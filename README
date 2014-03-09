@@ -11,4 +11,17 @@ pour nettoyer :
 $ make clean
 ... mais du coup t'es obligé de tout recompiler
 
+pour git :
+
+$ git pull
+tire et merge si besoin
+
+$ git add ...
+$ git commit -a
+
+$ git push
+
+$ git status
+pratique...
+
 Foilà.
