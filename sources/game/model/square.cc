@@ -7,12 +7,12 @@ square::Square::Square(double difficulty)
 {
 }
 
-unsigned square::Square::distance()
+unsigned square::Square::distance() const
 {
    return 2;
 }
 
-bool square::Square::dig(unsigned & score, unsigned & time, unsigned & lifes)
+bool square::Square::dig(unsigned & score, unsigned & time, unsigned & lifes) const
 {
    score = 1;
    time  = 1;

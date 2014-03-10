@@ -5,18 +5,27 @@
 using namespace diggewrong;
 
 GameModel::GameModel(unsigned width, unsigned height, double difficulty
-		     ,unsigned atarget, unsigned alifes)
+		     ,unsigned target, unsigned lifes, unsigned timelimit)
 
-   :board(width*height)
-   ,target(atarget)
-   ,lifes(alifes)
+   :Board(width*height)
+
+   ,Target(target)
+   ,Reached(0)
+
+   ,Score(0)
+   ,Lifes(lifes)
+   ,Timelimit(timelimit)
+   
+   ,Bonus_score(0)
+   ,Bonus_lifes(0)
+   ,Bonus_time(0)
 {
    fillBoard(difficulty);
 }
 
 void GameModel::fillBoard(double difficulty)
 {
-   for (square::Square* & square : board)
+   for (square::Square* & square : Board)
    {
       square = newRandomSquare(difficulty);
    }
@@ -33,3 +42,5 @@ square::Square* GameModel::newRandomSquare(double difficulty)
    else if (r <= pbomb + pbonus) return new square::Square(difficulty); // bonus
    else                          return new square::Square(difficulty); // bonus
 }
+
+

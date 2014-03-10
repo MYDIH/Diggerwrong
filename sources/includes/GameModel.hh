@@ -57,26 +57,32 @@ namespace diggewrong
    class GameModel: public GameObservable
    {
    private:
-      std::vector<square::Square*> board;
+      std::vector<square::Square*> Board;
 
-      unsigned target;
-      unsigned reached;
+      unsigned Target;
+      unsigned Reached;
 
-      unsigned score;
-      unsigned lifes;
-      unsigned timelimit;
+      unsigned Score;
+      unsigned Lifes;
+      unsigned Timelimit;
 
-      unsigned bonus_score;
-      unsigned bonus_lifes;
-      unsigned bonus_time;
+      unsigned Bonus_score;
+      unsigned Bonus_lifes;
+      unsigned Bonus_time;
 
       square::Square* newRandomSquare(double difficulty);
 
    public:
       GameModel(unsigned width, unsigned height, double difficulty
-		,unsigned target, unsigned lifes);
+		,unsigned target, unsigned lifes, unsigned timelimit);
 
       void fillBoard(double difficulty);
+
+      void play();
+      void pause();
+      unsigned remainingTime();
+
+
    };
 }
 
