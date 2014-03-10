@@ -8,45 +8,49 @@ namespace diggewrong
 {
    namespace square
    {
+      // juste pour les tests
       class Square
       {
       public:
+	 Square(double difficulty);
+
+	 virtual unsigned distance() const;
 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
       };
 
-      class Normal : public Square
-      {
-      private:
-	 unsigned m_num;
+      // class Normal : public Square
+      // {
+      // private:
+      // 	 unsigned m_num;
 
-      public:
-	 Normal(unsigned num);
+      // public:
+      // 	 Normal(unsigned num);
 
-	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      };
+      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
+      // };
 
-      class Bomb : public Square
-      {
-      public:
-	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      };
+      // class Bomb : public Square
+      // {
+      // public:
+      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
+      // };
 
-      class Digged : public Square
-      {
-      public:
-	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      };
+      // class Digged : public Square
+      // {
+      // public:
+      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
+      // };
 
-      class HiddenBonus : public Normal
-      {
-      private:
-	 unsigned m_score, m_time, m_lifes;
+      // class HiddenBonus : public Normal
+      // {
+      // private:
+      // 	 unsigned m_score, m_time, m_lifes;
 
-      public:
-	 HiddenBonus(unsigned score, unsigned time, unsigned lifes);
+      // public:
+      // 	 HiddenBonus(unsigned score, unsigned time, unsigned lifes);
 
-	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      };
+      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
+      // };
    }
 
 
@@ -55,10 +59,24 @@ namespace diggewrong
    private:
       std::vector<square::Square*> board;
 
+      unsigned target;
+      unsigned reached;
+
+      unsigned score;
+      unsigned lifes;
+      unsigned timelimit;
+
+      unsigned bonus_score;
+      unsigned bonus_lifes;
+      unsigned bonus_time;
+
       square::Square* newRandomSquare(double difficulty);
 
    public:
-      GameModel(unsigned width, unsigned height);
+      GameModel(unsigned width, unsigned height, double difficulty
+		,unsigned target, unsigned lifes);
+
+      void fillBoard(double difficulty);
    };
 }
 
