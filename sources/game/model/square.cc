@@ -7,6 +7,10 @@ square::Square::Square(double difficulty)
 {
 }
 
+square::Square::~Square()
+{
+}
+
 unsigned square::Square::distance() const
 {
    return 2;

@@ -13,6 +13,7 @@ namespace diggewrong
       {
       public:
 	 Square(double difficulty);
+	 virtual ~Square();
 
 	 virtual unsigned distance() const;
 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
@@ -53,22 +54,30 @@ namespace diggewrong
       // };
    }
 
+   struct point
+   {
+      unsigned x;
+      unsigned y;
+   };
 
    class GameModel: public GameObservable
    {
    private:
-      std::vector<square::Square*> Board;
+      std::vector< std::vector<square::Square*> > Board;
+
+      point Digger;
 
       unsigned Target;
       unsigned Reached;
 
       unsigned Score;
       unsigned Lifes;
-      unsigned Timelimit;
+      //unsigned Timelimit;
 
       unsigned Bonus_score;
       unsigned Bonus_lifes;
-      unsigned Bonus_time;
+      //unsigned Bonus_time;
+
 
       square::Square* newRandomSquare(double difficulty);
 
@@ -76,12 +85,13 @@ namespace diggewrong
       GameModel(unsigned width, unsigned height, double difficulty
 		,unsigned target, unsigned lifes, unsigned timelimit);
 
-      void fillBoard(double difficulty);
+      ~GameModel();
 
-      void play();
-      void pause();
-      unsigned remainingTime();
+      //void play();
+      //void pause();
 
+      bool move(char dx, char dy);
+      
 
    };
 }

@@ -7,29 +7,45 @@ using namespace diggewrong;
 GameModel::GameModel(unsigned width, unsigned height, double difficulty
 		     ,unsigned target, unsigned lifes, unsigned timelimit)
 
-   :Board(width*height)
+   :Board(width)
+
+   ,Digger({width/2, height/2})
 
    ,Target(target)
    ,Reached(0)
 
    ,Score(0)
    ,Lifes(lifes)
-   ,Timelimit(timelimit)
+    //,Timelimit(timelimit)
    
    ,Bonus_score(0)
    ,Bonus_lifes(0)
-   ,Bonus_time(0)
+    //,Bonus_time(0)
 {
-   fillBoard(difficulty);
+   for (auto & column : Board)
+   {
+      column.resize(width);
+
+      for (auto & square : column)
+      {
+	 square = newRandomSquare(difficulty);
+      }
+   }
+
+   //square = newRandomSquare(difficulty);
 }
 
-void GameModel::fillBoard(double difficulty)
+GameModel::~GameModel()
 {
-   for (square::Square* & square : Board)
+   for (auto & column : Board)
    {
-      square = newRandomSquare(difficulty);
+      for (auto & square : column)
+      {
+	 delete square;
+      }
    }
 }
+
 
 square::Square* GameModel::newRandomSquare(double difficulty)
 {

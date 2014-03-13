@@ -15,12 +15,12 @@ unit    = $(shell source Objects.sh ; unit    )
 
 
 release:	$(nonunit)
-	@mkdir -p $(buildir)/release
+	mkdir -p $(buildir)/release
 	$(CXX) $(CXXFLAGS) -o $(buildir)/release/diggewrong $^
 
 
 unit:		$(unit)
-	@mkdir -p $(buildir)/unit-tests
+	mkdir -p $(buildir)/unit-tests
 	$(CXX) $(CXXFLAGS) -o $(buildir)/unit-tests/diggewrong $^
 
 
@@ -29,7 +29,7 @@ test:		unit
 
 
 debug:		$(nonunit) 
-	@mkdir -p $(buildir)/debug
+	mkdir -p $(buildir)/debug
 	$(CXX) $(CXXFLAGS) -g -o $(buildir)/debug/diggewrong $^
 
 
@@ -45,6 +45,6 @@ clean:
 
 
 
-# on inclue les fichiers de dépendances générés dans %.o
+# on inclut les fichiers de dépendances générés dans %.o
 -include $(shell echo sources/**/*.d)
 
