@@ -6,58 +6,44 @@
 
 namespace diggewrong
 {
-   namespace square
-   {
-      // juste pour les tests
-      class Square
-      {
-      public:
-	 Square(double difficulty);
-	 virtual ~Square();
-
-	 virtual unsigned distance() const;
-	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      };
-
-      // class Normal : public Square
-      // {
-      // private:
-      // 	 unsigned m_num;
-
-      // public:
-      // 	 Normal(unsigned num);
-
-      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      // };
-
-      // class Bomb : public Square
-      // {
-      // public:
-      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      // };
-
-      // class Digged : public Square
-      // {
-      // public:
-      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      // };
-
-      // class HiddenBonus : public Normal
-      // {
-      // private:
-      // 	 unsigned m_score, m_time, m_lifes;
-
-      // public:
-      // 	 HiddenBonus(unsigned score, unsigned time, unsigned lifes);
-
-      // 	 virtual bool dig(unsigned & score, unsigned & time, unsigned & lifes) const;
-      // };
-   }
 
    struct point
    {
       unsigned x;
       unsigned y;
+   };
+   
+
+   class Square
+   {
+   public:
+      virtual ~Square() = 0;
+
+      virtual int value()           const = 0; // -1 si non supporté
+      virtual const string & type() const = 0;
+      // bomb, normal, bonus, digged...
+
+      virtual point dig(unsigned dx, unsigned dy, int distance
+			,GameModel & model, unsigned x, unsigned y) = 0;
+   };
+
+   class Normal : public Square
+   {
+   private:
+      string Type = "normal";
+      unsigned Value;
+
+   public:
+      Normal(double difficulty);
+      ~Normal() override;
+
+      int value()           const override; // -1 si non supporté
+      const string & type() const override;
+      // bomb, normal, bonus, digged...
+
+      point dig(unsigned dx, unsigned dy, int distance
+		,GameModel & model, unsigned x, unsigned y) override;
+
    };
 
    class GameModel: public GameObservable

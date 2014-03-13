@@ -2,27 +2,50 @@
 
 using namespace diggewrong;
 
-
-square::Square::Square(double difficulty)
+Normal::Normal(double difficulty, unsigned longestside)
 {
+   const double r = rand() / (double) RAND_MAX;
+
+   const max = (longestside/3.0)*r + (longestside/5.0);
+
+   Value = max*difficulty + 1;
 }
 
-square::Square::~Square()
+int Normal::value() const override
 {
+   return Value;
 }
 
-unsigned square::Square::distance() const
+const string & Normal::type() const override
 {
-   return 2;
+   return Type;
 }
 
-bool square::Square::dig(unsigned & score, unsigned & time, unsigned & lifes) const
+void Normal::dig(unsigned dx, unsigned dy, int distance
+		 ,GameModel & m, unsigned x, unsigned y) override
 {
-   score = 1;
-   time  = 1;
-   lifes = 1;
+   // si distance < 0, on est la première case visité du tour, on lance donc le déplacement
+   const int distance = (distance < 0) ? Value - 1 : distance;
 
-   return true;
+
+   if (distance > 0 and m.isOutOfRange(x + dx, y + dy))
+   {
+      m.die();
+   }
+   else
+   {
+      m.replaceSquare(x,y, new Digged());
+      m.addScore(Value*10);
+
+      // -- suicide
+      delete this;
+      // --
+
+      if (distance > 0)
+      {
+	 m.digAt(x + dx, y + dy, dx, dy, distance - 1);
+      }
+   }
 }
 
 
