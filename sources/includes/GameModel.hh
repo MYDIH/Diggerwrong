@@ -23,8 +23,8 @@ namespace diggewrong
       virtual const string & type() const = 0;
       // bomb, normal, bonus, digged...
 
-      virtual point dig(unsigned dx, unsigned dy, int distance
-			,GameModel & model, unsigned x, unsigned y) = 0;
+      virtual point dig(GameModel & model, unsigned x, unsigned y
+			,unsigned dx=0, unsigned dy=0, int distance=-1) = 0;
    };
 
    class Normal : public Square
