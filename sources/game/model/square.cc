@@ -1,52 +1,99 @@
-#include "GameModel.hh"
+#include "GameSquare.hh"
 
 using namespace diggewrong;
+
+
+//
+// Square
+//
+
+void Square::retain()
+{
+   Retain_count++;
+}
+
+void Square::release()
+{
+   if (Retain_count == 1)
+   {
+      delete this;
+   }
+   else
+   {
+      Retain_count--;
+   }
+}
+
+Square::~Square()
+{}
+
+int Square::value() const
+{
+   return -1;
+}
+
+
+//
+// Digged
+//
+
+bool Digged::dig(GameModel & m, int x, int y
+		 ,int dx, int dy, int distance)
+{
+   return true;
+}
+
+const std::string & Digged::type() const
+{
+   return Type;
+}
+
+
+
+
+//
+// Normal
+//
 
 Normal::Normal(double difficulty, unsigned longestside)
 {
    const double r = rand() / (double) RAND_MAX;
 
-   const max = (longestside/3.0)*r + (longestside/5.0);
+   const double max = (longestside/3.0)*r + (longestside/5.0);
 
    Value = max*difficulty + 1;
 }
 
-int Normal::value() const override
+int Normal::value() const
 {
    return Value;
 }
 
-const string & Normal::type() const override
+const std::string & Normal::type() const 
 {
    return Type;
 }
 
-void Normal::dig(unsigned dx, unsigned dy, int distance
-		 ,GameModel & m, unsigned x, unsigned y) override
+bool Normal::dig(GameModel & m, int x, int y
+		 ,int dx, int dy, int distance) 
 {
    // si distance < 0, on est la première case visité du tour, on lance donc le déplacement
-   const int distance = (distance < 0) ? Value - 1 : distance;
+   distance = (distance < 0) ? Value - 1 : distance;
 
 
-   if (distance > 0 and m.isOutOfRange(x + dx, y + dy))
+   Square * digged = new Normal(12,12);
+   m.replaceSquare(x,y, digged);
+   digged -> release();
+
+   m.addScore(Value*10);
+
+   if (distance > 0 and (dx != 0 or dy != 0))
    {
-      m.die();
+      return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
    }
-   else
-   {
-      m.replaceSquare(x,y, new Digged());
-      m.addScore(Value*10);
-
-      // -- suicide
-      delete this;
-      // --
-
-      if (distance > 0)
-      {
-	 m.digAt(x + dx, y + dy, dx, dy, distance - 1);
-      }
-   }
+   else return false;
 }
+
 
 
 

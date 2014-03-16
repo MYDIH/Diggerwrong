@@ -2,6 +2,8 @@
 CXX      = g++
 CXXFLAGS = -Wall -iquote sources/includes -std=c++11
 
+
+
 # constantes
 buildir  = Builds
 
@@ -12,6 +14,8 @@ SHELL    = /bin/bash -O extglob -O globstar -c
 
 nonunit = $(shell source Objects.sh ; nonunit )
 unit    = $(shell source Objects.sh ; unit    )
+
+
 
 
 release:	$(nonunit)
@@ -42,6 +46,7 @@ clean:
 # compilation + génération des fichiers de dépendance
 %.o:		%.cc
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -c -o $@ $<
+
 
 
 

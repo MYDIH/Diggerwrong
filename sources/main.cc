@@ -1,6 +1,5 @@
 #include "GameModel.hh"
 #include "GameObserver.hh"
-#include "GameObservable.hh"
 
 #include <cstdlib>
 

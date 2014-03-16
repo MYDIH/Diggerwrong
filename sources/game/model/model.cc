@@ -5,7 +5,8 @@
 using namespace diggewrong;
 
 GameModel::GameModel(unsigned width, unsigned height, double difficulty
-		     ,unsigned target, unsigned lifes, unsigned timelimit)
+		     ,unsigned target, unsigned lifes)
+
 
    :Board(width)
 
@@ -22,17 +23,18 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    ,Bonus_lifes(0)
     //,Bonus_time(0)
 {
+   const unsigned longestside = (width > height) ? width : height;
+
    for (auto & column : Board)
    {
-      column.resize(width);
+      column.resize(height);
 
       for (auto & square : column)
       {
-	 square = newRandomSquare(difficulty);
+	 square = newRandomSquare(difficulty, longestside);
       }
    }
 
-   //square = newRandomSquare(difficulty);
 }
 
 GameModel::~GameModel()
@@ -41,22 +43,82 @@ GameModel::~GameModel()
    {
       for (auto & square : column)
       {
-	 delete square;
+	 square -> release();
       }
    }
 }
 
 
-square::Square* GameModel::newRandomSquare(double difficulty)
+bool GameModel::move(int dx, int dy)
+{
+   if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+   {
+
+      return true;
+   }
+   else
+   {
+
+      return false;
+   }
+}
+
+
+
+Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
 
    double pbomb  = difficulty * 0.7;
    double pbonus = (1 - pbomb) * 0.2;
 
-   if      (r <= pbomb)          return new square::Square(difficulty); // bomb
-   else if (r <= pbomb + pbonus) return new square::Square(difficulty); // bonus
-   else                          return new square::Square(difficulty); // bonus
+   if      (r <= pbomb)          return new Normal(difficulty, longestside); // bomb
+   else if (r <= pbomb + pbonus) return new Normal(difficulty, longestside); // bonus
+   else                          return new Normal(difficulty, longestside); // normal
 }
 
+
+bool GameModel::isOutOfRange(int x, int y)
+{
+   if (x >= 0 and y >= 0 and (unsigned)x < Board.size() and (unsigned)y < Board[0].size())
+      return false;
+   else
+      return true;
+}
+
+bool GameModel::digAt(int x, int y
+		      ,int dx, int dy, int distance)
+{
+   if (isOutOfRange(x,y))
+   {
+      return true;
+   }
+   else
+   {
+      Digger.x = x;
+      Digger.y = y;
+      Reached++;
+
+      Board[x][y] -> retain();
+      const bool ret = Board[x][y] -> dig(*this,x,y,dx,dy,distance);
+      Board[x][y] -> release();
+      
+      return ret;
+   }
+}
+
+void GameModel::addScore(unsigned score)
+{
+   Score += score;
+}
+
+void GameModel::replaceSquare(int x, int y, Square * newone)
+{
+   if (not isOutOfRange(x,y))
+   {
+      Board[x][y] -> release();
+      newone -> retain();
+      Board[x][y] = newone;
+   }
+}
 
