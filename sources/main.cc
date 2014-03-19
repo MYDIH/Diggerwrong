@@ -1,6 +1,5 @@
 #include "GameModel.hh"
 #include "GameObserver.hh"
-
 #include <cstdlib>
 
 using namespace diggewrong;

@@ -49,8 +49,6 @@ const std::string & Digged::type() const
 }
 
 
-
-
 //
 // Normal
 //

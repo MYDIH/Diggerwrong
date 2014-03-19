@@ -22,6 +22,9 @@ release:	$(nonunit)
 	mkdir -p $(buildir)/release
 	$(CXX) $(CXXFLAGS) -o $(buildir)/release/diggewrong $^
 
+check-syntax:
+	$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES} # -o null
+
 
 unit:		$(unit)
 	mkdir -p $(buildir)/unit-tests
