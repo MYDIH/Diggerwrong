@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 namespace diggewrong
 {
@@ -49,7 +50,8 @@ namespace diggewrong
 
       bool move(int dx, int dy);
 
-
+      const std::string toString() const;
+      static std::string intToString(const int &e);
 
       void addScore(unsigned score);
 
@@ -58,9 +60,6 @@ namespace diggewrong
 		 ,int dx = 0, int dy = 0, int distance = -1);
 
       void replaceSquare(int x, int y, Square * newone);
-
-
-
    };
 }
 
