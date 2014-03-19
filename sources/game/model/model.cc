@@ -83,7 +83,6 @@ const std::string GameModel::toString() const
     for(unsigned i=0; i<Board[0].size(); i++)
       tempLine += '-';
 
-    tempString += tempLine;
     for(unsigned i=0; i<Board.size(); i++)
     {
         for(unsigned j=0; j<Board[i].size(); j++)

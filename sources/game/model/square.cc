@@ -46,7 +46,7 @@ const std::string & Digged::type() const
    return Type;
 }
 
-const std::string & Digged::toString() const
+const std::string Digged::toString() const
 { return "   "; }
 
 //
@@ -72,7 +72,7 @@ const std::string & Normal::type() const
    return Type;
 }
 
-const std::string & Normal::toString() const
+const std::string Normal::toString() const
 { return ' ' + GameModel::intToString(value()) + ' '; }
 
 bool Normal::dig(GameModel & m, int x, int y
