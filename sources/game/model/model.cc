@@ -1,6 +1,7 @@
 #include "GameModel.hh"
 
 #include <cstdlib>
+#include <sstream>
 
 using namespace diggewrong;
 
@@ -18,7 +19,7 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    ,Score(0)
    ,Lifes(lifes)
     //,Timelimit(timelimit)
-   
+
    ,Bonus_score(0)
    ,Bonus_lifes(0)
     //,Bonus_time(0)
@@ -31,10 +32,9 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
 
       for (auto & square : column)
       {
-	 square = newRandomSquare(difficulty, longestside);
+	      square = newRandomSquare(difficulty, longestside);
       }
    }
-
 }
 
 GameModel::~GameModel()
@@ -43,7 +43,7 @@ GameModel::~GameModel()
    {
       for (auto & square : column)
       {
-	 square -> release();
+	      square -> release();
       }
    }
 }
@@ -63,8 +63,6 @@ bool GameModel::move(int dx, int dy)
    }
 }
 
-
-
 Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
@@ -77,6 +75,37 @@ Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
    else                          return new Normal(difficulty, longestside); // normal
 }
 
+const std::string GameModel::toString() const
+{
+    std::string tempString = "";
+    std::string tempLine = "";
+
+    for(unsigned i=0; i<Board[0].size(); i++)
+      tempLine += '-';
+
+    tempString += tempLine;
+    for(unsigned i=0; i<Board.size(); i++)
+    {
+        for(unsigned j=0; j<Board[i].size(); j++)
+        {
+          if(!(i % 2))
+            tempString += tempLine + '\n';
+          tempString = '|' + Board[i][j]->toString() + '|';
+          if(j == Board[i].size() - 1)
+            tempString += '\n';
+        }
+    }
+
+    return tempString;
+}
+
+std::string GameModel::intToString(const int &e)
+{
+  std::ostringstream stream;
+  stream << e;
+
+  return stream.str();
+}
 
 bool GameModel::isOutOfRange(int x, int y)
 {
@@ -102,7 +131,7 @@ bool GameModel::digAt(int x, int y
       Board[x][y] -> retain();
       const bool ret = Board[x][y] -> dig(*this,x,y,dx,dy,distance);
       Board[x][y] -> release();
-      
+
       return ret;
    }
 }

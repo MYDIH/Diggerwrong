@@ -2,7 +2,6 @@
 
 using namespace diggewrong;
 
-
 //
 // Square
 //
@@ -32,7 +31,6 @@ int Square::value() const
    return -1;
 }
 
-
 //
 // Digged
 //
@@ -48,6 +46,9 @@ const std::string & Digged::type() const
    return Type;
 }
 
+
+const std::string & Digged::toString() const
+{ return "   "; }
 
 //
 // Normal
@@ -67,13 +68,16 @@ int Normal::value() const
    return Value;
 }
 
-const std::string & Normal::type() const 
+const std::string & Normal::type() const
 {
    return Type;
 }
 
+const std::string & Normal::toString() const
+{ return ' ' + GameModel::intToString(value()) + ' '; }
+
 bool Normal::dig(GameModel & m, int x, int y
-		 ,int dx, int dy, int distance) 
+		 ,int dx, int dy, int distance)
 {
    // si distance < 0, on est la première case visité du tour, on lance donc le déplacement
    distance = (distance < 0) ? Value - 1 : distance;

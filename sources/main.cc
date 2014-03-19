@@ -1,23 +1,17 @@
 #include "GameModel.hh"
 #include "GameObserver.hh"
 #include <cstdlib>
+#include <iostream>
 
 using namespace diggewrong;
 
-void f(point p)
-{
-}
-
-
 int main()
 {
-   unsigned a = 12;
-   unsigned b = 13;
+    GameModel *model = new GameModel(18, 18, 0.5, 1, 5);
+    std::cout << model->toString().c_str() << std::endl;
+    std::cout << "Programme démarré" << std::endl;
 
-
-   f({a,b});
-
-   return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 

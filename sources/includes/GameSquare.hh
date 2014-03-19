@@ -3,6 +3,7 @@
 #include "GameModel.hh"
 
 #include <string>
+#include <sstream>
 
 namespace diggewrong
 {
@@ -12,7 +13,7 @@ namespace diggewrong
    {
    private:
       unsigned Retain_count = 1;
-      
+
    public:
       virtual ~Square();
 
@@ -22,6 +23,7 @@ namespace diggewrong
 
       virtual bool dig(GameModel & model, int x, int y
 		       ,int dx=0, int dy=0, int distance=-1) = 0;
+      virtual const std::string & toString() const = 0;
 
       void retain();
       void release();
@@ -39,6 +41,7 @@ namespace diggewrong
 
       int value()                const override;
       const std::string & type() const override;
+      const std::string & toString() const override;
 
       bool dig(GameModel & model, int x, int y
 	       ,int dx, int dy, int distance) override;
@@ -52,6 +55,7 @@ namespace diggewrong
 
    public:
       const std::string & type() const override;
+      const std::string & toString() const override;
 
       bool dig(GameModel & model, int x, int y
 	       ,int dx, int dy, int distance) override;
