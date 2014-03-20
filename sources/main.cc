@@ -15,33 +15,42 @@ void afficherMenu()
 bool menu(GameModel *model)
 {
     std::string tempStr = "";
+    bool found = false;
 
     afficherMenu();
     std::cin >> tempStr;
 
-    if(tempStr == "O")
-    {}
-    else if(tempStr == "N")
-    {}
-    else if(tempStr == "E")
-    {}
-    else if(tempStr == "S")
-    {}
-    else if(tempStr == "NO")
-    {}
-    else if(tempStr == "NE")
-    {}
-    else if(tempStr == "SO")
-    {}
-    else if(tempStr == "SE")
-    {}
-    else if(tempStr == "Q")
-        return true;
-    else
+    while(!found)
     {
-        std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE ou Q !" << std::endl;
-        menu(model);
+        found = true;
+
+        if(tempStr == "O")
+            model->move(-1, 0);
+        else if(tempStr == "N")
+            model->move(0, -1);
+        else if(tempStr == "E")
+            model->move(1, 0);
+        else if(tempStr == "S")
+            model->move(0, 1);
+        else if(tempStr == "NO")
+            model->move(-1, -1);
+        else if(tempStr == "NE")
+            model->move(1, -1);
+        else if(tempStr == "SO")
+            model->move(-1, 1);
+        else if(tempStr == "SE")
+            model->move(1, 1);
+        else if(tempStr == "Q")
+            return false;
+        else
+        {
+            std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE ou Q !" << std::endl;
+            std::cin >> tempStr;
+            found = false;
+        }
     }
+
+    return true;
 }
 
 void printModel(GameModel *model)
@@ -56,14 +65,13 @@ void printModel(GameModel *model)
 
 int main()
 {
-    bool quit = false;
+    srand(time(NULL));
     GameModel *model = new GameModel(20, 20, 0.2, 20, 5);
 
-    while(!quit)
-    {
+    printModel(model);
+
+    while(menu(model))
         printModel(model);
-        quit = menu(model);
-    }
 
     delete model;
 

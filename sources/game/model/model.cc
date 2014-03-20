@@ -1,6 +1,7 @@
 #include "GameModel.hh"
 
 #include <cstdlib>
+#include <iostream>
 #include <sstream>
 
 using namespace diggewrong;
@@ -85,6 +86,7 @@ const std::string GameModel::toString() const
         tempLine += "---";
     tempLine += "+";
 
+    //std::cout << Board[Digger.x][Digger.y]->toString() << std::endl;
     for(unsigned i=0; i<Board.size(); i++)
     {
         for(unsigned j=0; j<Board[i].size(); j++)
@@ -93,10 +95,10 @@ const std::string GameModel::toString() const
                 tempString += tempLine + '\n';
             if(j == 0)
                 tempString += '|';
-            if(i != Digger.x || j != Digger.y)
-                tempString += Board[i][j]->toString();
-            else
+            if(i == Digger.x && j == Digger.y)
                 tempString += "@@@";
+            else
+                tempString += Board[i][j]->toString();
             if(j == Board[i].size() - 1)
                 tempString += '|';
         }

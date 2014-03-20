@@ -48,7 +48,7 @@ clean:
 
 # compilation + génération des fichiers de dépendance
 %.o:		%.cc
-	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -g -MMD -MF $*.d -c -o $@ $<
 
 
 
