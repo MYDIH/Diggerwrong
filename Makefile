@@ -1,7 +1,7 @@
 # options du compilateur
 CXX      = g++
 CXXFLAGS = -Wall -iquote sources/includes -std=c++11
-
+debug    = 
 
 
 # constantes
@@ -23,7 +23,7 @@ release:	$(nonunit)
 	$(CXX) $(CXXFLAGS) -o $(buildir)/release/diggewrong $^
 
 check-syntax:
-	$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES} # -o null
+	-$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES} # -o null
 
 
 unit:		$(unit)
@@ -48,7 +48,7 @@ clean:
 
 # compilation + génération des fichiers de dépendance
 %.o:		%.cc
-	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(debug) -MMD -MF $*.d -c -o $@ $<
 
 
 

@@ -63,6 +63,20 @@ namespace diggewrong
    };
 
 
+   class Bomb : public Square
+   {
+   private:
+      std::string Type = "bomb";
+
+   public:
+      const std::string & type() const override;
+      const std::string toString() const override;
+
+      bool dig(GameModel & model, int x, int y
+	       ,int dx, int dy, int distance) override;
+
+   };
+
 
 }
 

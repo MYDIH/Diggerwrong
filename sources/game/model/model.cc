@@ -3,6 +3,10 @@
 #include <cstdlib>
 #include <sstream>
 
+// debug
+#include <iostream>
+
+
 using namespace diggewrong;
 
 GameModel::GameModel(unsigned width, unsigned height, double difficulty
@@ -87,9 +91,14 @@ const std::string GameModel::toString() const
     {
         for(unsigned j=0; j<Board[i].size(); j++)
         {
+	   //std::cout << "<<SQUARE>>" << std::endl;
+
+	   // (i % 2) == 0
           if(!(i % 2))
             tempString += tempLine + '\n';
-          tempString = '|' + Board[i][j]->toString() + '|';
+
+          tempString += '|' + Board[i][j]->toString() + '|';
+
           if(j == Board[i].size() - 1)
             tempString += '\n';
         }
