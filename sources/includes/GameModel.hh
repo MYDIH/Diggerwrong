@@ -10,6 +10,13 @@ namespace diggewrong
 {
    class Square;
 
+   enum GameState
+   {
+        WON,
+        CONTINUE,
+        LOST
+   };
+
    struct point
    {
       unsigned x;
@@ -36,9 +43,9 @@ namespace diggewrong
       unsigned Bonus_lifes;
       //unsigned Bonus_time;
 
-      bool Dead;
+      GameState State = CONTINUE;
 
-      Square* newRandomSquare(double difficulty, unsigned longestside);
+      Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
 
    public:
       GameModel(unsigned width, unsigned height, double difficulty
@@ -49,7 +56,7 @@ namespace diggewrong
       //void play();
       //void pause();
 
-      bool move(int dx, int dy);
+      GameState move(int dx, int dy);
 
       const std::string toString() const;
       static std::string intToString(const int &e);
@@ -63,13 +70,13 @@ namespace diggewrong
 		 ,int dx = 0, int dy = 0, int distance = -1);
 
       void replaceSquare(int x, int y, Square * newone);
-      
+
       //Accesseurs
-      unsigned getTarget () const;
+      unsigned getTarget()  const;
       unsigned getReached() const;
-      unsigned getScore  () const;
-      unsigned getLifes  () const;
-      point    getDigger () const;
+      unsigned getScore()   const;
+      //unsigned getLifes  () const;
+      point    getDigger()  const;
       
    };
 }

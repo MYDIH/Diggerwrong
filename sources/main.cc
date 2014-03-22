@@ -9,6 +9,12 @@ const unsigned DECALAGE_CONSOLE = 35; // Distance entre Statu et Explications
 
 using namespace diggewrong;
 
+
+void restartGame(GameModel *model)
+{
+    delete model;
+    model = new GameModel(20, 20, 0.2, 20, 5);
+}
 ///////////////afficherMenu()///////////////////
 //Description : Cette Fonction affiche le menu//
 //Auteur : Nicolas Gomez                      //
@@ -45,40 +51,56 @@ void toLowerCase(std::string &s)
 bool menu(GameModel *model)
 {
     std::string tempStr = "";
-    bool found = false;
+    bool rightStr = false;
+    GameState state;
 
     afficherMenu();
     std::cin >> tempStr;
 
-    while(!found) // Tant que la string envoyée est invalide
+    while(!rightStr) // Tant que la string envoyée est invalide
     {
-        found = true;
+        rightStr = true;
         toLowerCase(tempStr); // On Décapitalise
 
         if(tempStr == "o")
-            model->move(-1, 0);
+            state = model->move(0, -1);
         else if(tempStr == "n")
-            model->move(0, -1);
+            state = model->move(-1, 0);
         else if(tempStr == "e")
-            model->move(1, 0);
+            state = model->move(0, 1);
         else if(tempStr == "s")
-            model->move(0, 1);
+            state = model->move(1, 0);
         else if(tempStr == "no")
-            model->move(-1, -1);
+            state = model->move(-1, -1);
         else if(tempStr == "ne")
-            model->move(1, -1);
+            state = model->move(-1, 1);
         else if(tempStr == "so")
-            model->move(-1, 1);
+            state = model->move(1, -1);
         else if(tempStr == "se")
-            model->move(1, 1);
+            state = model->move(1, 1);
         else if(tempStr == "q")
             return false; // On quitte le jeu
         else
         {
             std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE ou Q !" << std::endl;
             std::cin >> tempStr;
-            found = false;
+            rightStr = false;
         }
+    }
+
+    switch(state)
+    {
+        case WON :
+            std::cout << "-------------------------Vous Avez Gagné !-------------------------" << std::endl;
+            restartGame(model);
+            break;
+        case LOST :
+            std::cout << "-------------------------Vous Avez Perdu !-------------------------" << std::endl;
+            restartGame(model);
+            break;
+        case CONTINUE :
+            break;
+        default : {}
     }
 
     return true;
@@ -95,7 +117,10 @@ void printModel(GameModel *model)
     std::string tempTarget = "Cible a atteindre : " + GameModel::intToString(model->getTarget());       //
     std::string tempReached = "Nombre de déplacement : " + GameModel::intToString(model->getReached()); //  On créé les lignes de statu
     std::string tempScore = "Votre Score : " + GameModel::intToString(model->getScore());               //
-    std::string tempLifes = "Vies Restantes : " + GameModel::intToString(model->getLifes());            //
+
+    // je vient de percuter mais le nombre de vies ne peut pas être gérer au niveau du model
+    // puisque une instance du model ne représente qu'un niveau
+    std::string tempLifes = "Vies Restantes : kikou ! retrouve moi ligne <123>";// GameModel::intToString(model->getLifes());            //
 
     // On rends le résultat potable en ramenant chaque ligne de statu à la même longueur
     while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempLifes.length() < DECALAGE_CONSOLE)
@@ -128,7 +153,7 @@ void printModel(GameModel *model)
 int main()
 {
     srand(time(NULL)); // Initialise l'aléatoire
-    GameModel *model = new GameModel(20, 20, 0.2, 20, 5);
+    GameModel *model = new GameModel(20, 20, 0.2, 10, 5);
 
     printModel(model);
 

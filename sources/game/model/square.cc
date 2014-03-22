@@ -16,13 +16,9 @@ void Square::retain()
 void Square::release()
 {
    if (Retain_count == 1)
-   {
       delete this;
-   }
    else
-   {
       Retain_count--;
-   }
 }
 
 Square::~Square()
@@ -39,8 +35,7 @@ int Square::value() const
 // Digged
 //
 
-bool Digged::dig(GameModel & m, int x, int y
-		 ,int dx, int dy, int distance)
+bool Digged::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 {
    return true;
 }
@@ -63,9 +58,9 @@ Normal::Normal(double difficulty, unsigned longestside)
 {
    const double r = rand() / (double) RAND_MAX;
 
-   const double max = (longestside*0.7)*r + (longestside*0.2);
+   const double max = longestside * 0.7 * difficulty + longestside * 0.2;
 
-   Value = max*difficulty + 1;
+   Value = max*r + 1;
 }
 
 int Normal::value() const
@@ -81,21 +76,21 @@ const std::string & Normal::type() const
 const std::string Normal::toString() const
 { return ' ' + GameModel::intToString(value()) + ' '; }
 
-bool Normal::dig(GameModel & m, int x, int y
-		 ,int dx, int dy, int distance)
+bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 {
    // si distance < 0, on est la première case visité du tour, on lance donc le déplacement
-   distance = (distance < 0) ? Value - 1 : distance;
+   if(distance < 0)
+   {
+        distance = Value - 1;
+        Square * tempDigged = new Digged;
+        m.replaceSquare(x - dx, y - dy, tempDigged);
+   }
 
-
-   Square * digged = new Normal(12,12);
-   m.replaceSquare(x,y, digged);
-   digged -> release();
+   Square * digged = new Digged;
+   m.replaceSquare(x, y, digged);
 
    if (distance > 0 and (dx != 0 or dy != 0))
-   {
       return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
-   }
    else return false;
 }
 

@@ -22,7 +22,7 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    ,Reached(0)
 
    ,Score(0)
-   ,Lifes(lifes)
+    //,Lifes(lifes)
     //,Timelimit(timelimit)
 
    ,Bonus_score(0)
@@ -54,37 +54,51 @@ GameModel::~GameModel()
 }
 
 
-// bool GameModel::move(int dx, int dy)
+GameState GameModel::move(int dx, int dy)
+{
+   if (State == CONTINUE)
+   {
+      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+      {
+	 State = LOST;
+      }
+      else if (Reached >= Target)
+      {
+	 State = WON;
+      }
+   }
+
+   return State;
+}
+
+// GameState GameModel::move(int dx, int dy)
 // {
-//    if (Dead)
-//    {
-//       return true;
-//    }
-//    if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
-//    {
-//       // notifications 
-//       Dead = true;
+//     GameState tempState = LOST;
 
-//       return true;
-//    }
-//    else
-//    {
+//     if(!digAt(Digger.x + dx, Digger.y + dy, dx, dy) && !isOutOfRange(Digger.x + dx, Digger.y + dy) && Board[Digger.x + dx][Digger.y + dy]->type() != "digged")
+//         tempState = CONTINUE;
+//     else
+//         tempState = LOST;
 
-//       return false;
-//    }
+//     if(Reached >= Target)
+//         tempState = WON;
+
+//     return tempState;
 // }
+
 
 Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
 
-   double pbomb  = difficulty * 0.7;
-   double pbonus = (1 - pbomb) * 0.2;
+   double pbomb  = difficulty * 0.2;
+   double pbonus = (1 - pbomb) * 0.02;
 
-   if      (r <= pbomb)          return new Normal(difficulty, longestside); // bomb
-   else if (r <= pbomb + pbonus) return new Normal(difficulty, longestside); // bonus
+   if      (r <= pbomb)          return new Bomb(); // bomb
+   else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
    else                          return new Normal(difficulty, longestside); // normal
 }
+
 
 const std::string GameModel::toString() const
 {
@@ -119,6 +133,7 @@ const std::string GameModel::toString() const
    return tempString;
 }
 
+
 std::string GameModel::intToString(const int &e)
 {
    std::ostringstream stream;
@@ -127,7 +142,7 @@ std::string GameModel::intToString(const int &e)
    return stream.str();
 }
 
-bool GameModel::isOutOfRange(int x, int y)
+bool GameModel::isOutOfRange(int x, int y) const
 {
    if (x >= 0 and y >= 0 and (unsigned)x < Board.size() and (unsigned)y < Board[0].size())
       return false;
@@ -135,8 +150,7 @@ bool GameModel::isOutOfRange(int x, int y)
       return true;
 }
 
-bool GameModel::digAt(int x, int y
-                      ,int dx, int dy, int distance)
+bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
 {
    if (isOutOfRange(x,y))
    {
@@ -185,22 +199,24 @@ void GameModel::replaceSquare(int x, int y, Square * newone)
 
 // Accesseurs :
 
-unsigned GameModel::getTarget()
+unsigned GameModel::getTarget() const
 {
    return Target;
 }
 
-unsigned GameModel::getReached()
+unsigned GameModel::getReached() const
 {
    return Reached;
 }
 
-unsigned GameModel::getScore()
+unsigned GameModel::getScore() const
 {
    return Score;
 }
 
-unsigned GameModel::getLifes()
-{
-   return Lifes;
-}
+// unsigned GameModel::getLifes() const
+// {
+//    return Lifes;
+// }
+
+
