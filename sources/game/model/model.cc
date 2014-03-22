@@ -4,6 +4,10 @@
 #include <iostream>
 #include <sstream>
 
+// debug
+#include <iostream>
+
+
 using namespace diggewrong;
 
 GameModel::GameModel(unsigned width, unsigned height, double difficulty

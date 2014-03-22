@@ -6,6 +6,7 @@ using namespace diggewrong;
 // Square
 //
 
+
 void Square::retain()
 {
    Retain_count++;
@@ -89,6 +90,28 @@ bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
       return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
    else return false;
 }
+
+
+
+//
+// Bonus
+//
+
+
+bool Bomb::dig(GameModel & m, int x, int y
+		 ,int dx, int dy, int distance)
+{
+   return true;
+}
+
+const std::string & Bomb::type() const
+{
+   return Type;
+}
+
+const std::string Bomb::toString() const
+{ return " * "; }
+
 
 
 
