@@ -90,7 +90,6 @@ const std::string GameModel::toString() const
         tempLine += "---";
     tempLine += "+";
 
-    //std::cout << Board[Digger.x][Digger.y]->toString() << std::endl;
     for(unsigned i=0; i<Board.size(); i++)
     {
         for(unsigned j=0; j<Board[i].size(); j++)
