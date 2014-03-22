@@ -60,6 +60,14 @@ namespace diggewrong
 		 ,int dx = 0, int dy = 0, int distance = -1);
 
       void replaceSquare(int x, int y, Square * newone);
+      
+      //Accesseurs
+      unsigned getTarget();
+      unsigned getReached();
+      unsigned getScore();
+      unsigned getLifes();
+      point getDigger();
+      
    };
 }
 
