@@ -10,6 +10,13 @@ namespace diggewrong
 {
    class Square;
 
+   enum GameState
+   {
+        WON,
+        CONTINUE,
+        LOST
+   };
+
    struct point
    {
       unsigned x;
@@ -48,7 +55,7 @@ namespace diggewrong
       //void play();
       //void pause();
 
-      bool move(int dx, int dy);
+      GameState move(int dx, int dy);
 
       const std::string toString() const;
       static std::string intToString(const int &e);
@@ -60,14 +67,14 @@ namespace diggewrong
 		 ,int dx = 0, int dy = 0, int distance = -1);
 
       void replaceSquare(int x, int y, Square * newone);
-      
+
       //Accesseurs
       unsigned getTarget();
       unsigned getReached();
       unsigned getScore();
       unsigned getLifes();
       point getDigger();
-      
+
    };
 }
 

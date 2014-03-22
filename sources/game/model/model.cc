@@ -50,18 +50,19 @@ GameModel::~GameModel()
 }
 
 
-bool GameModel::move(int dx, int dy)
+GameState GameModel::move(int dx, int dy)
 {
-    if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
-    {
+    GameState tempState = LOST;
 
-        return true;
-    }
+    if(!digAt(Digger.x + dx, Digger.y + dy, dx, dy) && !isOutOfRange(Digger.x + dx, Digger.y + dy) && Board[Digger.x + dx][Digger.y + dy]->type() != "digged")
+        tempState = CONTINUE;
     else
-    {
+        tempState = LOST;
 
-        return false;
-    }
+    if(Reached >= Target)
+        tempState = WON;
+
+    return tempState;
 }
 
 Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
@@ -125,14 +126,9 @@ bool GameModel::isOutOfRange(int x, int y)
         return true;
 }
 
-bool GameModel::digAt(int x, int y
-                      ,int dx, int dy, int distance)
+bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
 {
-    if (isOutOfRange(x,y))
-    {
-        return true;
-    }
-    else
+    if (!isOutOfRange(x,y))
     {
         Digger.x = x;
         Digger.y = y;
@@ -144,6 +140,7 @@ bool GameModel::digAt(int x, int y
 
         return ret;
     }
+    return false;
 }
 
 void GameModel::addScore(unsigned score)
