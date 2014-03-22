@@ -2,6 +2,7 @@
 
 using namespace diggewrong;
 
+
 //
 // Square
 //
@@ -32,6 +33,8 @@ int Square::value() const
    return -1;
 }
 
+
+
 //
 // Digged
 //
@@ -50,6 +53,8 @@ const std::string & Digged::type() const
 const std::string Digged::toString() const
 { return "   "; }
 
+
+
 //
 // Normal
 //
@@ -58,7 +63,7 @@ Normal::Normal(double difficulty, unsigned longestside)
 {
    const double r = rand() / (double) RAND_MAX;
 
-   const double max = (longestside/3.0)*r + (longestside/5.0);
+   const double max = (longestside*0.7)*r + (longestside*0.2);
 
    Value = max*difficulty + 1;
 }
@@ -87,8 +92,6 @@ bool Normal::dig(GameModel & m, int x, int y
    m.replaceSquare(x,y, digged);
    digged -> release();
 
-   m.addScore(Value*10);
-
    if (distance > 0 and (dx != 0 or dy != 0))
    {
       return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
@@ -97,11 +100,56 @@ bool Normal::dig(GameModel & m, int x, int y
 }
 
 
-
 //
 // Bonus
 //
 
+Bonus::Bonus(double difficulty, unsigned longestside)
+   : Normal(difficulty, longestside)
+{
+   const double plife  = (1.1 - difficulty) * 0.2;
+
+   const double r = rand() / (double) RAND_MAX;
+
+   if (r <= plife)
+   {
+      Lifes = 1;
+      Score = 0;
+   }
+   else
+   {
+      const double r = rand() / (double) RAND_MAX;
+
+      Score = (100 * r + 10);
+   }
+}
+
+bool Bonus::dig(GameModel & m, int x, int y
+		 ,int dx, int dy, int distance)
+{
+   m.addBonusScore(Score);
+   m.addBonusLifes(Lifes);
+
+   return Normal::dig(m,x,y,dx,dy,distance);
+}
+
+const std::string & Bonus::type() const
+{
+   return Type;
+}
+
+const std::string Bonus::toString() const
+{
+   return '{' + GameModel::intToString(Normal::value()) + '}';
+}
+
+
+
+
+
+//
+// Bomb
+//
 
 bool Bomb::dig(GameModel & m, int x, int y
 		 ,int dx, int dy, int distance)

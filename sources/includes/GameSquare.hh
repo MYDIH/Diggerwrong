@@ -48,6 +48,25 @@ namespace diggewrong
 
    };
 
+   class Bonus : public Normal
+   {
+   private:
+      std::string Type = "bonus";
+
+      unsigned Lifes;
+      unsigned Score;
+
+   public:
+      Bonus(double difficulty, unsigned longestside);
+
+      const std::string & type() const override;
+      const std::string toString() const override;
+
+      bool dig(GameModel & model, int x, int y
+	       ,int dx, int dy, int distance) override;
+
+   };
+
    class Digged : public Square
    {
    private:

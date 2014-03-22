@@ -29,13 +29,14 @@ namespace diggewrong
       unsigned Reached;
 
       unsigned Score;
-      unsigned Lifes;
+      //unsigned Lifes;
       //unsigned Timelimit;
 
       unsigned Bonus_score;
       unsigned Bonus_lifes;
       //unsigned Bonus_time;
 
+      bool Dead;
 
       Square* newRandomSquare(double difficulty, unsigned longestside);
 
@@ -53,20 +54,22 @@ namespace diggewrong
       const std::string toString() const;
       static std::string intToString(const int &e);
 
-      void addScore(unsigned score);
+      void addBonusScore(unsigned score);
+      void addBonusLifes(unsigned lifes);
 
-      bool isOutOfRange(int x, int y);
+
+      bool isOutOfRange(int x, int y) const;
       bool digAt(int x, int y
 		 ,int dx = 0, int dy = 0, int distance = -1);
 
       void replaceSquare(int x, int y, Square * newone);
       
       //Accesseurs
-      unsigned getTarget();
-      unsigned getReached();
-      unsigned getScore();
-      unsigned getLifes();
-      point getDigger();
+      unsigned getTarget () const;
+      unsigned getReached() const;
+      unsigned getScore  () const;
+      unsigned getLifes  () const;
+      point    getDigger () const;
       
    };
 }
