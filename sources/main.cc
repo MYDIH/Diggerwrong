@@ -9,12 +9,6 @@ const unsigned DECALAGE_CONSOLE = 35; // Distance entre Statu et Explications
 
 using namespace diggewrong;
 
-
-void restartGame(GameModel *model)
-{
-    delete model;
-    model = new GameModel(20, 20, 0.2, 20, 5);
-}
 ///////////////afficherMenu()///////////////////
 //Description : Cette Fonction affiche le menu//
 //Auteur : Nicolas Gomez                      //
@@ -48,7 +42,7 @@ void toLowerCase(std::string &s)
 //                   continu, a faux sinon    //
 //Auteur : Nicolas Gomez                      //
 ////////////////////////////////////////////////
-bool menu(GameModel *model)
+GameState menu(GameModel *model, int &lifes)
 {
     std::string tempStr = "";
     bool rightStr = false;
@@ -79,7 +73,7 @@ bool menu(GameModel *model)
         else if(tempStr == "se")
             state = model->move(1, 1);
         else if(tempStr == "q")
-            return false; // On quitte le jeu
+            return QUIT; // On quitte le jeu
         else
         {
             std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE ou Q !" << std::endl;
@@ -92,18 +86,17 @@ bool menu(GameModel *model)
     {
         case WON :
             std::cout << "-------------------------Vous Avez Gagné !-------------------------" << std::endl;
-            restartGame(model);
             break;
         case LOST :
             std::cout << "-------------------------Vous Avez Perdu !-------------------------" << std::endl;
-            restartGame(model);
+            lifes--;
             break;
         case CONTINUE :
             break;
         default : {}
     }
 
-    return true;
+    return state;
 }
 
 //////////////////printModel()////////////////////
@@ -136,10 +129,10 @@ void printModel(GameModel *model)
     }
 
     // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
-    tempTarget += '|';
-    tempReached += " |    \"@@@\" Représente la position du mineur dans la Matrice";
+    tempTarget += "|    \"{x}\" Représente une case avec un bonus";
+    tempReached += " |    \"@@@\" Représente la position du mineur";
     tempScore += "|    \"   \" Représente une case déjà visitée";
-    tempLifes += '|';
+    tempLifes += "|    \" * \" Représente une bombe";
 
     // On affiche le tout
     std::cout << model->toString() << std::endl
@@ -153,14 +146,39 @@ void printModel(GameModel *model)
 int main()
 {
     srand(time(NULL)); // Initialise l'aléatoire
-    GameModel *model = new GameModel(20, 20, 0.2, 10, 5);
+    GameModel *realModel;
+    GameModel *modelForGame;
+    GameState state = CONTINUE;
+    int lifes = 5;
 
-    printModel(model);
+    realModel = new GameModel(20, 20, 0.2, 10, 5);
 
-    while(menu(model)) // Tantque le jeu continu => Le joueur ne souhaite pas quitter
-        printModel(model);
+    while(state != QUIT)
+    {
+        modelForGame = new GameModel(*realModel);
 
-    delete model;
+        printModel(modelForGame);
+        state = menu(modelForGame, lifes);
+
+        while(state != QUIT && state != LOST && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
+        {
+            printModel(modelForGame);
+            state = menu(modelForGame, lifes);
+        }
+
+        if(lifes < 1 && state != QUIT)
+        {
+            std::cout << "-------------------------Game Over-------------------------" << std::endl;
+
+            lifes = 5;
+            delete realModel;
+            realModel = new GameModel(20, 20, 0.2, 10, 5);
+        }
+
+        delete modelForGame;
+    }
+
+    delete realModel;
 
     return EXIT_SUCCESS;
 }

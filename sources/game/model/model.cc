@@ -42,6 +42,17 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    }
 }
 
+GameModel::GameModel(const GameModel &m)
+{
+    Board = m.Board;
+    Digger = m.Digger;
+    Target = m.Target;
+    Reached = m.Reached;
+    Score = m.Score;
+    Bonus_score = m.Bonus_score;
+    Bonus_lifes = m.Bonus_lifes;
+}
+
 GameModel::~GameModel()
 {
    for (auto & column : Board)
@@ -56,36 +67,20 @@ GameModel::~GameModel()
 
 GameState GameModel::move(int dx, int dy)
 {
-   if (State == CONTINUE)
-   {
-      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
-      {
-	 State = LOST;
-      }
-      else if (Reached >= Target)
-      {
-	 State = WON;
-      }
-   }
+    if (State == CONTINUE)
+    {
+        if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+        {
+            State = LOST;
+        }
+        else if (Reached >= Target)
+        {
+            State = WON;
+        }
+    }
 
-   return State;
+    return State;
 }
-
-// GameState GameModel::move(int dx, int dy)
-// {
-//     GameState tempState = LOST;
-
-//     if(!digAt(Digger.x + dx, Digger.y + dy, dx, dy) && !isOutOfRange(Digger.x + dx, Digger.y + dy) && Board[Digger.x + dx][Digger.y + dy]->type() != "digged")
-//         tempState = CONTINUE;
-//     else
-//         tempState = LOST;
-
-//     if(Reached >= Target)
-//         tempState = WON;
-
-//     return tempState;
-// }
-
 
 Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
 {
@@ -200,23 +195,12 @@ void GameModel::replaceSquare(int x, int y, Square * newone)
 // Accesseurs :
 
 unsigned GameModel::getTarget() const
-{
-   return Target;
-}
+{ return Target; }
 
 unsigned GameModel::getReached() const
-{
-   return Reached;
-}
+{ return Reached; }
 
 unsigned GameModel::getScore() const
-{
-   return Score;
-}
-
-// unsigned GameModel::getLifes() const
-// {
-//    return Lifes;
-// }
+{ return Score; }
 
 

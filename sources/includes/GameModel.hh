@@ -14,7 +14,8 @@ namespace diggewrong
    {
         WON,
         CONTINUE,
-        LOST
+        LOST,
+        QUIT
    };
 
    struct point
@@ -25,59 +26,58 @@ namespace diggewrong
 
    class GameModel
    {
-      friend class Square;
 
-   private:
-      std::vector< std::vector<Square*> > Board;
+    friend class Square;
 
-      point Digger;
+    private:
+        std::vector< std::vector<Square*> > Board;
 
-      unsigned Target;
-      unsigned Reached;
+        point Digger;
 
-      unsigned Score;
-      //unsigned Lifes;
-      //unsigned Timelimit;
+        unsigned Target;
+        unsigned Reached;
 
-      unsigned Bonus_score;
-      unsigned Bonus_lifes;
-      //unsigned Bonus_time;
+        unsigned Score;
+        //unsigned Lifes;
+        //unsigned Timelimit;
 
-      GameState State = CONTINUE;
+        unsigned Bonus_score;
+        unsigned Bonus_lifes;
+        //unsigned Bonus_time;
 
-      Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
+        GameState State = CONTINUE;
 
-   public:
-      GameModel(unsigned width, unsigned height, double difficulty
-		,unsigned target, unsigned lifes);
+        Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
 
-      ~GameModel();
+    public:
+        GameModel(unsigned width, unsigned height, double difficulty, unsigned target, unsigned lifes);
+        GameModel(const GameModel &m);
 
-      //void play();
-      //void pause();
+        ~GameModel();
 
-      GameState move(int dx, int dy);
+        //void play();
+        //void pause();
 
-      const std::string toString() const;
-      static std::string intToString(const int &e);
+        GameState move(int dx, int dy);
 
-      void addBonusScore(unsigned score);
-      void addBonusLifes(unsigned lifes);
+        const std::string toString() const;
+        static std::string intToString(const int &e);
+
+        void addBonusScore(unsigned score);
+        void addBonusLifes(unsigned lifes);
 
 
-      bool isOutOfRange(int x, int y) const;
-      bool digAt(int x, int y
-		 ,int dx = 0, int dy = 0, int distance = -1);
+        bool isOutOfRange(int x, int y) const;
+        bool digAt(int x, int y
+         ,int dx = 0, int dy = 0, int distance = -1);
 
-      void replaceSquare(int x, int y, Square * newone);
+        void replaceSquare(int x, int y, Square * newone);
 
-      //Accesseurs
-      unsigned getTarget()  const;
-      unsigned getReached() const;
-      unsigned getScore()   const;
-      //unsigned getLifes  () const;
-      point    getDigger()  const;
-      
+        //Accesseurs
+        unsigned getTarget()  const;
+        unsigned getReached() const;
+        unsigned getScore()   const;
+        point    getDigger()  const;
    };
 }
 
