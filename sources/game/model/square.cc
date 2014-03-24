@@ -7,7 +7,6 @@ using namespace diggewrong;
 // Square
 //
 
-
 void Square::retain()
 {
    Retain_count++;
@@ -24,35 +23,25 @@ void Square::release()
 Square::~Square()
 {}
 
-int Square::value() const
-{
-   return -1;
-}
-
-
-
 //
 // Digged
 //
 
 bool Digged::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
-{
-   return true;
-}
-
-const std::string & Digged::type() const
-{
-   return Type;
-}
+{ return true; }
 
 const std::string Digged::toString() const
 { return "   "; }
 
-
+Square* Digged::clone()
+{ return new Digged; }
 
 //
 // Normal
 //
+
+Normal::Normal()
+{}
 
 Normal::Normal(double difficulty, unsigned longestside)
 {
@@ -63,18 +52,11 @@ Normal::Normal(double difficulty, unsigned longestside)
    Value = max*r + 1;
 }
 
-int Normal::value() const
-{
-   return Value;
-}
-
-const std::string & Normal::type() const
-{
-   return Type;
-}
+Normal::Normal(const Normal & other)
+{ Value = other.Value; }
 
 const std::string Normal::toString() const
-{ return ' ' + GameModel::intToString(value()) + ' '; }
+{ return ' ' + GameModel::intToString(Value) + ' '; }
 
 bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 {
@@ -94,6 +76,8 @@ bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
    else return false;
 }
 
+Square* Normal::clone()
+{ return new Normal(*this); }
 
 //
 // Bonus
@@ -119,6 +103,13 @@ Bonus::Bonus(double difficulty, unsigned longestside)
    }
 }
 
+Bonus::Bonus(const Bonus & other)
+{
+    Lifes = other.Lifes;
+    Score = other.Score;
+    Value = other.Value;
+}
+
 bool Bonus::dig(GameModel & m, int x, int y
 		 ,int dx, int dy, int distance)
 {
@@ -128,19 +119,13 @@ bool Bonus::dig(GameModel & m, int x, int y
    return Normal::dig(m,x,y,dx,dy,distance);
 }
 
-const std::string & Bonus::type() const
-{
-   return Type;
-}
-
 const std::string Bonus::toString() const
 {
-   return '{' + GameModel::intToString(Normal::value()) + '}';
+   return '{' + GameModel::intToString(Value) + '}';
 }
 
-
-
-
+Square* Bonus::clone()
+{ return new Bonus(*this); }
 
 //
 // Bomb
@@ -152,13 +137,11 @@ bool Bomb::dig(GameModel & m, int x, int y
    return true;
 }
 
-const std::string & Bomb::type() const
-{
-   return Type;
-}
-
 const std::string Bomb::toString() const
 { return " * "; }
+
+Square* Bomb::clone()
+{ return new Bomb; }
 
 
 

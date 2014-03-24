@@ -42,9 +42,18 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    }
 }
 
-GameModel::GameModel(const GameModel &m)
+GameModel::GameModel(const GameModel &m) : Board(m.Board.size())
 {
-    Board = m.Board;
+    for(unsigned i = 0; i<m.Board.size(); i++)
+    {
+        Board[i].resize(m.Board[0].size());
+
+        for(unsigned j = 0; j<m.Board[0].size(); j++)
+        {
+            Board[i][j] = m.Board[i][j]->clone();
+        }
+    }
+
     Digger = m.Digger;
     Target = m.Target;
     Reached = m.Reached;
@@ -59,7 +68,7 @@ GameModel::~GameModel()
    {
       for (auto & square : column)
       {
-	 square -> release();
+        square -> release();
       }
    }
 }
@@ -159,8 +168,8 @@ bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
       Digger.y = y;
       Reached++;
 
-      const unsigned value = square -> value();
-      if (value > 0) Score += value * 10;
+      /*const unsigned value = square -> value();
+      if (value > 0) Score += value * 10;*/
 
       square -> retain();
       const bool ret = square -> dig(*this,x,y,dx,dy,distance);

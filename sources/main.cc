@@ -90,6 +90,8 @@ GameState menu(GameModel *model, int &lifes)
         case LOST :
             std::cout << "-------------------------Vous Avez Perdu !-------------------------" << std::endl;
             lifes--;
+            if(lifes < 1)
+                std::cout << "-----------------------------Game Over-----------------------------" << std::endl;
             break;
         case CONTINUE :
             break;
@@ -105,15 +107,12 @@ GameState menu(GameModel *model, int &lifes)
 //Description : Affiche un modèle               //
 //Auteur : Nicolas Gomez                        //
 //////////////////////////////////////////////////
-void printModel(GameModel *model)
+void printModel(GameModel *model, int lifes)
 {
     std::string tempTarget = "Cible a atteindre : " + GameModel::intToString(model->getTarget());       //
     std::string tempReached = "Nombre de déplacement : " + GameModel::intToString(model->getReached()); //  On créé les lignes de statu
     std::string tempScore = "Votre Score : " + GameModel::intToString(model->getScore());               //
-
-    // je vient de percuter mais le nombre de vies ne peut pas être gérer au niveau du model
-    // puisque une instance du model ne représente qu'un niveau
-    std::string tempLifes = "Vies Restantes : kikou ! retrouve moi ligne <123>";// GameModel::intToString(model->getLifes());            //
+    std::string tempLifes = "Vies Restantes : " + GameModel::intToString(lifes);                        //
 
     // On rends le résultat potable en ramenant chaque ligne de statu à la même longueur
     while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempLifes.length() < DECALAGE_CONSOLE)
@@ -157,20 +156,19 @@ int main()
     {
         modelForGame = new GameModel(*realModel);
 
-        printModel(modelForGame);
+        printModel(modelForGame, lifes);
         state = menu(modelForGame, lifes);
 
-        while(state != QUIT && state != LOST && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
+        while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
         {
-            printModel(modelForGame);
+            printModel(modelForGame, lifes);
             state = menu(modelForGame, lifes);
         }
 
-        if(lifes < 1 && state != QUIT)
+        if((lifes < 1 && state != QUIT) || state == WON)
         {
-            std::cout << "-------------------------Game Over-------------------------" << std::endl;
-
-            lifes = 5;
+            if(state != WON)
+                lifes = 5;
             delete realModel;
             realModel = new GameModel(20, 20, 0.2, 10, 5);
         }

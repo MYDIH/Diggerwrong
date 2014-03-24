@@ -7,94 +7,84 @@
 
 namespace diggewrong
 {
-   class GameModel;
+    class GameModel;
 
-   class Square
-   {
-   private:
-      unsigned Retain_count = 1;
+    /*template<class C>
+    C* clone(const C & objectToClone)
+    { return new C(objectToClone); }*/
 
-   public:
-      virtual ~Square();
+    class Square
+    {
+        private:
+          unsigned Retain_count = 1;
 
-      virtual int value()                const; // -1 si non implémenté
-      virtual const std::string & type() const = 0;
-      // bomb, normal, bonus, digged...
+        public:
+          virtual ~Square();
 
-      virtual bool dig(GameModel & model, int x, int y
-		       ,int dx=0, int dy=0, int distance=-1) = 0;
-      virtual const std::string toString() const = 0;
+          virtual bool dig(GameModel & model, int x, int y
+                   ,int dx=0, int dy=0, int distance=-1) = 0;
+          virtual const std::string toString() const = 0;
+          virtual Square * clone() = 0;
 
-      void retain();
-      void release();
-   };
-
-
-   class Normal : public Square
-   {
-   private:
-      std::string Type = "normal";
-      unsigned Value;
-
-   public:
-      Normal(double difficulty, unsigned longestside);
-
-      int value()                const override;
-      const std::string & type() const override;
-      const std::string toString() const override;
-
-      bool dig(GameModel & model, int x, int y
-	       ,int dx, int dy, int distance) override;
-
-   };
-
-   class Bonus : public Normal
-   {
-   private:
-      std::string Type = "bonus";
-
-      unsigned Lifes;
-      unsigned Score;
-
-   public:
-      Bonus(double difficulty, unsigned longestside);
-
-      const std::string & type() const override;
-      const std::string toString() const override;
-
-      bool dig(GameModel & model, int x, int y
-	       ,int dx, int dy, int distance) override;
-
-   };
-
-   class Digged : public Square
-   {
-   private:
-      std::string Type = "digged";
-
-   public:
-      const std::string & type() const override;
-      const std::string toString() const override;
-
-      bool dig(GameModel & model, int x, int y
-	       ,int dx, int dy, int distance) override;
-
-   };
+          void retain();
+          void release();
+    };
 
 
-   class Bomb : public Square
-   {
-   private:
-      std::string Type = "bomb";
+    class Normal : public Square
+    {
+        protected:
+          unsigned Value;
 
-   public:
-      const std::string & type() const override;
-      const std::string toString() const override;
+        public:
+          Normal();
+          Normal(double difficulty, unsigned longestside);
+          Normal(const Normal & other);
 
-      bool dig(GameModel & model, int x, int y
-	       ,int dx, int dy, int distance) override;
+          const std::string toString() const override;
 
-   };
+          bool dig(GameModel & model, int x, int y
+               ,int dx, int dy, int distance) override;
+          Square * clone() override;
+    };
+
+    class Bonus : public Normal
+    {
+        private:
+          unsigned Lifes;
+          unsigned Score;
+
+        public:
+          Bonus(double difficulty, unsigned longestside);
+          Bonus(const Bonus & other);
+
+          const std::string toString() const override;
+
+          bool dig(GameModel & model, int x, int y
+               ,int dx, int dy, int distance) override;
+          Square * clone() override;
+    };
+
+    class Digged : public Square
+    {
+        public:
+          const std::string toString() const override;
+
+          bool dig(GameModel & model, int x, int y
+               ,int dx, int dy, int distance) override;
+          Square * clone() override;
+    };
+
+
+    class Bomb : public Square
+    {
+        public:
+          const std::string toString() const override;
+
+          bool dig(GameModel & model, int x, int y
+               ,int dx, int dy, int distance) override;
+          Square * clone() override;
+    };
 
 
 }
