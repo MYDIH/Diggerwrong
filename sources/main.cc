@@ -128,10 +128,10 @@ void printModel(GameModel *model, int lifes)
     }
 
     // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
-    tempTarget += "|    \"{x}\" Représente une case avec un bonus";
-    tempReached += " |    \"@@@\" Représente la position du mineur";
+    tempTarget += "|    \"☾x☽\" Représente une case avec un bonus";
+    tempReached += " |    \" ☉ \" Représente la position du mineur";
     tempScore += "|    \"   \" Représente une case déjà visitée";
-    tempLifes += "|    \" * \" Représente une bombe";
+    tempLifes += "|    \" ☠ \" Représente une bombe";
 
     // On affiche le tout
     std::cout << model->toString() << std::endl
@@ -150,7 +150,7 @@ int main()
     GameState state = CONTINUE;
     int lifes = 5;
 
-    realModel = new GameModel(20, 20, 0.2, 10, 5);
+    realModel = new GameModel(18, 18, 0.2, 10, 5);
 
     while(state != QUIT)
     {

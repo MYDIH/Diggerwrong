@@ -40,6 +40,10 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
 	 square = newRandomSquare(difficulty, longestside);
       }
    }
+
+   Square * tmp = new Digged;
+   replaceSquare(Digger.x, Digger.y, tmp);
+   tmp -> release();
 }
 
 GameModel::GameModel(const GameModel &m) : Board(m.Board.size())
@@ -103,40 +107,38 @@ Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
    else                          return new Normal(difficulty, longestside); // normal
 }
 
-
 const std::string GameModel::toString() const
 {
-   std::string tempString = "";
-   std::string tempLine = "";
+    std::string tempString = "";
+    std::string tempLine = "";
 
-   tempLine += "+";
-   for(unsigned i=0; i<Board[0].size(); i++)
-      tempLine += "---";
-   tempLine += "+";
+    tempLine += "+";
+    for(unsigned i=0; i<Board[0].size(); i++)
+        tempLine += "----";
+    tempLine.pop_back();
+    tempLine += "+";
 
-   for(unsigned i=0; i<Board.size(); i++)
-   {
-      for(unsigned j=0; j<Board[i].size(); j++)
-      {
-	 if(i == 0 && j == 0)
-	    tempString += tempLine + '\n';
-	 if(j == 0)
-	    tempString += '|';
-	 if(i == Digger.x && j == Digger.y)
-	    tempString += "@@@";
-	 else
-	    tempString += Board[i][j]->toString();
-	 if(j == Board[i].size() - 1)
-	    tempString += '|';
-      }
-      tempString += '\n';
-      if(i == Board.size() - 1)
-	 tempString += tempLine;
-   }
+    for(unsigned i=0; i<Board.size(); i++)
+    {
+        for(unsigned j=0; j<Board[i].size(); j++)
+        {
+        if(i == 0 && j == 0)
+            tempString += tempLine + '\n';
+        tempString += '|';
+        if(i == Digger.x && j == Digger.y)
+            tempString += " ☉ ";
+        else
+            tempString += Board[i][j]->toString();
+        if(j == Board[i].size() - 1)
+            tempString += '|';
+        }
+        tempString += '\n';
+        if(i == Board.size() - 1)
+        tempString += tempLine;
+    }
 
-   return tempString;
+    return tempString;
 }
-
 
 std::string GameModel::intToString(const int &e)
 {
@@ -168,15 +170,17 @@ bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
       Digger.y = y;
       Reached++;
 
-      /*const unsigned value = square -> value();
-      if (value > 0) Score += value * 10;*/
-
       square -> retain();
       const bool ret = square -> dig(*this,x,y,dx,dy,distance);
       square -> release();
 
       return ret;
    }
+}
+
+void GameModel::addScore(unsigned score)
+{
+  Score += score;
 }
 
 void GameModel::addBonusScore(unsigned score)

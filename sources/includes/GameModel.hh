@@ -63,8 +63,10 @@ namespace diggewrong
         const std::string toString() const;
         static std::string intToString(const int &e);
 
-        void addBonusScore(unsigned score);
-        void addBonusLifes(unsigned lifes);
+
+	void addScore(unsigned score);
+	void addBonusScore(unsigned score);
+	void addBonusLifes(unsigned lifes);
 
 
         bool isOutOfRange(int x, int y) const;

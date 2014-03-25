@@ -2,7 +2,6 @@
 
 using namespace diggewrong;
 
-
 //
 // Square
 //
@@ -60,19 +59,20 @@ const std::string Normal::toString() const
 
 bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 {
+  m.addScore(Value*10);
+
    // si distance < 0, on est la première case visité du tour, on lance donc le déplacement
    if(distance < 0)
    {
         distance = Value - 1;
-        Square * tempDigged = new Digged;
-        m.replaceSquare(x - dx, y - dy, tempDigged);
    }
 
    Square * digged = new Digged;
    m.replaceSquare(x, y, digged);
+   digged -> release();
 
    if (distance > 0 and (dx != 0 or dy != 0))
-      return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
+     return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
    else return false;
 }
 
@@ -121,7 +121,7 @@ bool Bonus::dig(GameModel & m, int x, int y
 
 const std::string Bonus::toString() const
 {
-   return '{' + GameModel::intToString(Value) + '}';
+   return "☾" + GameModel::intToString(Value) + "☽";
 }
 
 Square* Bonus::clone()
@@ -138,7 +138,7 @@ bool Bomb::dig(GameModel & m, int x, int y
 }
 
 const std::string Bomb::toString() const
-{ return " * "; }
+{ return " ☠ "; }
 
 Square* Bomb::clone()
 { return new Bomb; }
