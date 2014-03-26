@@ -50,7 +50,7 @@ namespace diggewrong
         Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
 
     public:
-        GameModel(unsigned width, unsigned height, double difficulty, unsigned target, unsigned lifes);
+	GameModel(unsigned width, unsigned height, double difficulty, unsigned target);
         GameModel(const GameModel &m);
 
         ~GameModel();

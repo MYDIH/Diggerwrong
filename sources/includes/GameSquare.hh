@@ -23,6 +23,7 @@ namespace diggewrong
 
           virtual bool dig(GameModel & model, int x, int y
                    ,int dx=0, int dy=0, int distance=-1) = 0;
+
           virtual const std::string toString() const = 0;
           virtual Square * clone() = 0;
 
@@ -88,4 +89,8 @@ namespace diggewrong
 
 
 }
+
+
+
+
 

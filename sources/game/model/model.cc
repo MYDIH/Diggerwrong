@@ -11,7 +11,7 @@
 using namespace diggewrong;
 
 GameModel::GameModel(unsigned width, unsigned height, double difficulty
-                     ,unsigned target, unsigned lifes)
+                     ,unsigned target)
 
 
    :Board(width)

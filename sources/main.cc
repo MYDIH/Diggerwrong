@@ -150,7 +150,7 @@ int main()
     GameState state = CONTINUE;
     int lifes = 5;
 
-    realModel = new GameModel(18, 18, 0.2, 10, 5);
+    realModel = new GameModel(18, 18, 0.2, 10);
 
     while(state != QUIT)
     {
@@ -170,7 +170,7 @@ int main()
             if(state != WON)
                 lifes = 5;
             delete realModel;
-            realModel = new GameModel(20, 20, 0.2, 10, 5);
+            realModel = new GameModel(20, 20, 0.2, 10);
         }
 
         delete modelForGame;
