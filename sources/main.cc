@@ -1,7 +1,10 @@
 #include "GameModel.hh"
 #include "GameObserver.hh"
+#include "MainLoop.hh"
+
 #include <cstdlib>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <locale>
 
@@ -142,43 +145,65 @@ void printModel(GameModel *model, int lifes)
               << tempLifes << std::endl << std::endl;
 }
 
-int main()
+int textMain()
+{
+   GameModel *realModel;
+   GameModel *modelForGame;
+   GameState state = CONTINUE;
+   int lifes = 5;
+
+   realModel = new GameModel(18, 18, 0.2, 10);
+
+   while(state != QUIT)
+   {
+      modelForGame = new GameModel(*realModel);
+
+      printModel(modelForGame, lifes);
+      state = menu(modelForGame, lifes);
+
+      while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
+      {
+	 printModel(modelForGame, lifes);
+	 state = menu(modelForGame, lifes);
+      }
+
+      if((lifes < 1 && state != QUIT) || state == WON)
+      {
+	 if(state != WON)
+	    lifes = 5;
+	 delete realModel;
+	 realModel = new GameModel(20, 20, 0.2, 10);
+      }
+
+      delete modelForGame;
+   }
+
+   delete realModel;
+
+   return EXIT_SUCCESS;
+}
+
+
+int guiMain()
+{
+   MainLoop loop("Salute", 20);
+
+   loop.run();
+
+   return EXIT_SUCCESS;
+}
+
+
+int main(int argc, char ** argv)
 {
     srand(time(NULL)); // Initialise l'aléatoire
-    GameModel *realModel;
-    GameModel *modelForGame;
-    GameState state = CONTINUE;
-    int lifes = 5;
 
-    realModel = new GameModel(18, 18, 0.2, 10);
+    if (argc > 1 && strcmp(argv[1], "--gui") == 0)
+       return guiMain();
+    else
+       return textMain();
 
-    while(state != QUIT)
-    {
-        modelForGame = new GameModel(*realModel);
-
-        printModel(modelForGame, lifes);
-        state = menu(modelForGame, lifes);
-
-        while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
-        {
-            printModel(modelForGame, lifes);
-            state = menu(modelForGame, lifes);
-        }
-
-        if((lifes < 1 && state != QUIT) || state == WON)
-        {
-            if(state != WON)
-                lifes = 5;
-            delete realModel;
-            realModel = new GameModel(20, 20, 0.2, 10);
-        }
-
-        delete modelForGame;
-    }
-
-    delete realModel;
-
-    return EXIT_SUCCESS;
 }
+
 
 

@@ -1,6 +1,6 @@
 # options du compilateur
 CXX      = g++
-CXXFLAGS = -Wall -iquote sources/includes -std=c++11
+CXXFLAGS = -Wall -iquote sources/includes -std=c++11 -lsfml-window -lsfml-system
 
 # constantes
 buildir = Builds
