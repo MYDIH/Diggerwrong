@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include "Constantes.hh"
 
 // debug
 #include <iostream>
@@ -111,26 +112,27 @@ const std::string GameModel::toString() const
 {
     std::string tempString = "";
     std::string tempLine = "";
+    std::string greyPipe = COLOR_GRAY + '|' + RESET_COLOR;
 
-    tempLine += "+";
+    tempLine += COLOR_GRAY + "+";
     for(unsigned i=0; i<Board[0].size(); i++)
         tempLine += "----";
     tempLine.pop_back();
-    tempLine += "+";
+    tempLine += "+" + RESET_COLOR;
 
     for(unsigned i=0; i<Board.size(); i++)
     {
         for(unsigned j=0; j<Board[i].size(); j++)
         {
-        if(i == 0 && j == 0)
-            tempString += tempLine + '\n';
-        tempString += '|';
-        if(i == Digger.x && j == Digger.y)
-            tempString += " ☉ ";
-        else
-            tempString += Board[i][j]->toString();
-        if(j == Board[i].size() - 1)
-            tempString += '|';
+            if(i == 0 && j == 0)
+                tempString += tempLine + '\n';
+            tempString += greyPipe;
+            if(i == Digger.x && j == Digger.y)
+                tempString += " ☉ ";
+            else
+                tempString += COLOR_CYAN + Board[i][j]->toString() + RESET_COLOR;
+            if(j == Board[i].size() - 1)
+                tempString += greyPipe;
         }
         tempString += '\n';
         if(i == Board.size() - 1)

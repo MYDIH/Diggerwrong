@@ -4,8 +4,7 @@
 #include <string>
 #include <iostream>
 #include <locale>
-
-const unsigned DECALAGE_CONSOLE = 35; // Distance entre Statu et Explications
+#include "Constantes.hh"
 
 using namespace diggewrong;
 
@@ -15,7 +14,7 @@ using namespace diggewrong;
 ////////////////////////////////////////////////
 void afficherMenu()
 {
-    std::cout << "Pour se déplacer dans les 8 directions : O,N,E,S,NO,NE,SO,SE" << std::endl
+    std::cout << "Pour se déplacer dans les 8 directions : O,N,E,S,NO,NE,SO,SE ou 4,8,6,2,7,9,3,1" << std::endl
               << "Quitter le jeu : Q" << std::endl;
 }
 
@@ -56,27 +55,27 @@ GameState menu(GameModel *model, int &lifes)
         rightStr = true;
         toLowerCase(tempStr); // On Décapitalise
 
-        if(tempStr == "o")
+        if(tempStr == "o" || tempStr == GameModel::intToString(4))
             state = model->move(0, -1);
-        else if(tempStr == "n")
+        else if(tempStr == "n" || tempStr == GameModel::intToString(8))
             state = model->move(-1, 0);
-        else if(tempStr == "e")
+        else if(tempStr == "e" || tempStr == GameModel::intToString(6))
             state = model->move(0, 1);
-        else if(tempStr == "s")
+        else if(tempStr == "s" || tempStr == GameModel::intToString(2))
             state = model->move(1, 0);
-        else if(tempStr == "no")
+        else if(tempStr == "no" || tempStr == GameModel::intToString(7))
             state = model->move(-1, -1);
-        else if(tempStr == "ne")
+        else if(tempStr == "ne" || tempStr == GameModel::intToString(9))
             state = model->move(-1, 1);
-        else if(tempStr == "so")
-            state = model->move(1, -1);
-        else if(tempStr == "se")
+        else if(tempStr == "se" || tempStr == GameModel::intToString(3))
             state = model->move(1, 1);
+        else if(tempStr == "so" || tempStr == GameModel::intToString(1))
+            state = model->move(1, -1);
         else if(tempStr == "q")
             return QUIT; // On quitte le jeu
         else
         {
-            std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE ou Q !" << std::endl;
+            std::cout << "Veuillez entrer O,N,E,S,NO,NE,SO,SE,4,8,6,2,7,9,3,1 ou Q !" << std::endl;
             std::cin >> tempStr;
             rightStr = false;
         }
@@ -128,10 +127,10 @@ void printModel(GameModel *model, int lifes)
     }
 
     // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
-    tempTarget += "|    \"☾x☽\" Représente une case avec un bonus";
+    tempTarget += "|    \"" + COLOR_YELLOW + "☾x☽" + RESET_COLOR + "\" Représente une case avec un bonus";
     tempReached += " |    \" ☉ \" Représente la position du mineur";
     tempScore += "|    \"   \" Représente une case déjà visitée";
-    tempLifes += "|    \" ☠ \" Représente une bombe";
+    tempLifes += "|    \" " + COLOR_RED + "☠" + RESET_COLOR + " \" Représente une bombe";
 
     // On affiche le tout
     std::cout << model->toString() << std::endl
@@ -170,7 +169,7 @@ int main()
             if(state != WON)
                 lifes = 5;
             delete realModel;
-            realModel = new GameModel(20, 20, 0.2, 10, 5);
+            realModel = new GameModel(18, 18, 0.2, 10, 5);
         }
 
         delete modelForGame;

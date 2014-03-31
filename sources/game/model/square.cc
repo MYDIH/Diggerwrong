@@ -121,7 +121,7 @@ bool Bonus::dig(GameModel & m, int x, int y
 
 const std::string Bonus::toString() const
 {
-   return "☾" + GameModel::intToString(Value) + "☽";
+   return COLOR_YELLOW + "☾" + GameModel::intToString(Value) + "☽" + RESET_COLOR;
 }
 
 Square* Bonus::clone()
@@ -138,7 +138,7 @@ bool Bomb::dig(GameModel & m, int x, int y
 }
 
 const std::string Bomb::toString() const
-{ return " ☠ "; }
+{ return COLOR_RED + " ☠ " + RESET_COLOR; }
 
 Square* Bomb::clone()
 { return new Bomb; }
