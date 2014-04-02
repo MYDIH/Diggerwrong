@@ -7,25 +7,27 @@
 namespace diggewrong
 {
 
-   class MainLoop
+   class EventHandler
    {
    private:
-      sf::Window Window;
-
-
-      void (& Draw_handler)(const T &) = NULL;
-
+      int call(sf::Event t);
 
    public:
-      MainLoop(const std::string & window_title, unsigned max_fps);
+      //MainLoop();
 
-      void run();
-      void draw();
+      int run(sf::Window & w);
 
-      void hook( void (& handler)(const T &) )
-      {
-      }
+
+      /* Evenements */
+      virtual int draw(sf::Window & w) = 0;
+      virtual int mouseButtonPressed(sf::Event::MouseButtonEvent e)  = 0;
+      virtual int mouseButtonReleased(sf::Event::MouseButtonEvent e) = 0;
+
+      virtual int closed();
    
+
+
+
    };
 
 
