@@ -28,19 +28,21 @@ nouvelles cases.
 # blablabla
 # blabla..
 
+* Événements externes :
+ - Lancement du programme
+ - Entrer commande (4,8,6,2,7,9,3,1,o,n,e,s,no,ne,se,so,O,N,E,S,NO,NE,SE,SO,q,Q)
+ - Quitter terminal
 
+* Événements résultat :
+ - Afficher Modèle
+ - Afficher Menu
+ - Afficher Erreur
+ - Afficher Demande Utilisateur
+ - Afficher statu du jeu
 
-* Événements externes
-
-une jolie liste :
-- bla
-- bla
-- blala
-
-* Événements résultat
-
-# ...
-
-* Règles du jeu convenues
-
-# ...
+* Règles du jeu convenues :
+Le temps sera représenté par une classe de chronomètre instanciée dans le modèle et qui sera donc représentative du temps passé dans le niveau de jeu courant (étant donné que le modèle représente un niveau).
+Associé a ce chronomètre, un délai. Une fois ce délai dépassé, le chronomètre en notifie le modèle et celui-ci agit en conséquence en arrêtant la partie courante et en redémarrant une nouvelle partie sur un
+niveau identique avec pour seule différence la perte d'une vie et la réinitialisation du score. 
+Les Cases bonus peuvent suivant le cas (aléatoire) donner soit un bonus d'une seule vie, soit donner un bonus de score. le bonus de score est calculé a la construction de la case grâce a une valeur aléatoire
+et un facteur de 100.
