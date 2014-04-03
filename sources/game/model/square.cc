@@ -29,7 +29,7 @@ Square::~Square()
 bool Digged::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 { return true; }
 
-const std::string Digged::toString() const
+const std::string Digged::toString(const int &charSet) const
 { return "   "; }
 
 Square* Digged::clone()
@@ -39,8 +39,8 @@ Square* Digged::clone()
 // Normal
 //
 
-Normal::Normal()
-{}
+Normal::Normal(unsigned val)
+{ Value = val; }
 
 Normal::Normal(double difficulty, unsigned longestside)
 {
@@ -54,8 +54,8 @@ Normal::Normal(double difficulty, unsigned longestside)
 Normal::Normal(const Normal & other)
 { Value = other.Value; }
 
-const std::string Normal::toString() const
-{ return ' ' + GameModel::intToString(Value) + ' '; }
+const std::string Normal::toString(const int &charSet) const
+{ return CHARS[charSet][7] + GameModel::intToString(Value) + CHARS[charSet][8]; }
 
 bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 {
@@ -83,6 +83,12 @@ Square* Normal::clone()
 // Bonus
 //
 
+Bonus::Bonus(unsigned val, unsigned life, unsigned score) : Normal(val)
+{
+    Lifes = life;
+    Score = score;
+}
+
 Bonus::Bonus(double difficulty, unsigned longestside)
    : Normal(difficulty, longestside)
 {
@@ -103,11 +109,10 @@ Bonus::Bonus(double difficulty, unsigned longestside)
    }
 }
 
-Bonus::Bonus(const Bonus & other)
+Bonus::Bonus(const Bonus & other) : Normal(other)
 {
     Lifes = other.Lifes;
     Score = other.Score;
-    Value = other.Value;
 }
 
 bool Bonus::dig(GameModel & m, int x, int y
@@ -119,9 +124,9 @@ bool Bonus::dig(GameModel & m, int x, int y
    return Normal::dig(m,x,y,dx,dy,distance);
 }
 
-const std::string Bonus::toString() const
+const std::string Bonus::toString(const int &charSet) const
 {
-   return COLOR_YELLOW + "☾" + GameModel::intToString(Value) + "☽" + RESET_COLOR;
+   return CHARS[charSet][1] + GameModel::intToString(Value) + CHARS[charSet][2];
 }
 
 Square* Bonus::clone()
@@ -137,8 +142,8 @@ bool Bomb::dig(GameModel & m, int x, int y
    return true;
 }
 
-const std::string Bomb::toString() const
-{ return COLOR_RED + " ☠ " + RESET_COLOR; }
+const std::string Bomb::toString(const int &charSet) const
+{ return CHARS[charSet][0]; }
 
 Square* Bomb::clone()
 { return new Bomb; }

@@ -108,17 +108,16 @@ Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
    else                          return new Normal(difficulty, longestside); // normal
 }
 
-const std::string GameModel::toString() const
+const std::string GameModel::toString(const int &charSet) const
 {
     std::string tempString = "";
     std::string tempLine = "";
-    std::string greyPipe = COLOR_GRAY + '|' + RESET_COLOR;
 
-    tempLine += COLOR_GRAY + "+";
+    tempLine += CHARS[charSet][4];
     for(unsigned i=0; i<Board[0].size(); i++)
         tempLine += "----";
     tempLine.pop_back();
-    tempLine += "+" + RESET_COLOR;
+    tempLine += CHARS[charSet][5];
 
     for(unsigned i=0; i<Board.size(); i++)
     {
@@ -126,13 +125,13 @@ const std::string GameModel::toString() const
         {
             if(i == 0 && j == 0)
                 tempString += tempLine + '\n';
-            tempString += greyPipe;
+            tempString += CHARS[charSet][6];
             if(i == Digger.x && j == Digger.y)
-                tempString += " ☉ ";
+                tempString += CHARS[charSet][3];
             else
-                tempString += COLOR_CYAN + Board[i][j]->toString() + RESET_COLOR;
+                tempString += Board[i][j]->toString(charSet);
             if(j == Board[i].size() - 1)
-                tempString += greyPipe;
+                tempString += CHARS[charSet][6];
         }
         tempString += '\n';
         if(i == Board.size() - 1)

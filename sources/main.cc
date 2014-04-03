@@ -106,7 +106,7 @@ GameState menu(GameModel *model, int &lifes)
 //Description : Affiche un modèle               //
 //Auteur : Nicolas Gomez                        //
 //////////////////////////////////////////////////
-void printModel(GameModel *model, int lifes)
+void printModel(GameModel *model, int lifes, const int &charSet)
 {
     std::string tempTarget = "Cible a atteindre : " + GameModel::intToString(model->getTarget());       //
     std::string tempReached = "Nombre de déplacement : " + GameModel::intToString(model->getReached()); //  On créé les lignes de statu
@@ -127,13 +127,13 @@ void printModel(GameModel *model, int lifes)
     }
 
     // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
-    tempTarget += "|    \"" + COLOR_YELLOW + "☾x☽" + RESET_COLOR + "\" Représente une case avec un bonus";
-    tempReached += " |    \" ☉ \" Représente la position du mineur";
+    tempTarget += "|    \"" + CHARS[charSet][1] + "x" + CHARS[charSet][2] + "\" Représente une case avec un bonus";
+    tempReached += " |    \"" + CHARS[charSet][3] + "\" Représente la position du mineur";
     tempScore += "|    \"   \" Représente une case déjà visitée";
-    tempLifes += "|    \" " + COLOR_RED + "☠" + RESET_COLOR + " \" Représente une bombe";
+    tempLifes += "|    \"" + CHARS[charSet][0] + "\" Représente une bombe";
 
     // On affiche le tout
-    std::cout << model->toString() << std::endl
+    std::cout << model->toString(charSet) << std::endl
               << std::endl
               << tempTarget << std::endl
               << tempReached << std::endl
@@ -141,13 +141,14 @@ void printModel(GameModel *model, int lifes)
               << tempLifes << std::endl << std::endl;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    srand(time(NULL)); // Initialise l'aléatoire
+    //srand(time(NULL)); // Initialise l'aléatoire
     GameModel *realModel;
     GameModel *modelForGame;
     GameState state = CONTINUE;
     int lifes = 5;
+    int charSet = 1;
 
     realModel = new GameModel(18, 18, 0.2, 10);
 
@@ -155,12 +156,12 @@ int main()
     {
         modelForGame = new GameModel(*realModel);
 
-        printModel(modelForGame, lifes);
+        printModel(modelForGame, lifes, charSet);
         state = menu(modelForGame, lifes);
 
         while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
         {
-            printModel(modelForGame, lifes);
+            printModel(modelForGame, lifes, charSet);
             state = menu(modelForGame, lifes);
         }
 
@@ -170,7 +171,7 @@ int main()
                 lifes = 5;
             delete realModel;
 
-            realModel = new GameModel(18, 18, 0.2, 10, 5);
+            realModel = new GameModel(18, 18, 0.2, 10);
         }
 
         delete modelForGame;

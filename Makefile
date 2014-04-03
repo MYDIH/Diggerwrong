@@ -29,7 +29,7 @@ $(buildir)/release/$(bin):	$(release)
 
 $(buildir)/unit/$(bin):		$(unit)
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -lboost_unit_test_framework -o $@ $^
 
 $(buildir)/debug/$(bin):	$(debug)
 	mkdir -p $(@D)

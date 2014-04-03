@@ -4,27 +4,30 @@
 #include <ctime>
 #include <string>
 
-typedef std::chrono::duration<double> seconds;
-typedef std::chrono::time_point<std::chrono::system_clock> systemclock;
-
-class GameChrono
+namespace diggewrong
 {
-    public:
-        GameChrono();
-        GameChrono(int delay);
-        GameChrono(const GameChrono& other);
+    typedef std::chrono::duration<double> seconds;
+    typedef std::chrono::time_point<std::chrono::system_clock> systemclock;
 
-        bool addDelay(const int & newDelay);
-        bool setDelay(const int & newDelay);
-        void start();
-        bool update();
-        int getTimeFC() const;
+    class GameChrono
+    {
+        public:
+            GameChrono();
+            GameChrono(int delay);
+            GameChrono(const GameChrono& other);
 
-        static std::string getCurrentTime();
+            bool addDelay(const int & newDelay);
+            bool setDelay(const int & newDelay);
+            void start();
+            bool update();
+            int getTimeFC() const;
 
-    private:
-        systemclock firstTime;
-        seconds timeFromConstruction;
-        int intTFC = 0;
-        int m_delay = 0;
-};
+            static std::string getCurrentTime();
+
+        private:
+            systemclock firstTime;
+            seconds timeFromConstruction;
+            int intTFC = 0;
+            int m_delay = 0;
+    };
+}

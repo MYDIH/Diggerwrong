@@ -8,26 +8,26 @@
 
 namespace diggewrong
 {
-   class Square;
+    class Square;
 
-   enum GameState
-   {
+    enum GameState
+    {
         WON,
         CONTINUE,
         LOST,
         QUIT
-   };
+    };
 
-   struct point
-   {
-      unsigned x;
-      unsigned y;
-   };
+    struct point
+    {
+        unsigned x;
+        unsigned y;
+    };
 
-   class GameModel
-   {
+    class GameModel
+    {
 
-    friend class Square;
+        friend class Square;
 
     private:
         std::vector< std::vector<Square*> > Board;
@@ -50,7 +50,7 @@ namespace diggewrong
         Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
 
     public:
-	GameModel(unsigned width, unsigned height, double difficulty, unsigned target);
+        GameModel(unsigned width, unsigned height, double difficulty, unsigned target);
         GameModel(const GameModel &m);
 
         ~GameModel();
@@ -60,18 +60,18 @@ namespace diggewrong
 
         GameState move(int dx, int dy);
 
-        const std::string toString() const;
+        const std::string toString(const int &charSet) const;
         static std::string intToString(const int &e);
 
 
-	void addScore(unsigned score);
-	void addBonusScore(unsigned score);
-	void addBonusLifes(unsigned lifes);
+        void addScore(unsigned score);
+        void addBonusScore(unsigned score);
+        void addBonusLifes(unsigned lifes);
 
 
         bool isOutOfRange(int x, int y) const;
         bool digAt(int x, int y
-         ,int dx = 0, int dy = 0, int distance = -1);
+                   ,int dx = 0, int dy = 0, int distance = -1);
 
         void replaceSquare(int x, int y, Square * newone);
 
@@ -80,6 +80,6 @@ namespace diggewrong
         unsigned getReached() const;
         unsigned getScore()   const;
         point    getDigger()  const;
-   };
+};
 }
 
