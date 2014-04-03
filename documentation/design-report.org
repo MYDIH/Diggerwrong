@@ -1,0 +1,46 @@
+#+TITLE: Rapport de projet : conception d'une implémentation du jeu "Puru-puru Digger"
+#+AUTHOR: Nicolas Gomez, Timothée Jourde
+#+LANGUAGE: fr
+
+
+/Se référer au sujet pour une description détaillé du jeu de référence./
+
+* Diagramme de contexte statique
+
+# ici le diagramme...
+
+Le jeu ici présenté dans ce document n'est pas un système complexe au regard des interactions
+avec l'extèrieur : il n'y a en effet qu'un seul acteur véritablement externe (le joueur).
+
+Quelques précisions :
+| système de saisie   | récupérer les commandes du joueur                  | périphériques de saisie (clavier, souris...), pilotes, système de fenêtrage... | | système d'affichage | répondre au joueur (afficher)                      | écran, pilotes graphiques, système de fenêtrage...                             | | horloge             | gérer un chronomètre                               |                                                                                | | système de stockage | sauvegarder des informations (réglages, scores...) | périphériques de stockage, système de fichier...                               | 
+* Diagramme de classes
+
+La conception est axée sur l'extensibilité et la simplicité. Le jeu de référence repose sur une grille
+composé de "cases" de différentes natures (bombes, bonus, normales...). L'ajout de fonctionalités se résume
+donc avant tout à l'ajout de nouveaux types de cases. La conception est donc centrée sur la classe =Square=
+et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement en implémentant de nouvelles
+classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
+nouvelles cases.
+
+# ici le diagramme...
+
+# blablabla
+# blabla..
+
+
+
+* Événements externes
+
+une jolie liste :
+- bla
+- bla
+- blala
+
+* Événements résultat
+
+# ...
+
+* Règles du jeu convenues
+
+# ...
