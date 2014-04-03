@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <string>
 
@@ -9,25 +9,34 @@ namespace diggewrong
 
    class EventHandler
    {
-   private:
-      int call(sf::Event t);
-
    public:
-      //MainLoop();
+      virtual ~EventHandler();
 
-      int run(sf::Window & w);
-
-
+      int run(sf::RenderWindow & w);
+      int call(sf::Event t);
+      
+      
+      
       /* Evenements */
-      virtual int draw(sf::Window & w) = 0;
+      virtual int draw(sf::RenderWindow & w) = 0;
       virtual int mouseButtonPressed(sf::Event::MouseButtonEvent e)  = 0;
       virtual int mouseButtonReleased(sf::Event::MouseButtonEvent e) = 0;
-
+      
       virtual int closed();
-   
+      
+      
+      
+      
+   };
 
-
-
+   class EventDemo : public EventHandler
+   {
+   private:
+      int x = -1, y = -1;
+   public:
+      int draw(sf::RenderWindow & w) override;
+      int mouseButtonPressed(sf::Event::MouseButtonEvent e)  override;
+      int mouseButtonReleased(sf::Event::MouseButtonEvent e) override;
    };
 
 

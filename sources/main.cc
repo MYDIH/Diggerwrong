@@ -1,6 +1,6 @@
 #include "GameModel.hh"
 #include "GameObserver.hh"
-#include "MainLoop.hh"
+#include "EventHandler.hh"
 
 #include <cstdlib>
 #include <string>
@@ -186,9 +186,12 @@ int textMain()
 
 int guiMain()
 {
-   MainLoop loop("Salute", 20);
+   sf::RenderWindow window(sf::VideoMode::GetDesktopMode(), "Demo !");
+   window.SetFramerateLimit(35);
+   EventDemo demo;
+   
 
-   loop.run();
+   std::cout << "\nrun() giving up with code : " << demo.run(window) << "\n";
 
    return EXIT_SUCCESS;
 }
