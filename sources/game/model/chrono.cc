@@ -1,6 +1,5 @@
 #include "GameChrono.hh"
 
-// ya tout ce qu'il faut dans la sfml, alors je sait pas si c'est utile ^^
 
 GameChrono::GameChrono(int delay)
 {

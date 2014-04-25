@@ -1,4 +1,4 @@
-#include "GameModel.hh"
+#include "Board.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -8,9 +8,7 @@
 #include <iostream>
 
 
-using namespace diggewrong;
-
-GameModel::GameModel(unsigned width, unsigned height, double difficulty
+Board::Board(unsigned width, unsigned height, double difficulty
                      ,unsigned target)
 
 
@@ -28,6 +26,8 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    ,Bonus_score(0)
    ,Bonus_lifes(0)
     //,Bonus_time(0)
+
+   ,State(CONTINUE)
 {
    const unsigned longestside = (width > height) ? width : height;
 
@@ -46,7 +46,7 @@ GameModel::GameModel(unsigned width, unsigned height, double difficulty
    tmp -> release();
 }
 
-GameModel::GameModel(const GameModel &m) : Board(m.Board.size())
+Board::Board(const Board &m) : Board(m.Board.size())
 {
     for(unsigned i = 0; i<m.Board.size(); i++)
     {
@@ -66,7 +66,7 @@ GameModel::GameModel(const GameModel &m) : Board(m.Board.size())
     Bonus_lifes = m.Bonus_lifes;
 }
 
-GameModel::~GameModel()
+Board::~Board()
 {
    for (auto & column : Board)
    {
@@ -78,7 +78,7 @@ GameModel::~GameModel()
 }
 
 
-GameState GameModel::move(int dx, int dy)
+GameState Board::move(int dx, int dy)
 {
     if (State == CONTINUE)
     {
@@ -95,7 +95,7 @@ GameState GameModel::move(int dx, int dy)
     return State;
 }
 
-Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
+Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
 
@@ -107,7 +107,7 @@ Square* GameModel::newRandomSquare(double difficulty, unsigned longestside)
    else                          return new Normal(difficulty, longestside); // normal
 }
 
-const std::string GameModel::toString() const
+const std::string Board::toString() const
 {
     std::string tempString = "";
     std::string tempLine = "";
@@ -140,7 +140,7 @@ const std::string GameModel::toString() const
     return tempString;
 }
 
-std::string GameModel::intToString(const int &e)
+std::string Board::intToString(const int &e)
 {
    std::ostringstream stream;
    stream << e;
@@ -148,7 +148,7 @@ std::string GameModel::intToString(const int &e)
    return stream.str();
 }
 
-bool GameModel::isOutOfRange(int x, int y) const
+bool Board::isOutOfRange(int x, int y) const
 {
    if (x >= 0 and y >= 0 and (unsigned)x < Board.size() and (unsigned)y < Board[0].size())
       return false;
@@ -156,7 +156,7 @@ bool GameModel::isOutOfRange(int x, int y) const
       return true;
 }
 
-bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
+bool Board::digAt(int x, int y, int dx, int dy, int distance)
 {
    if (isOutOfRange(x,y))
    {
@@ -178,23 +178,23 @@ bool GameModel::digAt(int x, int y, int dx, int dy, int distance)
    }
 }
 
-void GameModel::addScore(unsigned score)
+void Board::addScore(unsigned score)
 {
   Score += score;
 }
 
-void GameModel::addBonusScore(unsigned score)
+void Board::addBonusScore(unsigned score)
 {
    Bonus_score += score;
 }
 
-void GameModel::addBonusLifes(unsigned lifes)
+void Board::addBonusLifes(unsigned lifes)
 {
    Bonus_lifes += lifes;
 }
 
 
-void GameModel::replaceSquare(int x, int y, Square * newone)
+void Board::replaceSquare(int x, int y, Square * newone)
 {
    if (not isOutOfRange(x,y))
    {
@@ -207,13 +207,13 @@ void GameModel::replaceSquare(int x, int y, Square * newone)
 
 // Accesseurs :
 
-unsigned GameModel::getTarget() const
+unsigned Board::getTarget() const
 { return Target; }
 
-unsigned GameModel::getReached() const
+unsigned Board::getReached() const
 { return Reached; }
 
-unsigned GameModel::getScore() const
+unsigned Board::getScore() const
 { return Score; }
 
 
