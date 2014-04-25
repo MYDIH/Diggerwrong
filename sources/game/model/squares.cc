@@ -1,26 +1,5 @@
-#include "GameSquare.hh"
+#include "Square.hh"
 
-using namespace diggewrong;
-
-//
-// Square
-//
-
-void Square::retain()
-{
-   Retain_count++;
-}
-
-void Square::release()
-{
-   if (Retain_count == 1)
-      delete this;
-   else
-      Retain_count--;
-}
-
-Square::~Square()
-{}
 
 //
 // Digged
@@ -34,6 +13,7 @@ const std::string Digged::toString(const int &charSet) const
 
 Square* Digged::clone()
 { return new Digged; }
+
 
 //
 // Normal
@@ -78,6 +58,7 @@ bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
 
 Square* Normal::clone()
 { return new Normal(*this); }
+
 
 //
 // Bonus
@@ -131,6 +112,7 @@ const std::string Bonus::toString(const int &charSet) const
 
 Square* Bonus::clone()
 { return new Bonus(*this); }
+
 
 //
 // Bomb

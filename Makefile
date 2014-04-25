@@ -1,6 +1,10 @@
 # options du compilateur
 CXX      = g++
-CXXFLAGS = -Wall -iquote sources/includes -std=c++11
+
+CXXFLAGS = -Wall -I /usr/include/sfml-1.6 -iquote sources/includes -std=c++11 -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6
+#CXXFLAGS = -Wall -iquote sources/includes -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
+
+
 
 # constantes
 buildir = Builds
@@ -23,13 +27,14 @@ release:	$(buildir)/release/$(bin)
 unit:		$(buildir)/unit/$(bin)
 debug:		$(buildir)/debug/$(bin)
 
+
 $(buildir)/release/$(bin):	$(release)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 $(buildir)/unit/$(bin):		$(unit)
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -lboost_unit_test_framework -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
 $(buildir)/debug/$(bin):	$(debug)
 	mkdir -p $(@D)
@@ -46,17 +51,19 @@ check-syntax:
 
 
 # compilation + génération des fichiers de dépendance
-Builds/.cache/%.o:		%.cc
+$(cache)/%.o:		%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MMD -MF $@.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -Ofast -MMD -MF $(cache)/$*.d -c -o $@ $<
 
-Builds/.cache/%.debug.o :	%.cc
+$(cache)/%.debug.o :	%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -g -MMD -MF $@.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -g -MMD -MF $(cache)/$*.d -c -o $@ $<
+
 
 
 # on inclut les fichiers de dépendances générés dans %.o
--include $(shell echo $(cache)/**/*.d)
+deps   = $(src_release:%.cc=$(cache)/%.d)
+-include $(deps)
 
 
 

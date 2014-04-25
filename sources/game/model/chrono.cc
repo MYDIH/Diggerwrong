@@ -1,6 +1,6 @@
 #include "GameChrono.hh"
 
-namespace diggewrong
+GameChrono::GameChrono(int delay)
 {
     GameChrono::GameChrono(int delay)
     {

@@ -1,0 +1,81 @@
+#+TITLE: Rapport de projet : conception d'une implémentation du jeu "Puru-puru Digger"
+#+AUTHOR: Nicolas Gomez, Timothée Jourde
+#+LANGUAGE: fr
+
+
+/Se référer au sujet pour une description détaillé du jeu de référence./
+
+* Diagramme de contexte statique
+
+/Voir l'annexe 1./
+
+Le jeu présenté dans ce document n'est pas un système complexe au regard des interactions
+avec l'extérieur : il n'y a en effet qu'un seul acteur véritablement externe (le joueur).
+
+Quelques précisions :
+| Nom de l'acteur     | Fonction                                           | Composantes                                                                    |
+|---------------------+----------------------------------------------------+--------------------------------------------------------------------------------|
+| système de saisie   | récupérer les commandes du joueur                  | périphériques de saisie (clavier, souris...), pilotes, système de fenêtrage... |
+| système d'affichage | répondre au joueur (afficher)                      | écran, pilotes graphiques, système de fenêtrage...                             |
+| horloge             | gérer un chronomètre                               |                                                                                |
+| système de stockage | sauvegarder des informations (réglages, scores...) | périphériques de stockage, système de fichier...                               |
+
+
+* Diagramme de classes
+
+/Voir l'annexe 2./
+
+La conception est axée sur l'extensibilité et la simplicité. Le jeu de référence repose sur une grille
+composé de "cases" de différentes natures (bombes, bonus, normales...). L'ajout de fonctionnalités se résume
+donc avant tout à l'ajout de nouveaux types de cases. La conception est donc centrée sur les classes =Square=
+et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement en implémentant de nouvelles
+classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
+nouvelles cases.
+
+** =Board=
+La classe =Board= représente le plateau : une matrice d'instances de =Square= (les cases). La méthode =move()= permet de
+déplacer le joueur dans une direction (gauche, droite, haut, bas, et diagonales). La longueur de ce déplacement,
+ainsi que ses conséquences (gain de score, modifications du plateau...), dépendent des cases rencontrés ;
+c'est pourquoi =Board= ne prend pas directement en charge le déplacement mais fournit simplement une interface
+permettant de réaliser certaines actions sur le plateau (remplacement d'une case, ajout de score/bonus, déplacement...).
+
+** =Square=
+Pour lancer une déplacement, =move()= appel alors simplement la méthode =dig()= de la première case dans le sens du déplacement,
+cette méthode a alors accès à l'interface décrite plus haut ; elle peut alors notamment poursuivre le déplacement en appelant récursivement =dig()= sur une autre
+case (à travers la méthode =digAt()= de =Board= permettant d'enregistrer le déplacement). La valeur de retour de la première méthode =dig()=
+appelé détermine si le joueur perd ou non.
+
+La classe =Square= fournit une interface pour =dig()= (ainsi qu'une méthode de clonage et un compteur de références pour faciliter
+l'allocation/destruction).
+
+=SquareView= fournit une interface pour l'affichage d'une case. Sa définition se précisera lors de l'implémentation.
+
+Il est ainsi facile d'ajouter un nouveau type de case : il suffit d'une nouvelle classe héritant de =Square= et de =SquareView=, implémentant
+les méthode adéquates. La zone verte est un exemple.
+
+** Gestion des évènements et contrôleurs
+La classe =EventHandler= permet de simplifier la gestion des évènements ; elle implémente notamment une boucle principale ( méthode =run()= )
+traitant les évènements et appelant les méthodes (virtuelles) correspondantes. Cela permet de définir plusieurs contrôleurs
+( chacun héritant de =EventHandler= ), pouvant éventuellement se "passer la main" entre eux. Ici =GameController= gère une partie de jeu complète
+(instanciation des plateaux, transitions...) et contôle =GameView= pour afficher le score globale ou encore des boutons.
+Il contrôle également - et passe certains évènements à - =BoardController= qui luis ne gère que le plateau et les évènements liés. 
+
+
+
+* Événements externes & résultats :
+
+- Lancement du programme :: Afficher l'écran d'accueil, proposer de lancer une partie
+- Lancer une partie      :: Afficher le plateau
+- Choisir une direction  :: Afficher le déplacement, les changements survenus, modifier le score...
+- Quitter                :: Sauvegarder, terminer le programme
+
+* Règles du jeu convenues :
+Le temps sera représenté par une classe de chronomètre instancié dans =Board= et qui
+sera donc représentative du temps passé dans le niveau de jeu courant ( =Board= représente un niveau ).
+Associé a ce chronomètre, un délai. =BoardController= vérifie le temps restant et une fois le délai dépassé notifie
+=GameController= qui agit en conséquence en arrêtant la partie courante et en
+redémarrant une nouvelle partie sur un plateau identique avec pour
+seule différence la perte d'une vie et la réinitialisation du score.
+
+Les cases bonus peuvent, suivant le cas (aléatoire), donner soit un bonus d'une seule vie soit un bonus de score.
+Le bonus de score est calculé a la construction de la case grâce a un tirage aléatoire et un niveau de difficulté.
