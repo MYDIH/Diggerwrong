@@ -1,7 +1,10 @@
 #include "EventHandler.hh"
 
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
+
+#include <iostream>
 
 // Fichier temporaire
 

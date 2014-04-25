@@ -7,7 +7,6 @@
 
 #define MAY_INTERRUPT( x ) { int up; if ( (up = (x)) ) return up; }
 
-using namespace diggewrong;
 
 
 int EventHandler::run(sf::RenderWindow & w)
@@ -19,7 +18,7 @@ int EventHandler::run(sf::RenderWindow & w)
    {
       std::cout << "\n\t<< loop >>\n";
 
-      //view.SetFromRect(sf::FloatRect(0, 0, w.GetWidth(), w.GetHeight()));
+      view.SetFromRect(sf::FloatRect(0, 0, w.GetWidth(), w.GetHeight()));
 
       /* gestion évenements */
       MAY_INTERRUPT( draw(w) );

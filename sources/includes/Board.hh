@@ -29,7 +29,7 @@ class Board
    friend class Square;
 
 private:
-   std::vector< std::vector<Square*> > Board;
+   std::vector< std::vector<Square*> > Squares;
 
    point Digger;
 

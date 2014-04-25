@@ -5,7 +5,7 @@
 // Digged
 //
 
-bool Digged::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
+bool Digged::dig(Board & m, int x, int y, int dx, int dy, int distance)
 { return true; }
 
 const std::string Digged::toString(const int &charSet) const
@@ -35,9 +35,9 @@ Normal::Normal(const Normal & other)
 { Value = other.Value; }
 
 const std::string Normal::toString(const int &charSet) const
-{ return CHARS[charSet][7] + GameModel::intToString(Value) + CHARS[charSet][8]; }
+{ return CHARS[charSet][7] + Board::intToString(Value) + CHARS[charSet][8]; }
 
-bool Normal::dig(GameModel & m, int x, int y, int dx, int dy, int distance)
+bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 {
   m.addScore(Value*10);
 
@@ -96,7 +96,7 @@ Bonus::Bonus(const Bonus & other) : Normal(other)
     Score = other.Score;
 }
 
-bool Bonus::dig(GameModel & m, int x, int y
+bool Bonus::dig(Board & m, int x, int y
 		 ,int dx, int dy, int distance)
 {
    m.addBonusScore(Score);
@@ -107,7 +107,7 @@ bool Bonus::dig(GameModel & m, int x, int y
 
 const std::string Bonus::toString(const int &charSet) const
 {
-   return CHARS[charSet][1] + GameModel::intToString(Value) + CHARS[charSet][2];
+   return CHARS[charSet][1] + Board::intToString(Value) + CHARS[charSet][2];
 }
 
 Square* Bonus::clone()
@@ -118,7 +118,7 @@ Square* Bonus::clone()
 // Bomb
 //
 
-bool Bomb::dig(GameModel & m, int x, int y
+bool Bomb::dig(Board & m, int x, int y
 		 ,int dx, int dy, int distance)
 {
    return true;
