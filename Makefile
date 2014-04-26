@@ -1,9 +1,10 @@
 # options du compilateur
 CXX      = g++
 
-CXXFLAGS = -Wall -I /usr/include/sfml-1.6 -iquote sources/includes -std=c++11 -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6
-#CXXFLAGS = -Wall -iquote sources/includes -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
+CXXFLAGS = -Wall -iquote sources/includes -std=c++11   -I /usr/include/sfml-1.6
 
+LDLIBS =   -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6
+#LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system
 
 
 # constantes
@@ -24,27 +25,27 @@ debug   = $(src_release:%.cc=$(cache)/%.debug.o)
 
 
 release:	$(buildir)/release/$(bin)
-unit:		$(buildir)/unit/$(bin)
+unit:		$(buildir)/unit/testsuite
 debug:		$(buildir)/debug/$(bin)
 
 
 $(buildir)/release/$(bin):	$(release)
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -o $@ $^
 
-$(buildir)/unit/$(bin):		$(unit)
+$(buildir)/unit/testsuite:		$(unit)
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -lboost_unit_test_framework -o $@ $^
 
 $(buildir)/debug/$(bin):	$(debug)
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -g -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -g -o $@ $^
 
 clean:
 	-rm -r $(buildir)
 
 test:		unit
-	cd $(buildir)/unit/ && ./$(bin)
+	cd $(buildir)/unit/ && ./testsuite
 
 check-syntax:
 	-$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES}
@@ -53,7 +54,7 @@ check-syntax:
 # compilation + génération des fichiers de dépendance
 $(cache)/%.o:		%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -Ofast -MMD -MF $(cache)/$*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -O3 -MMD -MF $(cache)/$*.d -c -o $@ $<
 
 $(cache)/%.debug.o :	%.cc
 	mkdir -p $(@D)

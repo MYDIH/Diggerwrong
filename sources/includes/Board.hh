@@ -25,9 +25,6 @@ struct point
 
 class Board
 {
-
-   friend class Square;
-
 private:
    std::vector< std::vector<Square*> > Squares;
 
@@ -77,7 +74,14 @@ public:
    //Accesseurs
    unsigned getTarget()  const;
    unsigned getReached() const;
+
    unsigned getScore()   const;
+   unsigned getBonusScore()   const;
+   unsigned getBonusLifes()   const;
+
    point    getDigger()  const;
+
+   unsigned getWidth()   const;
+   unsigned getHeight()  const;
 };
 

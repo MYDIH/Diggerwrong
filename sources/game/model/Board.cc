@@ -215,4 +215,21 @@ unsigned Board::getReached() const
 unsigned Board::getScore() const
 { return Score; }
 
+unsigned Board::getWidth()   const
+{ return Squares.size(); }
+
+unsigned Board::getHeight()  const
+{
+   if (Squares.size() < 1)
+      return 0;
+   else
+      return Squares[0].size();
+}
+
+unsigned Board::getBonusScore() const
+{ return Bonus_score; }
+unsigned Board::getBonusLifes() const
+{ return Bonus_lifes; }
+
+
 
