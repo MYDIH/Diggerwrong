@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Square.hh"
+#include "utils.hh"
 
 #include <vector>
 #include <string>
@@ -26,7 +27,7 @@ struct point
 class Board
 {
 private:
-   std::vector< std::vector<Square*> > Squares;
+   std::vector< std::vector< ValuePtr<Square> > > Squares;
 
    point Digger;
 
@@ -69,7 +70,7 @@ public:
    bool digAt(int x, int y
 	      ,int dx = 0, int dy = 0, int distance = -1);
 
-   void replaceSquare(int x, int y, Square * newone);
+   void replaceSquare(int x, int y, const ValuePtr<Square> & newone);
 
    //Accesseurs
    unsigned getTarget()  const;

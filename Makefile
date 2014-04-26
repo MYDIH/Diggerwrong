@@ -3,8 +3,8 @@ CXX      = g++
 
 CXXFLAGS = -Wall -iquote sources/includes -std=c++11   -I /usr/include/sfml-1.6
 
-LDLIBS =   -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6
-#LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system
+#LDLIBS =   -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6
+LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system
 
 
 # constantes

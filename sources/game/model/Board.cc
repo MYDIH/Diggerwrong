@@ -30,19 +30,18 @@ Board::Board(unsigned width, unsigned height, double difficulty
 {
    const unsigned longestside = (width > height) ? width : height;
 
-   for (auto & column : Squares)
-   {
-      column.resize(height);
+    for (auto & column : Squares)
+    {
+        column.resize(height);
 
-      for (auto & square : column)
-      {
-	 square = newRandomSquare(difficulty, longestside);
-      }
-   }
+        for (auto & square : column)
+        {
+            square = ValuePtr<Square>(newRandomSquare(difficulty, longestside));
+        }
+    }
 
-   Square * tmp = new Digged;
+   ValuePtr<Square> tmp(new Digged);
    replaceSquare(Digger.x, Digger.y, tmp);
-   tmp -> release();
 }
 
 Board::Board(const Board &m) : Squares(m.Squares.size())
@@ -53,7 +52,7 @@ Board::Board(const Board &m) : Squares(m.Squares.size())
 
         for(unsigned j = 0; j<m.Squares[0].size(); j++)
         {
-            Squares[i][j] = m.Squares[i][j]->clone();
+            Squares[i][j] = m.Squares[i][j];
         }
     }
 
@@ -66,16 +65,7 @@ Board::Board(const Board &m) : Squares(m.Squares.size())
 }
 
 Board::~Board()
-{
-   for (auto & column : Squares)
-   {
-      for (auto & square : column)
-      {
-        square -> release();
-      }
-   }
-}
-
+{}
 
 GameState Board::move(int dx, int dy)
 {
@@ -139,14 +129,6 @@ const std::string Board::toString(const int &charSet) const
     return tempString;
 }
 
-std::string Board::intToString(const int &e)
-{
-   std::ostringstream stream;
-   stream << e;
-
-   return stream.str();
-}
-
 bool Board::isOutOfRange(int x, int y) const
 {
    if (x >= 0 and y >= 0 and (unsigned)x < Squares.size() and (unsigned)y < Squares[0].size())
@@ -163,15 +145,11 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
    }
    else
    {
-      Square * square = Squares[x][y];
-
       Digger.x = x;
       Digger.y = y;
       Reached++;
 
-      square -> retain();
-      const bool ret = square -> dig(*this,x,y,dx,dy,distance);
-      square -> release();
+      const bool ret = Squares[x][y] -> dig(*this,x,y,dx,dy,distance);
 
       return ret;
    }
@@ -193,15 +171,10 @@ void Board::addBonusLifes(unsigned lifes)
 }
 
 
-void Board::replaceSquare(int x, int y, Square * newone)
+void Board::replaceSquare(int x, int y, const ValuePtr<Square> & newone)
 {
    if (not isOutOfRange(x,y))
-   {
-      Squares[x][y] -> release();
-      newone -> retain();
-
       Squares[x][y] = newone;
-   }
 }
 
 // Accesseurs :
@@ -228,6 +201,7 @@ unsigned Board::getHeight()  const
 
 unsigned Board::getBonusScore() const
 { return Bonus_score; }
+
 unsigned Board::getBonusLifes() const
 { return Bonus_lifes; }
 

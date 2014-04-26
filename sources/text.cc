@@ -1,15 +1,7 @@
-#include "Board.hh"
-#include "consts.hh"
-
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <locale>
-
+#include "text.hh"
 
 ///////////////afficherMenu()///////////////////
 //Description : Cette Fonction affiche le menu//
-//Auteur : Nicolas Gomez                      //
 ////////////////////////////////////////////////
 void afficherMenu()
 {
@@ -21,7 +13,6 @@ void afficherMenu()
 //Paramètre : "&s" : Référence vers la string //
 //            a modifier                      //
 //Description : Décapitalise une string       //
-//Auteur : Nicolas Gomez                      //
 ////////////////////////////////////////////////
 void toLowerCase(std::string &s)
 {
@@ -38,7 +29,6 @@ void toLowerCase(std::string &s)
 //              méthodes adéquates            //
 //Valeur de Retour : Booléen a vrai si le jeu //
 //                   continu, a faux sinon    //
-//Auteur : Nicolas Gomez                      //
 ////////////////////////////////////////////////
 GameState menu(Board *model, int &lifes)
 {
@@ -54,21 +44,21 @@ GameState menu(Board *model, int &lifes)
         rightStr = true;
         toLowerCase(tempStr); // On Décapitalise
 
-        if(tempStr == "o" || tempStr == Board::intToString(4))
+        if(tempStr == "o" || tempStr == typeToString<int>(4))
             state = model->move(0, -1);
-        else if(tempStr == "n" || tempStr == Board::intToString(8))
+        else if(tempStr == "n" || tempStr == typeToString<int>(8))
             state = model->move(-1, 0);
-        else if(tempStr == "e" || tempStr == Board::intToString(6))
+        else if(tempStr == "e" || tempStr == typeToString<int>(6))
             state = model->move(0, 1);
-        else if(tempStr == "s" || tempStr == Board::intToString(2))
+        else if(tempStr == "s" || tempStr == typeToString<int>(2))
             state = model->move(1, 0);
-        else if(tempStr == "no" || tempStr == Board::intToString(7))
+        else if(tempStr == "no" || tempStr == typeToString<int>(7))
             state = model->move(-1, -1);
-        else if(tempStr == "ne" || tempStr == Board::intToString(9))
+        else if(tempStr == "ne" || tempStr == typeToString<int>(9))
             state = model->move(-1, 1);
-        else if(tempStr == "se" || tempStr == Board::intToString(3))
+        else if(tempStr == "se" || tempStr == typeToString<int>(3))
             state = model->move(1, 1);
-        else if(tempStr == "so" || tempStr == Board::intToString(1))
+        else if(tempStr == "so" || tempStr == typeToString<int>(1))
             state = model->move(1, -1);
         else if(tempStr == "q")
             return QUIT; // On quitte le jeu
@@ -103,17 +93,18 @@ GameState menu(Board *model, int &lifes)
 //Paramètre : "*model" : pointeur sur le modèle //
 //            à afficher                        //
 //Description : Affiche un modèle               //
-//Auteur : Nicolas Gomez                        //
 //////////////////////////////////////////////////
-void printModel(Board *model, int lifes, const int &charSet)
+void printModel(Board *model, int lifes, int level, const int &charSet)
 {
-    std::string tempTarget = "Cible a atteindre : " + Board::intToString(model->getTarget());       //
-    std::string tempReached = "Nombre de déplacement : " + Board::intToString(model->getReached()); //  On créé les lignes de statu
-    std::string tempScore = "Votre Score : " + Board::intToString(model->getScore());               //
-    std::string tempLifes = "Vies Restantes : " + Board::intToString(lifes);                        //
+    std::string tempTarget = "Cible a atteindre : " + typeToString<int>(model->getTarget());        //
+    std::string tempReached = "Nombre de déplacement : " + typeToString<int>(model->getReached());  //
+    std::string tempScore = "Votre Score : " + typeToString<int>(model->getScore());                //
+    std::string tempScoreBonus = "Votre Score bonus : " + typeToString<int>(model->getBonusScore());//  On créé les lignes de statu
+    std::string lifeStr = "Vies Restantes : " + typeToString<int>(lifes);                             //
+    std::string levelStr = "Niveau n°" + typeToString<int>(level);                                     //
 
     // On rends le résultat potable en ramenant chaque ligne de statu à la même longueur
-    while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempLifes.length() < DECALAGE_CONSOLE)
+    while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempScoreBonus.length() < DECALAGE_CONSOLE)
     {
         if(tempTarget.length() < DECALAGE_CONSOLE)
             tempTarget += ' ';
@@ -121,15 +112,15 @@ void printModel(Board *model, int lifes, const int &charSet)
             tempReached += ' ';
         if(tempScore.length() < DECALAGE_CONSOLE)
             tempScore += ' ';
-        if(tempLifes.length() < DECALAGE_CONSOLE)
-            tempLifes += ' ';
+        if(tempScoreBonus.length() < DECALAGE_CONSOLE)
+            tempScoreBonus += ' ';
     }
 
     // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
     tempTarget += "|    \"" + CHARS[charSet][1] + "x" + CHARS[charSet][2] + "\" Représente une case avec un bonus";
     tempReached += " |    \"" + CHARS[charSet][3] + "\" Représente la position du mineur";
     tempScore += "|    \"   \" Représente une case déjà visitée";
-    tempLifes += "|    \"" + CHARS[charSet][0] + "\" Représente une bombe";
+    tempScoreBonus += "|    \"" + CHARS[charSet][0] + "\" Représente une bombe";
 
     // On affiche le tout
     std::cout << model->toString(charSet) << std::endl
@@ -137,31 +128,33 @@ void printModel(Board *model, int lifes, const int &charSet)
               << tempTarget << std::endl
               << tempReached << std::endl
               << tempScore << std::endl
-              << tempLifes << std::endl << std::endl;
+              << tempScoreBonus << std::endl
+              << std::endl
+              << levelStr << std::endl
+              << lifeStr << std::endl << std::endl;
 }
 
 
-int textMain()
+int textMain(int charSet)
 {
-    //srand(time(NULL)); // Initialise l'aléatoire
     Board *realModel;
     Board *modelForGame;
     GameState state = CONTINUE;
     int lifes = 5;
-    int charSet = 1;
+    int level = 1;
 
-    realModel = new Board(18, 18, 0.2, 10);
+    realModel = new Board(18, 18, inv(level), 10);
 
     while(state != QUIT)
     {
         modelForGame = new Board(*realModel);
 
-        printModel(modelForGame, lifes, charSet);
+        printModel(modelForGame, lifes, level, charSet);
         state = menu(modelForGame, lifes);
 
         while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
         {
-            printModel(modelForGame, lifes, charSet);
+            printModel(modelForGame, lifes, level, charSet);
             state = menu(modelForGame, lifes);
         }
 
@@ -170,8 +163,9 @@ int textMain()
             if(state != WON)
                 lifes = 5;
             delete realModel;
+            level++;
 
-            realModel = new Board(18, 18, 0.2, 10);
+            realModel = new Board(18, 18, inv(level), 10);
         }
 
         delete modelForGame;
