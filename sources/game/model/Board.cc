@@ -8,7 +8,7 @@
 
 
 Board::Board(unsigned width, unsigned height, double difficulty
-                     ,unsigned target)
+	     ,unsigned target)
 
 
    :Squares(width)
@@ -47,22 +47,22 @@ Board::Board(unsigned width, unsigned height, double difficulty
 
 Board::Board(const Board &m) : Squares(m.Squares.size())
 {
-    for(unsigned i = 0; i<m.Squares.size(); i++)
-    {
-        Squares[i].resize(m.Squares[0].size());
+   for(unsigned i = 0; i<m.Squares.size(); i++)
+   {
+      Squares[i].resize(m.Squares[0].size());
 
-        for(unsigned j = 0; j<m.Squares[0].size(); j++)
-        {
-            Squares[i][j] = m.Squares[i][j]->clone();
-        }
-    }
+      for(unsigned j = 0; j<m.Squares[0].size(); j++)
+      {
+	 Squares[i][j] = m.Squares[i][j]->clone();
+      }
+   }
 
-    Digger = m.Digger;
-    Target = m.Target;
-    Reached = m.Reached;
-    Score = m.Score;
-    Bonus_score = m.Bonus_score;
-    Bonus_lifes = m.Bonus_lifes;
+   Digger = m.Digger;
+   Target = m.Target;
+   Reached = m.Reached;
+   Score = m.Score;
+   Bonus_score = m.Bonus_score;
+   Bonus_lifes = m.Bonus_lifes;
 }
 
 Board::~Board()
@@ -71,7 +71,7 @@ Board::~Board()
    {
       for (auto & square : column)
       {
-        square -> release();
+	 square -> release();
       }
    }
 }
@@ -79,19 +79,25 @@ Board::~Board()
 
 GameState Board::move(int dx, int dy)
 {
-    if (State == CONTINUE)
-    {
-        if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
-        {
-            State = LOST;
-        }
-        else if (Reached >= Target)
-        {
-            State = WON;
-        }
-    }
+   if (State == CONTINUE)
+   {
+      if (dx > 0) dx = 1;
+      else if (dx < 0) dx = -1;
 
-    return State;
+      if (dy > 0) dy = 1;
+      else if (dy < 0) dy = -1;
+
+      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+      {
+	 State = LOST;
+      }
+      else if (Reached >= Target)
+      {
+	 State = WON;
+      }
+   }
+
+   return State;
 }
 
 Square* Board::newRandomSquare(double difficulty, unsigned longestside)
@@ -108,35 +114,35 @@ Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 
 const std::string Board::toString(const int &charSet) const
 {
-    std::string tempString = "";
-    std::string tempLine = "";
+   std::string tempString = "";
+   std::string tempLine = "";
 
-    tempLine += CHARS[charSet][4];
-    for(unsigned i=0; i<Squares[0].size(); i++)
-        tempLine += "----";
-    tempLine.pop_back();
-    tempLine += CHARS[charSet][5];
+   tempLine += CHARS[charSet][4];
+   for(unsigned i=0; i<Squares[0].size(); i++)
+      tempLine += "----";
+   tempLine.pop_back();
+   tempLine += CHARS[charSet][5];
 
-    for(unsigned i=0; i<Squares.size(); i++)
-    {
-        for(unsigned j=0; j<Squares[i].size(); j++)
-        {
-            if(i == 0 && j == 0)
-                tempString += tempLine + '\n';
-            tempString += CHARS[charSet][6];
-            if(i == Digger.x && j == Digger.y)
-                tempString += CHARS[charSet][3];
-            else
-                tempString += Squares[i][j]->toString(charSet);
-            if(j == Squares[i].size() - 1)
-                tempString += CHARS[charSet][6];
-        }
-        tempString += '\n';
-        if(i == Squares.size() - 1)
-        tempString += tempLine;
-    }
+   for(unsigned i=0; i<Squares.size(); i++)
+   {
+      for(unsigned j=0; j<Squares[i].size(); j++)
+      {
+	 if(i == 0 && j == 0)
+	    tempString += tempLine + '\n';
+	 tempString += CHARS[charSet][6];
+	 if(i == Digger.x && j == Digger.y)
+	    tempString += CHARS[charSet][3];
+	 else
+	    tempString += Squares[i][j]->toString(charSet);
+	 if(j == Squares[i].size() - 1)
+	    tempString += CHARS[charSet][6];
+      }
+      tempString += '\n';
+      if(i == Squares.size() - 1)
+	 tempString += tempLine;
+   }
 
-    return tempString;
+   return tempString;
 }
 
 std::string Board::intToString(const int &e)
@@ -179,7 +185,7 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
 
 void Board::addScore(unsigned score)
 {
-  Score += score;
+   Score += score;
 }
 
 void Board::addBonusScore(unsigned score)
@@ -225,6 +231,9 @@ unsigned Board::getHeight()  const
    else
       return Squares[0].size();
 }
+
+point Board::getDigger() const
+{ return Digger; }
 
 unsigned Board::getBonusScore() const
 { return Bonus_score; }
