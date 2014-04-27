@@ -32,7 +32,7 @@ void toLowerCase(std::string &s)
 //Valeur de Retour : Booléen a vrai si le jeu //
 //                   continu, a faux sinon    //
 ////////////////////////////////////////////////
-GameState menu(Board *model, int &lifes)
+GameState menu(Board *model, unsigned &lifes)
 {
     std::string tempStr = "";
     bool rightStr = false;
@@ -96,7 +96,7 @@ GameState menu(Board *model, int &lifes)
 //            à afficher                        //
 //Description : Affiche un modèle               //
 //////////////////////////////////////////////////
-void printModel(Board *model, int lifes, int level, const int &charSet)
+void printModel(Board *model, unsigned lifes, unsigned level, int charSet)
 {
     std::string tempTarget = "Cible a atteindre : " + typeToString<int>(model->getTarget());        //
     std::string tempReached = "Nombre de déplacement : " + typeToString<int>(model->getReached());  //
@@ -139,20 +139,21 @@ void printModel(Board *model, int lifes, int level, const int &charSet)
 
 int textMain(int charSet)
 {
-   for(unsigned i = 1; i < 20; i++)
+   /*for(unsigned i = 1; i < 20; i++)
    {
       std::cout << i << "::" << typeToString<int>(inv(i)*100) << "% -> ";
    }
-   std::cout << std::endl;
+   std::cout << std::endl;*/
 
 
-   srand(time(NULL));
+    srand(time(NULL));
 
     Board *realModel;
     Board *modelForGame;
     GameState state = CONTINUE;
-    int lifes = 5;
-    int level = 1;
+    unsigned lifes = 5;
+    unsigned bonusLifes = 0;
+    unsigned level = 1;
 
     realModel = new Board(18, 18, inv(level), 22);
 
@@ -167,12 +168,20 @@ int textMain(int charSet)
         {
             printModel(modelForGame, lifes, level, charSet);
             state = menu(modelForGame, lifes);
+            if(modelForGame->getBonusLifes() > bonusLifes)
+            {
+                lifes += modelForGame->getBonusLifes() - bonusLifes;
+                bonusLifes = modelForGame->getBonusLifes();
+            }
         }
 
         if((lifes < 1 && state != QUIT) || state == WON)
         {
-	   if(state != WON)
+            if(state != WON)
+            {
                 lifes = 5;
+                level = 0;
+            }
             delete realModel;
             level++;
 

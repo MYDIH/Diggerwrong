@@ -65,13 +65,17 @@ Board::Board(const Board &m)
 
         for(unsigned j = 0; j<m.Squares[0].size(); j++)
         {
-	   Squares[i][j] = m.Squares[i][j] -> clone();
+            Squares[i][j] = m.Squares[i][j] -> clone();
         }
     }
 }
 
 Board::~Board()
-{}
+{
+    for(unsigned i = 0; i<Squares.size(); i++)
+        for(unsigned j = 0; j<Squares[0].size(); j++)
+            Squares[i][j]->release();
+}
 
 GameState Board::move(int dx, int dy)
 {
@@ -83,14 +87,8 @@ GameState Board::move(int dx, int dy)
       if (dy > 0) dy = 1;
       else if (dy < 0) dy = -1;
 
-      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
-      {
-	 State = LOST;
-      }
-      else if (Reached >= Target)
-      {
-	 State = WON;
-      }
+      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) ) State = LOST;
+      else if (Reached >= Target) State = WON;
    }
 
    return State;
