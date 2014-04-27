@@ -1,8 +1,13 @@
--- diggewrong 
+-- diggewrong
 -- un clone du jeu Puru Puru Digger
 -- projet M2103 ; IUT Informatique de Bordeaux
+-- Nicolas Gomez & Timothée Jourde
 
-Le jeu est en dévellopement ;
+Merci de jeter un coup d'oeil au rapport
+de conception (dans "documentation") pour
+mieux comprendre le code.
+
+Le jeu est en dévellopement,
 des fonctionalités seront ajoutés
 par la suite même au niveau du
 code existant.
@@ -12,7 +17,7 @@ Compiler :
   $ make debug
 
 L'éxecutable est "Builds/*/diggewrong" .
-Passez les paramètres --unicode --color
+Passez lui les paramètres --unicode --color
 (ou -uc) pour une sortie plus lisible.
 
 Lancer les tests unitaires :

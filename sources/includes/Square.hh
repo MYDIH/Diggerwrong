@@ -9,7 +9,8 @@
 
 class Board;
 
-
+// Classe abstraite. Représente une case (model du MVC).
+// Est manipulé dans une collection hétérogène de manière générique/unique (pas de transtypage/identification...).
 class Square
 {
 private:
@@ -28,7 +29,7 @@ public:
    void release();
 
 
-   // uniquement pour le débugage ; ne sert pas d'identifiant
+   // uniquement pour le débugage ; ne sert pas d'identifiant ; n'entre pas dans la logique de la conception
    virtual const std::string toString(const int &charSet) const = 0;
 };
 

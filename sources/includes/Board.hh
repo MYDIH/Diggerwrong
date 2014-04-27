@@ -15,7 +15,8 @@ enum GameState
    WON,
    CONTINUE,
    LOST,
-   QUIT
+
+   QUIT // temporaire ; ne devrai pas être lié à Board
 };
 
 struct point
@@ -24,6 +25,8 @@ struct point
    unsigned y;
 };
 
+
+// représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
 class Board
 {
 private:
@@ -35,16 +38,17 @@ private:
    unsigned Reached;
 
    unsigned Score;
-   //unsigned Lifes;
    //unsigned Timelimit;
 
    unsigned Bonus_score;
    unsigned Bonus_lifes;
    //unsigned Bonus_time;
 
-   GameState State = CONTINUE;
+   GameState State;
 
-   Square* newRandomSquare(double difficulty, unsigned longestside); // temporaire
+
+   // temporaire ; la génération aléatoire sera plus complexe
+   Square* newRandomSquare(double difficulty, unsigned longestside);
 
 public:
    Board(unsigned width, unsigned height, double difficulty, unsigned target);
@@ -52,37 +56,31 @@ public:
 
    ~Board();
 
-   //void play();
-   //void pause();
-
    GameState move(int dx, int dy);
 
-   const std::string toString(const int &charSet) const;
-   static std::string intToString(const int &e);
-
-
+   // interface pour Square
    void addScore(unsigned score);
    void addBonusScore(unsigned score);
    void addBonusLifes(unsigned lifes);
-
-
    bool isOutOfRange(int x, int y) const;
    bool digAt(int x, int y
 	      ,int dx = 0, int dy = 0, int distance = -1);
-
    void replaceSquare(int x, int y, Square * newone);
 
-   //Accesseurs
+
+   // accesseurs
    unsigned getTarget()  const;
    unsigned getReached() const;
+   unsigned getScore()      const;
+   unsigned getBonusScore() const;
+   unsigned getBonusLifes() const;
+   point    getDigger() const;
+   unsigned getWidth()  const;
+   unsigned getHeight() const;
 
-   unsigned getScore()   const;
-   unsigned getBonusScore()   const;
-   unsigned getBonusLifes()   const;
 
-   point    getDigger()  const;
 
-   unsigned getWidth()   const;
-   unsigned getHeight()  const;
+   // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
+   const std::string toString(const int &charSet) const;
 };
 

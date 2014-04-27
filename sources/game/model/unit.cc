@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE Model
+#define BOOST_TEST_MODULE GameModel
 #include <boost/test/unit_test.hpp>
 
 #include "Board.hh"
@@ -22,10 +22,11 @@ void fill_board_normal(Board & b, unsigned value)
    }
 }
 
-
 BOOST_AUTO_TEST_CASE(Board_move_with_Normal_squares)
 {
    /*
+     Effectue 3 parcours différents (t1,t2,t3) sur le plateau ci-dessou (b) de le position de départ S à la position F. On vérifie que la position final du joueur soit conforme.
+
      . -- 1
      S -- initiale
      F -- finale
@@ -110,9 +111,31 @@ BOOST_AUTO_TEST_CASE(Board_move_with_Normal_squares)
 }
 
 
+BOOST_AUTO_TEST_CASE(Board_reach_target)
+{
+   // On vérifie que la cible (nombre de déplacements requis pour gagner) est atteinte au bon moment.
+
+   Board b(811,477, 0, 350); // cible: 350
+   fill_board_normal(b, 11); // valeur des cases: 11
+
+   // 11 * 31 = 341
+
+   for (unsigned i = 1; i <= 20; i++)
+      b.move(-1,+1);
+
+   for (unsigned i = 1; i <= 10; i++)
+      b.move(+1,0);
+
+   BOOST_CHECK(b.move(0,-1) == CONTINUE);
+   BOOST_CHECK(b.move(0,-1) == WON);
+	 
+}
+
 BOOST_AUTO_TEST_CASE(tiny_Board_move_out_of_range)
 {
-    Board b(1, 1, 0.66, 100);
+   // On vérifie que le joueur sort bien du plateau et perd.
+
+    Board b(1, 1, 1, 100);
     fill_board_normal(b, 1);
 
     BOOST_CHECK(b.move(+1, 0) == LOST);
@@ -137,6 +160,8 @@ BOOST_AUTO_TEST_CASE(tiny_Board_move_out_of_range)
 
 BOOST_AUTO_TEST_CASE(big_Board_move_out_of_range)
 {
+   // On vérifie que le joueur sort bien du plateau et perd.
+
     Board b(500, 888, 0.66, 1000);
     fill_board_normal(b, 1);
 
