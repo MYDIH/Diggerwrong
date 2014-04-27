@@ -5,7 +5,7 @@
 #include <utility>
 
 // doit être > 0 ; plus c'est grand plus la fonction est linéaire
-const double LINE = 2.5;
+const double LINE = 6;
 
 double inv(double x);
 

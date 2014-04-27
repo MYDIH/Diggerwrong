@@ -36,7 +36,7 @@ Board::Board(unsigned width, unsigned height, double difficulty
 
         for (auto & square : column)
         {
-            square = newRandomSquare(difficulty, longestside);
+	   square = newRandomSquare(difficulty, longestside);
         }
     }
 
@@ -96,12 +96,13 @@ GameState Board::move(int dx, int dy)
    return State;
 }
 
+// temporaire ; devra être indépendant de Board
 Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
 
-   double pbomb  = difficulty * 0.2;
-   double pbonus = (1 - pbomb) * 0.02;
+   double pbomb  = difficulty * 0.12;
+   double pbonus = (1-difficulty) * 0.017;
 
    if      (r <= pbomb)          return new Bomb(); // bomb
    else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus

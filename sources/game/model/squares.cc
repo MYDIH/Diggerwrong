@@ -1,5 +1,6 @@
 #include "Square.hh"
 
+#include <cmath>
 
 //
 // Digged
@@ -24,9 +25,9 @@ Normal::Normal(unsigned val)
 
 Normal::Normal(double difficulty, unsigned longestside)
 {
-   const double r = rand() / (double) RAND_MAX;
+   const double r = pow(rand() / (double) RAND_MAX, 1.5);
 
-   const double max = longestside * 0.7 * difficulty + longestside * 0.2;
+   const double max = longestside * 0.3 * difficulty + longestside * 0.2;
 
    Value = max*r + 1;
 }

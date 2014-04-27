@@ -1,5 +1,7 @@
 #include "text.hh"
 
+#include <ctime>
+
 ///////////////afficherMenu()///////////////////
 //Description : Cette Fonction affiche le menu//
 ////////////////////////////////////////////////
@@ -101,7 +103,7 @@ void printModel(Board *model, int lifes, int level, const int &charSet)
     std::string tempScore = "Votre Score : " + typeToString<int>(model->getScore());                //
     std::string tempScoreBonus = "Votre Score bonus : " + typeToString<int>(model->getBonusScore());//  On créé les lignes de statu
     std::string lifeStr = "Vies Restantes : " + typeToString<int>(lifes);                             //
-    std::string levelStr = "Niveau n°" + typeToString<int>(level);                                     //
+    std::string levelStr = "Niveau n°" + typeToString<int>(level) + " (difficulté: " + typeToString<int>(inv(level)*100) + "%)";                                     //
 
     // On rends le résultat potable en ramenant chaque ligne de statu à la même longueur
     while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempScoreBonus.length() < DECALAGE_CONSOLE)
@@ -137,13 +139,22 @@ void printModel(Board *model, int lifes, int level, const int &charSet)
 
 int textMain(int charSet)
 {
+   for(unsigned i = 1; i < 20; i++)
+   {
+      std::cout << i << "::" << typeToString<int>(inv(i)*100) << "% -> ";
+   }
+   std::cout << std::endl;
+
+
+   srand(time(NULL));
+
     Board *realModel;
     Board *modelForGame;
     GameState state = CONTINUE;
     int lifes = 5;
     int level = 1;
 
-    realModel = new Board(18, 18, inv(level), 10);
+    realModel = new Board(18, 18, inv(level), 22);
 
     while(state != QUIT)
     {
@@ -160,12 +171,12 @@ int textMain(int charSet)
 
         if((lifes < 1 && state != QUIT) || state == WON)
         {
-            if(state != WON)
+	   if(state != WON)
                 lifes = 5;
             delete realModel;
             level++;
 
-            realModel = new Board(18, 18, inv(level), 10);
+            realModel = new Board(18, 18, inv(level), 22);
         }
 
         delete modelForGame;
