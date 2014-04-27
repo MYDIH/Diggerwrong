@@ -1,27 +1,21 @@
-Voilà, un magnifique projet vide.
+-- diggewrong 
+-- un clone du jeu Puru Puru Digger
+-- projet M2103 ; IUT Informatique de Bordeaux
 
-Ajoute les sources ou tu veu dans un sous-repertoire de "sources", les headers dans "sources/includes".
-Pour inclure les headers #include "xx.h" suffit, pas besoins d'indiquer le chemin
-On peut utiliser "#pragma once" (non standard mais implémenté partout) pour éviter l'inclusion multiple (à la place de #ifndef et tout le bordel).
+Le jeu est en dévellopement ;
+des fonctionalités seront ajoutés
+par la suite même au niveau du
+code existant.
 
-pour compiler (il te faut GNU Make, bash et g++) :
-$ make
+Compiler :
+  $ make
+  $ make debug
 
-pour nettoyer :
-$ make clean
-... mais du coup t'es obligé de tout recompiler
+L'éxecutable est "Builds/*/diggewrong" .
+Passez les paramètres --unicode --color
+(ou -uc) pour une sortie plus lisible.
 
-pour git :
+Lancer les tests unitaires :
+  $ make test
 
-$ git pull
-tire et merge si besoin
-
-$ git add ...
-$ git commit -a
-
-$ git push
-
-$ git status
-pratique...
-
-Foilà.
+Merci.
