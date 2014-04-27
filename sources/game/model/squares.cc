@@ -35,7 +35,16 @@ Normal::Normal(const Normal & other)
 { Value = other.Value; }
 
 const std::string Normal::toString(const int &charSet) const
-{ return CHARS[charSet][7] + typeToString<int>(Value) + CHARS[charSet][8]; }
+{
+   const std::string ret = CHARS[charSet][7] + typeToString<int>(Value);
+
+   if (Value < 10)
+      return ' ' + ret + ' ';
+   else if (Value < 100)
+      return ' ' + ret;
+   else
+      return ret;
+}
 
 bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 {
@@ -47,12 +56,14 @@ bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
         distance = Value - 1;
    }
 
-   ValuePtr<Square> digged(new Digged);
-   m.replaceSquare(x, y, digged);
+   Square * tmp = new Digged();
+   m.replaceSquare(x, y, tmp);
+   tmp -> release();
 
    if (distance > 0 and (dx != 0 or dy != 0))
-     return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
-   else return false;
+      return m.digAt(x + dx, y + dy, dx, dy, distance - 1);
+   else
+      return false;
 }
 
 Square* Normal::clone()
@@ -105,7 +116,11 @@ bool Bonus::dig(Board & m, int x, int y
 
 const std::string Bonus::toString(const int &charSet) const
 {
-   return CHARS[charSet][1] + typeToString<int>(Value) + CHARS[charSet][2];
+   if (Value < 10)
+      return CHARS[charSet][1] + typeToString<int>(Value) + CHARS[charSet][2];
+   else
+      return CHARS[charSet][1] + typeToString<int>(Value);
+
 }
 
 Square* Bonus::clone()

@@ -36,15 +36,28 @@ Board::Board(unsigned width, unsigned height, double difficulty
 
         for (auto & square : column)
         {
-            square = ValuePtr<Square>(newRandomSquare(difficulty, longestside));
+            square = newRandomSquare(difficulty, longestside);
         }
     }
 
-   ValuePtr<Square> tmp(new Digged);
+   Square * tmp = new Digged;
    replaceSquare(Digger.x, Digger.y, tmp);
+   tmp -> release();
 }
 
-Board::Board(const Board &m) : Squares(m.Squares.size())
+Board::Board(const Board &m)
+   : Squares(m.Squares.size())
+   ,Digger(m.Digger)
+
+   ,Target(m.Target)
+   ,Reached(m.Reached)
+
+   ,Score(m.Score)
+
+   ,Bonus_score(m.Bonus_score)
+   ,Bonus_lifes(m.Bonus_lifes)
+
+   ,State(m.State)
 {
     for(unsigned i = 0; i<m.Squares.size(); i++)
     {
@@ -52,16 +65,9 @@ Board::Board(const Board &m) : Squares(m.Squares.size())
 
         for(unsigned j = 0; j<m.Squares[0].size(); j++)
         {
-            Squares[i][j] = m.Squares[i][j];
+	   Squares[i][j] = m.Squares[i][j] -> clone();
         }
     }
-
-    Digger = m.Digger;
-    Target = m.Target;
-    Reached = m.Reached;
-    Score = m.Score;
-    Bonus_score = m.Bonus_score;
-    Bonus_lifes = m.Bonus_lifes;
 }
 
 Board::~Board()
@@ -151,11 +157,15 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
    }
    else
    {
+      Square * square = Squares[x][y];
+
       Digger.x = x;
       Digger.y = y;
       Reached++;
 
-      const bool ret = Squares[x][y] -> dig(*this,x,y,dx,dy,distance);
+      square -> retain(); // on retarde l'éventuelle désallocation de la case pour garentir la bonne execution de dig()
+      const bool ret = square -> dig(*this,x,y,dx,dy,distance);
+      square -> release();
 
       return ret;
    }
@@ -177,10 +187,15 @@ void Board::addBonusLifes(unsigned lifes)
 }
 
 
-void Board::replaceSquare(int x, int y, const ValuePtr<Square> & newone)
+void Board::replaceSquare(int x, int y, Square * newone)
 {
    if (not isOutOfRange(x,y))
+   {
+      Squares[x][y] -> release();
+
+      newone -> retain();
       Squares[x][y] = newone;
+   }
 }
 
 // Accesseurs :
