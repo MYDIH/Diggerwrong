@@ -45,6 +45,17 @@ Board::Board(unsigned width, unsigned height, double difficulty
    tmp -> release();
 }
 
+void Board::copy_squares(const Board &m)
+{
+   for(unsigned i = 0; i<m.Squares.size(); i++)
+   {
+      Squares[i].resize(m.Squares[0].size());
+
+      for(unsigned j = 0; j<m.Squares[0].size(); j++)
+	 Squares[i][j] = m.Squares[i][j] -> clone();
+   }
+}
+
 Board::Board(const Board &m)
    : Squares(m.Squares.size())
    ,Digger(m.Digger)
@@ -59,19 +70,12 @@ Board::Board(const Board &m)
 
    ,State(m.State)
 {
-    for(unsigned i = 0; i<m.Squares.size(); i++)
-    {
-        Squares[i].resize(m.Squares[0].size());
-
-        for(unsigned j = 0; j<m.Squares[0].size(); j++)
-            Squares[i][j] = m.Squares[i][j] -> clone();
-    }
+   copy_squares(m);
 }
 
 
 const Board & Board::operator=(const Board &m)
 {
-   Squares.resize(m.Squares.size());
    Digger = m.Digger;
 
    Target = m.Target;
@@ -84,26 +88,24 @@ const Board & Board::operator=(const Board &m)
 
    State = m.State;
 
-   for(unsigned i = 0; i<m.Squares.size(); i++)
-   {
-      Squares[i].resize(m.Squares[0].size());
-
-      for(unsigned j = 0; j<m.Squares[0].size(); j++)
-      {
-	 Squares[i][j] -> release();
-	 Squares[i][j] = m.Squares[i][j] -> clone();
-      }
-   }
+   release_squares();
+   Squares.resize(m.Squares.size());
+   copy_squares(m);
 
    return *this;
 }
 
 
+void Board::release_squares()
+{
+   for(unsigned i = 0; i<Squares.size(); i++)
+      for(unsigned j = 0; j<Squares[0].size(); j++)
+	 Squares[i][j]->release();
+}
+
 Board::~Board()
 {
-    for(unsigned i = 0; i<Squares.size(); i++)
-        for(unsigned j = 0; j<Squares[0].size(); j++)
-            Squares[i][j]->release();
+   release_squares();
 }
 
 GameState Board::move(int dx, int dy)

@@ -56,6 +56,9 @@ public:
 
    const Board & operator=(const Board &m);
 
+   void copy_squares(const Board &m);
+   void release_squares();
+
    ~Board();
 
    GameState move(int dx, int dy);
