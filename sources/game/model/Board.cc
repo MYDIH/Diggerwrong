@@ -64,11 +64,40 @@ Board::Board(const Board &m)
         Squares[i].resize(m.Squares[0].size());
 
         for(unsigned j = 0; j<m.Squares[0].size(); j++)
-        {
             Squares[i][j] = m.Squares[i][j] -> clone();
-        }
     }
 }
+
+
+const Board & Board::operator=(const Board &m)
+{
+   Squares.resize(m.Squares.size());
+   Digger = m.Digger;
+
+   Target = m.Target;
+   Reached = m.Reached;
+
+   Score = m.Score;
+
+   Bonus_score = m.Bonus_score;
+   Bonus_lifes = m.Bonus_lifes;
+
+   State = m.State;
+
+   for(unsigned i = 0; i<m.Squares.size(); i++)
+   {
+      Squares[i].resize(m.Squares[0].size());
+
+      for(unsigned j = 0; j<m.Squares[0].size(); j++)
+      {
+	 Squares[i][j] -> release();
+	 Squares[i][j] = m.Squares[i][j] -> clone();
+      }
+   }
+
+   return *this;
+}
+
 
 Board::~Board()
 {

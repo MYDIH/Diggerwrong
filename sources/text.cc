@@ -32,7 +32,7 @@ void toLowerCase(std::string &s)
 //Valeur de Retour : Booléen a vrai si le jeu //
 //                   continu, a faux sinon    //
 ////////////////////////////////////////////////
-GameState menu(Board *model, unsigned &lifes)
+GameState menu(Board *model, unsigned&lifes)
 {
    std::string tempStr = "";
    bool rightStr = false;
@@ -96,17 +96,20 @@ GameState menu(Board *model, unsigned &lifes)
 //            à afficher                        //
 //Description : Affiche un modèle               //
 //////////////////////////////////////////////////
-void printModel(Board *model, unsigned lifes, unsigned level, int charSet)
+void printModel(Board *model, unsigned lifes, unsigned globalScore, unsigned level, int charSet)
 {
    std::string tempTarget = "Cible a atteindre : " + typeToString<int>(model->getTarget());        //
    std::string tempReached = "Nombre de déplacement : " + typeToString<int>(model->getReached());  //
    std::string tempScore = "Votre Score : " + typeToString<int>(model->getScore());                //
    std::string tempScoreBonus = "Votre Score bonus : " + typeToString<int>(model->getBonusScore());//  On créé les lignes de statu
+   std::string lifesBonus = "Vos vies bonus : " + typeToString<int>(model->getBonusLifes());
    std::string lifeStr = "Vies Restantes : " + typeToString<int>(lifes);                             //
    std::string levelStr = "Niveau n°" + typeToString<int>(level) + " (difficulté: " + typeToString<int>(inv(level)*100) + "%)";                                     //
+   std::string globalScoreStr = "Votre Score totale : " + typeToString<int>(globalScore);          //
+
 
    // On rends le résultat potable en ramenant chaque ligne de statu à la même longueur
-   while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempScoreBonus.length() < DECALAGE_CONSOLE)
+   while(tempTarget.length() < DECALAGE_CONSOLE || tempReached.length() < DECALAGE_CONSOLE || tempScore.length() < DECALAGE_CONSOLE || tempScoreBonus.length() < DECALAGE_CONSOLE || lifesBonus.length() < DECALAGE_CONSOLE || globalScoreStr.length() < DECALAGE_CONSOLE)
    {
       if(tempTarget.length() < DECALAGE_CONSOLE)
 	 tempTarget += ' ';
@@ -116,6 +119,10 @@ void printModel(Board *model, unsigned lifes, unsigned level, int charSet)
 	 tempScore += ' ';
       if(tempScoreBonus.length() < DECALAGE_CONSOLE)
 	 tempScoreBonus += ' ';
+      if(lifesBonus.length() < DECALAGE_CONSOLE)
+	 lifesBonus += ' ';
+      if(globalScoreStr.length() < DECALAGE_CONSOLE)
+	 globalScoreStr += ' ';
    }
 
    // On inscrit des précisions sur les représentations au sein de la matrice a droite du statu
@@ -131,11 +138,72 @@ void printModel(Board *model, unsigned lifes, unsigned level, int charSet)
 	     << tempReached << std::endl
 	     << tempScore << std::endl
 	     << tempScoreBonus << std::endl
+	     << lifesBonus << std::endl
 	     << std::endl
 	     << levelStr << std::endl
-	     << lifeStr << std::endl << std::endl;
+	     << lifeStr << std::endl
+	     << globalScoreStr<< std::endl << std::endl;
 }
 
+GameState try_level(int charSet, unsigned & lifes, unsigned & score, unsigned level, const Board & orig)
+{
+   Board atry(orig);
+
+   while (true)
+   {
+      printModel(&atry, lifes, score, level, charSet);
+	 
+      switch (menu(&atry, lifes))
+      {
+	 case WON:
+	    score += atry.getScore() + atry.getBonusScore();
+	    lifes += atry.getBonusLifes();
+	    return WON;
+	    
+	 case LOST:
+	 {
+	    if (lifes < 1)
+	       return LOST;
+	    else
+	       atry = orig;
+	 }
+	 break;
+	    
+	 case QUIT:
+	    return QUIT;
+
+	 default:;
+      }
+
+   }
+}
+
+GameState play(int charSet)
+{
+   unsigned score = 0;
+   unsigned lifes = 5;
+   unsigned level = 1;
+
+   while (true)
+   {
+      Board board(18,18, inv(level), 22);
+
+      switch ( try_level(charSet, lifes, score, level, board) )
+      {
+	 case WON:
+	    level++;
+	    break;
+	    
+	 case LOST:
+	    return LOST;
+	    
+	 case QUIT:
+	    return QUIT;
+
+	 default:;
+      }
+   }
+}
 
 int textMain(int charSet)
 {
@@ -148,51 +216,7 @@ int textMain(int charSet)
 
    srand(time(NULL));
 
-   Board *realModel;
-   Board *modelForGame;
-   GameState state = CONTINUE;
-   unsigned lifes = 5;
-   unsigned bonusLifes = 0;
-   unsigned level = 1;
-
-   realModel = new Board(18, 18, inv(level), 22);
-
-   while(state != QUIT)
-   {
-      modelForGame = new Board(*realModel);
-
-      printModel(modelForGame, lifes, level, charSet);
-      state = menu(modelForGame, lifes);
-
-      while(state == CONTINUE && lifes > 0) // Tantque le jeu continu => Le joueur ne souhaite pas quitter et il n'a pas perdu
-      {
-	 printModel(modelForGame, lifes, level, charSet);
-	 state = menu(modelForGame, lifes);
-	 if(modelForGame->getBonusLifes() > bonusLifes)
-	 {
-	    lifes += modelForGame->getBonusLifes() - bonusLifes;
-	    bonusLifes = modelForGame->getBonusLifes();
-	 }
-      }
-
-      if((lifes < 1 && state != QUIT) || state == WON)
-      {
-	 if(state != WON)
-	 {
-	    lifes = 5;
-	    level = 0;
-	 }
-	 delete realModel;
-	 level++;
-
-	 realModel = new Board(18, 18, inv(level), 22);
-	 bonusLifes = 0;
-      }
-
-      delete modelForGame;
-   }
-
-   delete realModel;
+   while (play(charSet) != QUIT);
 
    return EXIT_SUCCESS;
 }

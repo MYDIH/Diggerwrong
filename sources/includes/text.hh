@@ -2,7 +2,7 @@
 
 #include "Board.hh"
 #include "consts.hh"
-#include "includes/utils.hh"
+#include "utils.hh"
 
 #include <cstdlib>
 #include <string>

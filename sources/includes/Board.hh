@@ -54,6 +54,8 @@ public:
    Board(unsigned width, unsigned height, double difficulty, unsigned target);
    Board(const Board &m);
 
+   const Board & operator=(const Board &m);
+
    ~Board();
 
    GameState move(int dx, int dy);
