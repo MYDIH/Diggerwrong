@@ -44,7 +44,8 @@ int main(int argc, char ** argv)
 
    if (o.count("help"))
    {
-      std::cout << options;
+      std::cout << "\n-- diggewrong rev." << REV << "\n-- un clone du jeu Puru Puru Digger\n-- Timothée Jourde & Nicolas Gomez\n\n"
+		<< options << std::endl;
       return EXIT_SUCCESS;
    }
    else if (o.count("gui"))

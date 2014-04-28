@@ -12,6 +12,7 @@ buildir = Builds
 cache   = $(buildir)/.cache
 bin     = diggewrong
 
+
 # pour utiliser le globbing
 SHELL    = /bin/bash -O extglob -O globstar -c
 
@@ -25,8 +26,8 @@ debug   = $(src_release:%.cc=$(cache)/%.debug.o)
 
 
 release:	$(buildir)/release/$(bin)
-unit:		$(buildir)/unit/testsuite
 debug:		$(buildir)/debug/$(bin)
+unit:		$(buildir)/unit/testsuite
 
 
 $(buildir)/release/$(bin):	$(release)
@@ -55,7 +56,7 @@ check-syntax:
 # compilation + génération des fichiers de dépendance
 $(cache)/%.o:		%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -O3 -MMD -MF $(cache)/$*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -D REV=$(shell git rev-list --count HEAD) -O3 -MMD -MF $(cache)/$*.d -c -o $@ $<
 
 $(cache)/%.debug.o :	%.cc
 	mkdir -p $(@D)
