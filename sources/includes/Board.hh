@@ -56,8 +56,8 @@ public:
 
    const Board & operator=(const Board &m);
 
-   void copy_squares(const Board &m);
-   void release_squares();
+   void copySquares(const Board &m);
+   void releaseSquares();
 
    ~Board();
 

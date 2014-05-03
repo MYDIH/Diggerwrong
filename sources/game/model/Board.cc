@@ -45,7 +45,14 @@ Board::Board(unsigned width, unsigned height, double difficulty
    tmp -> release();
 }
 
-void Board::copy_squares(const Board &m)
+void Board::releaseSquares()
+{
+   for(unsigned i = 0; i<Squares.size(); i++)
+      for(unsigned j = 0; j<Squares[0].size(); j++)
+	 Squares[i][j]->release();
+}
+
+void Board::copySquares(const Board &m)
 {
    for(unsigned i = 0; i<m.Squares.size(); i++)
    {
@@ -70,7 +77,7 @@ Board::Board(const Board &m)
 
    ,State(m.State)
 {
-   copy_squares(m);
+   copySquares(m);
 }
 
 
@@ -88,24 +95,17 @@ const Board & Board::operator=(const Board &m)
 
    State = m.State;
 
-   release_squares();
+   releaseSquares();
    Squares.resize(m.Squares.size());
-   copy_squares(m);
+   copySquares(m);
 
    return *this;
 }
 
 
-void Board::release_squares()
-{
-   for(unsigned i = 0; i<Squares.size(); i++)
-      for(unsigned j = 0; j<Squares[0].size(); j++)
-	 Squares[i][j]->release();
-}
-
 Board::~Board()
 {
-   release_squares();
+   releaseSquares();
 }
 
 GameState Board::move(int dx, int dy)
