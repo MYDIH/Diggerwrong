@@ -16,10 +16,7 @@ int guiMain() // temporaire...
    
    sf::RenderWindow window(sf::VideoMode::GetDesktopMode(), "Demo !");
    window.SetFramerateLimit(35);
-   EventDemo demo;
 
-
-   std::cout << "\nrun() giving up with code : " << demo.run(window) << "\n";
 
    return EXIT_SUCCESS;
 }

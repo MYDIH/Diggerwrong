@@ -6,35 +6,28 @@
 
 class EventHandler
 {
+private:
+   bool Need_refresh;
+   static const sf::Clock Clock;
+
 public:
+   EventHandler();
    virtual ~EventHandler();
 
    int run(sf::RenderWindow & w);
-   int call(sf::Event t);
-      
+   int call(sf::RenderWindow & w, sf::Event & t);
+   void need_refresh();
       
       
    /* Evenements */
-   virtual int draw(sf::RenderWindow & w) = 0;
-   virtual int mouseButtonPressed(sf::Event::MouseButtonEvent e)  = 0;
-   virtual int mouseButtonReleased(sf::Event::MouseButtonEvent e) = 0;
-      
-   virtual int closed();
-      
-      
-      
-      
+   virtual void draw(sf::RenderWindow & w);
+   virtual int tick(sf::RenderWindow & w, float now);
+   virtual int mouse_button_pressed(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e);
+   virtual int mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e);
+   virtual int key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e);
+   virtual int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e);
+   virtual int mouse_moved(sf::RenderWindow & w, sf::Event::MouseMoveEvent & e);
+   virtual int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e);
+   virtual int closed(sf::RenderWindow & w);
 };
-
-class EventDemo : public EventHandler
-{
-private:
-   int x = -1, y = -1;
-public:
-   int draw(sf::RenderWindow & w) override;
-   int mouseButtonPressed(sf::Event::MouseButtonEvent e)  override;
-   int mouseButtonReleased(sf::Event::MouseButtonEvent e) override;
-};
-
-
 
