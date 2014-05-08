@@ -12,62 +12,65 @@ private:
 
 public:
    sf::Sprite frame(float elapsed_time, float stopping_since) const;
-   float remaning_time(float elapsed_time, float stopping_since) const;
+   float remaining_time(float elapsed_time, float stopping_since) const;
 };
 
 class Animation
 {
 private:
    const AnimationResource * Resource;
+
+   float Start_at;
+   float Stop_at;
+
+   float Elapsed_time;
+
 public:
    Animation();
 
-   void start();
-   void stop();
+   void start(float at);
+   void stop(float at);
 
-   bool tick(float now);
-   /* false si dernière frame atteinte ;
-      pour afficher exactement le bon nombre 
-      de frames, appeler draw() après chaque
-      tick() (y compris le premier retournant false)
+   void tick(float now);
 
-      exemple:
-      | while ( s.tick(t) ) s.draw(d);
-      | s.draw(d);
-   */
+   float remaining_time() const;
 
-
-   void draw(sf::RenderTarget & drawer);
+   void draw(sf::RenderTarget & drawer) const;
 };
 
-class SquareSprite
+class SquareAnimation
 {
    enum state
    {
-      APPEAR
-      ,NORMAL
-      ,DISAPPEAR
+      APPEARING
+      ,APPEARED
+      ,DISAPPEARING
+      ,DISAPPEARED
    };
 
 private:
-/*
-   AnimatedSprite Appear;
-   AnimatedSprite Appear_above;
+   Animation Appearing;
+   Animation Appearing_above;
 
-   AnimatedSprite Normal;
-   AnimatedSprite Normal_above;
+   Animation Normal;
+   Animation Normal_above;
 
-   AnimatedSprite Disappear;
-   AnimatedSprite Disappear_above;
-*/
+   Animation Disappearing;
+   Animation Disappearing_above;
+
+
+   float Appear_at;
+   float Disappear_at;
+
    state State;
-
 public:
-   SquareSprite();
+   SquareAnimation();
 
-   void appear();
-   void disappear();
+   void appear(float at);
+   void disappear(float at);
 
-   bool tick(float now);
-   void draw(sf::RenderTarget & drawer);
+   void tick(float now);
+
+   void draw(sf::RenderTarget & drawer) const;
+   void draw_above(sf::RenderTarget & drawer) const;
 };

@@ -3,103 +3,150 @@
 
 sf::Sprite AnimationResource::frame(float elapsed_time, float stopping_since = -1) const
 {
-   const unsigned frame = elapsed_time * Fps;
+   const unsigned size = Frames.size();
 
-   return Frames[ Iterator(frame_n, Frames.size(), last_frame_reached, 0) ];
-   
-   return last_frame_reached;
-}
-
-
-
-
-bool Animation::tick(float now)
-{
-   /*
-
-   if (Frames == nullptr or Frames -> size() == 0)
-      return false;
-
-   else
+   if (Loop)
    {
-      unsigned frame;
-
-      if (not Started)
+      if (stopping_since >= 0)
       {
-	 Started = true;
-	 First = now;
+	 const float frame_f = (stopping_since * Fps);
+	 const unsigned integer_part = frame_f;
+	 const float delta = frame_f - integer_part;
 
-	 frame = 0;
+	 const unsigned stopped_at_frame = integer_part % size;
+	 const unsigned frame = ((elapsed_time - stopping_since) * Fps + delta) + stopped_at_frame;
+
+	 if (frame >= size-1)
+	    return Frames[ size-1 ];
+	 else
+	    return Frames[ frame ];
+
       }
       else
-	 frame = (unsigned) ((First - now) / (Duration / Frames->size()));
-
-      
-      switch(Iterator)
       {
-	 case ONCE:
-	    if (frame >= Frames->size() - 1)
-	    {
-	       Frame = Frames->size() - 1;
-	       return false;
-	    }
-	    else
-	    {
-	       Frame = frame;
-	       return true;
-	    }
-
-	 case LOOP:
-	    Frame = frame % (Frames->size());
-	    return true;
-
-	 case BACK_AND_FORTH:
-	    frame = frame % (Frames->size() * 2);
-
-	    if (frame >= Frames->size())
-	       Frame = 2*Frames->size() - frame - 1;
-	    else
-	       Frame = frame;
-
-	    return true;
+	 return Frames[ (unsigned)(elapsed_time * Fps) % size ];
       }
    }
+   else
+   {
+      const unsigned frame = elapsed_time * Fps;
 
-   return true; // pour le warning;
-
-   */
-
-   return true;
+      if (frame >= size-1)
+	 return Frames[ size-1 ];
+      else
+	 return Frames[ frame ];
+   }
 }
 
-void Animation::draw(sf::RenderTarget & drawer)
+
+#define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
+float AnimationResource::remaining_time(float elapsed_time, float stopping_since = -1) const
 {
-/*
-   if (Frames != nullptr and Frame < Frames->size())
-      drawer.Draw( (*Frames)[Frame] );
-*/
+   const unsigned size = Frames.size();
+
+   if (Loop)
+   {
+      if (stopping_since >= 0)
+      {
+	 const float frame_f = (stopping_since * Fps);
+	 const unsigned integer_part = frame_f;
+	 const float delta = frame_f - integer_part;
+
+	 const unsigned stopped_at_frame = integer_part % size;
+
+	 return MAX(0, (size - stopped_at_frame - delta) / Fps - (elapsed_time - stopping_since));
+      }
+      else 
+	 return -1;
+   }
+   else
+      return MAX(0, (size / Fps) - elapsed_time);
 }
 
-
-SquareSprite::SquareSprite()
-   :State(NORMAL)
+Animation::Animation()
+   :Resource(nullptr)
+   ,Start_at(-1)
+   ,Stop_at(-1)
+   ,Elapsed_time(0)
 {}
 
-void SquareSprite::appear()
+void Animation::tick(float now)
 {
+   if (Start_at >= 0 and now >= Start_at)
+      Elapsed_time = now - Start_at;
 }
 
-void SquareSprite::disappear()
+void Animation::start(float at)
+{ Start_at = at; }
+void Animation::stop(float at)
+{ Stop_at = at; }
+
+float Animation::remaining_time() const
 {
+   if (Resource != nullptr)
+      return Resource -> remaining_time(Elapsed_time, Stop_at);
+   else
+      return 0;
 }
 
-bool SquareSprite::tick(float now)
+void Animation::draw(sf::RenderTarget & drawer) const
 {
-   return true;
+   if (Resource != nullptr)
+      drawer.Draw( Resource -> frame(Elapsed_time, Stop_at) );
 }
 
-void SquareSprite::draw(sf::RenderTarget & drawer)
+
+SquareAnimation::SquareAnimation()
+   :Appear_at(-1)
+   ,Disappear_at(-1)
+   ,State(DISAPPEARED)
+{}
+
+void SquareAnimation::appear(float at)
 {
+   Appearing.start( at );
+   Appearing_above.start( at );
+
+   Normal.start( at + Appearing.remaining_time() );
+   Normal_above.start( at + Appearing_above.remaining_time() );
+
+   Appear_at = at;
+}
+void SquareAnimation::disappear(float at)
+{
+   Normal.stop( at );
+   Normal_above.stop( at );
+
+   Disappearing.start( at + Normal.remaining_time() );
+   Disappearing_above.start( at + Normal_above.remaining_time() );
+
+   Disappear_at = at;
+}
+
+void SquareAnimation::tick(float now)
+{
+   
+}
+
+void SquareAnimation::draw(sf::RenderTarget & drawer) const
+{
+   switch (State)
+   {
+      case APPEARING:    Appearing.draw(drawer);    break;
+      case APPEARED:     Normal.draw(drawer);       break;
+      case DISAPPEARING: Disappearing.draw(drawer); break;
+      case DISAPPEARED:;
+   }
+}
+void SquareAnimation::draw_above(sf::RenderTarget & drawer) const
+{
+   switch (State)
+   {
+      case APPEARING:    Appearing_above.draw(drawer);    break;
+      case APPEARED:     Normal_above.draw(drawer);       break;
+      case DISAPPEARING: Disappearing_above.draw(drawer); break;
+      case DISAPPEARED:;
+   }
 }
 
 
