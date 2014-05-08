@@ -1,23 +1,11 @@
 #include "sprites.hh"
 
 
-bool AnimationResource::frame(float elapsed_time, sf::Sprite & frame) const
+sf::Sprite AnimationResource::frame(float elapsed_time, float stopping_since = -1) const
 {
-   bool last_frame_reached;
-   const unsigned frame_n = elapsed_time * Fps;
+   const unsigned frame = elapsed_time * Fps;
 
-   frame = Frames[ Iterator(frame_n, Frames.size(), last_frame_reached, 0) ];
-   
-   return last_frame_reached;
-}
-
-bool AnimationResource::frame_stopping(float elapsed_time, float stopping_since, sf::Sprite & frame) const
-{
-   bool last_frame_reached;
-   const unsigned frame_n = elapsed_time * Fps;
-   const unsigned from_frame_n = stopping_since * Fps;
-
-   frame = Frames[ Stopping_iterator(frame_n, Frames.size(), last_frame_reached, from_frame_n) ];
+   return Frames[ Iterator(frame_n, Frames.size(), last_frame_reached, 0) ];
    
    return last_frame_reached;
 }

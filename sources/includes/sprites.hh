@@ -5,17 +5,14 @@
 
 class AnimationResource
 {
-   typedef unsigned (*iterator)(unsigned frame, unsigned frames_count, bool & last_frame_reached, unsigned from_frame);
-
 private:
    std::vector<sf::Sprite> Frames;
    float Fps;
-   iterator Iterator;
-   iterator Stopping_iterator;
+   bool Loop;
 
 public:
-   bool frame(float elapsed_time, sf::Sprite & frame) const;
-   bool frame_stopping(float elapsed_time, float stopping_since, sf::Sprite & frame) const;
+   sf::Sprite frame(float elapsed_time, float stopping_since) const;
+   float remaning_time(float elapsed_time, float stopping_since) const;
 };
 
 class Animation
