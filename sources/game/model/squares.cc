@@ -1,4 +1,5 @@
 #include "Square.hh"
+#include "squares.hh"
 
 #include <cmath>
 
@@ -6,24 +7,24 @@
 // Digged
 //
 
-bool Digged::dig(Board & m, int x, int y, int dx, int dy, int distance)
+bool SDigged::dig(Board & m, int x, int y, int dx, int dy, int distance)
 { return true; }
 
-const std::string Digged::toString(const int &charSet) const
+const std::string SDigged::toString(const int &charSet) const
 { return "   "; }
 
-Square* Digged::clone()
-{ return new Digged; }
+Square* SDigged::clone()
+{ return new SDigged; }
 
 
 //
 // Normal
 //
 
-Normal::Normal(unsigned val)
+SNormal::SNormal(unsigned val)
 { Value = val; }
 
-Normal::Normal(double difficulty, unsigned longestside)
+SNormal::SNormal(double difficulty, unsigned longestside)
 {
    const double r = pow(rand() / (double) RAND_MAX, 1.5);
 
@@ -32,10 +33,10 @@ Normal::Normal(double difficulty, unsigned longestside)
    Value = max*r + 1;
 }
 
-Normal::Normal(const Normal & other)
+SNormal::SNormal(const SNormal & other)
 { Value = other.Value; }
 
-const std::string Normal::toString(const int &charSet) const
+const std::string SNormal::toString(const int &charSet) const
 {
    const std::string ret = CHARS[charSet][7] + typeToString<int>(Value);
 
@@ -47,7 +48,7 @@ const std::string Normal::toString(const int &charSet) const
       return ret;
 }
 
-bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
+bool SNormal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 {
   m.addScore(Value*10);
 
@@ -57,7 +58,7 @@ bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
         distance = Value - 1;
    }
 
-   Square * tmp = new Digged();
+   Square * tmp = new SDigged();
    m.replaceSquare(x, y, tmp);
    tmp -> release();
 
@@ -67,21 +68,21 @@ bool Normal::dig(Board & m, int x, int y, int dx, int dy, int distance)
       return false;
 }
 
-Square* Normal::clone()
-{ return new Normal(*this); }
+Square* SNormal::clone()
+{ return new SNormal(*this); }
 
 //
 // Bonus
 //
 
-Bonus::Bonus(unsigned val, unsigned life, unsigned score) : Normal(val)
+SBonus::SBonus(unsigned val, unsigned life, unsigned score) : SNormal(val)
 {
     Lifes = life;
     Score = score;
 }
 
-Bonus::Bonus(double difficulty, unsigned longestside)
-   : Normal(difficulty, longestside)
+SBonus::SBonus(double difficulty, unsigned longestside)
+   : SNormal(difficulty, longestside)
 {
    const double plife  = (1.1 - difficulty) * 0.2;
 
@@ -100,22 +101,22 @@ Bonus::Bonus(double difficulty, unsigned longestside)
    }
 }
 
-Bonus::Bonus(const Bonus & other) : Normal(other)
+SBonus::SBonus(const SBonus & other) : SNormal(other)
 {
     Lifes = other.Lifes;
     Score = other.Score;
 }
 
-bool Bonus::dig(Board & m, int x, int y
+bool SBonus::dig(Board & m, int x, int y
 		 ,int dx, int dy, int distance)
 {
    m.addBonusScore(Score);
    m.addBonusLifes(Lifes);
 
-   return Normal::dig(m,x,y,dx,dy,distance);
+   return SNormal::dig(m,x,y,dx,dy,distance);
 }
 
-const std::string Bonus::toString(const int &charSet) const
+const std::string SBonus::toString(const int &charSet) const
 {
    if (Value < 10)
       return CHARS[charSet][1] + typeToString<int>(Value) + CHARS[charSet][2];
@@ -124,25 +125,25 @@ const std::string Bonus::toString(const int &charSet) const
 
 }
 
-Square* Bonus::clone()
-{ return new Bonus(*this); }
+Square* SBonus::clone()
+{ return new SBonus(*this); }
 
 
 //
 // Bomb
 //
 
-bool Bomb::dig(Board & m, int x, int y
+bool SBomb::dig(Board & m, int x, int y
 		 ,int dx, int dy, int distance)
 {
    return true;
 }
 
-const std::string Bomb::toString(const int &charSet) const
+const std::string SBomb::toString(const int &charSet) const
 { return CHARS[charSet][0]; }
 
-Square* Bomb::clone()
-{ return new Bomb; }
+Square* SBomb::clone()
+{ return new SBomb; }
 
 
 

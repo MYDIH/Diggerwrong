@@ -1,5 +1,7 @@
 #include "Board.hh"
 #include "consts.hh"
+#include "squares.hh"
+#include "Square.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -40,7 +42,7 @@ Board::Board(unsigned width, unsigned height, double difficulty
         }
     }
 
-   Square * tmp = new Digged;
+   Square * tmp = new SDigged;
    replaceSquare(Digger.x, Digger.y, tmp);
    tmp -> release();
 }
@@ -54,6 +56,8 @@ void Board::releaseSquares()
 
 void Board::copySquares(const Board &m)
 {
+   Squares.resize(m.Squares.size());
+
    for(unsigned i = 0; i<m.Squares.size(); i++)
    {
       Squares[i].resize(m.Squares[0].size());
@@ -64,22 +68,9 @@ void Board::copySquares(const Board &m)
 }
 
 Board::Board(const Board &m)
-   : Squares(m.Squares.size())
-   ,Digger(m.Digger)
-
-   ,Target(m.Target)
-   ,Reached(m.Reached)
-
-   ,Score(m.Score)
-
-   ,Bonus_score(m.Bonus_score)
-   ,Bonus_lifes(m.Bonus_lifes)
-
-   ,State(m.State)
 {
-   copySquares(m);
+   operator=(m);
 }
-
 
 const Board & Board::operator=(const Board &m)
 {
@@ -96,7 +87,6 @@ const Board & Board::operator=(const Board &m)
    State = m.State;
 
    releaseSquares();
-   Squares.resize(m.Squares.size());
    copySquares(m);
 
    return *this;
@@ -133,9 +123,9 @@ Square* Board::newRandomSquare(double difficulty, unsigned longestside)
    double pbomb  = difficulty * 0.12;
    double pbonus = (1-difficulty) * 0.017;
 
-   if      (r <= pbomb)          return new Bomb(); // bomb
-   else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
-   else                          return new Normal(difficulty, longestside); // normal
+   if      (r <= pbomb)          return new SBomb(); // bomb
+   else if (r <= pbomb + pbonus) return new SBonus(difficulty, longestside); // bonus
+   else                          return new SNormal(difficulty, longestside); // normal
 }
 
 const std::string Board::toString(const int &charSet) const

@@ -1,5 +1,5 @@
-#include "EventHandler.hh"
 #include "text.hh"
+#include "tests.hh"
 
 #include <boost/program_options.hpp>
 #include <cstdlib>
@@ -12,11 +12,7 @@ namespace po = boost::program_options;
 
 int guiMain() // temporaire...
 {
-   srand(time(NULL));
-   
-   sf::RenderWindow window(sf::VideoMode::GetDesktopMode(), "Demo !");
-   window.SetFramerateLimit(35);
-
+   animation();
 
    return EXIT_SUCCESS;
 }

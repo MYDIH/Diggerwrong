@@ -2,16 +2,22 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <vector>
+#include <list>
 
 class AnimationResource
 {
 private:
-   std::vector<sf::Sprite> Frames;
+   std::list<sf::Image> Images;
+   std::vector<sf::Drawable *> Frames;
    float Fps;
    bool Loop;
 
 public:
-   sf::Sprite frame(float elapsed_time, float stopping_since) const;
+   AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
+   ~AnimationResource();
+
+   const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
    float remaining_time(float elapsed_time, float stopping_since) const;
 };
 
@@ -21,56 +27,17 @@ private:
    const AnimationResource * Resource;
 
    float Start_at;
-   float Stop_at;
-
-   float Elapsed_time;
+   float Stop_after;
 
 public:
-   Animation();
+   Animation(const AnimationResource * r);
 
    void start(float at);
    void stop(float at);
 
-   void tick(float now);
+   bool running(float at) const;
 
-   float remaining_time() const;
+   float remaining_time(float at) const;
 
-   void draw(sf::RenderTarget & drawer) const;
-};
-
-class SquareAnimation
-{
-   enum state
-   {
-      APPEARING
-      ,APPEARED
-      ,DISAPPEARING
-      ,DISAPPEARED
-   };
-
-private:
-   Animation Appearing;
-   Animation Appearing_above;
-
-   Animation Normal;
-   Animation Normal_above;
-
-   Animation Disappearing;
-   Animation Disappearing_above;
-
-
-   float Appear_at;
-   float Disappear_at;
-
-   state State;
-public:
-   SquareAnimation();
-
-   void appear(float at);
-   void disappear(float at);
-
-   void tick(float now);
-
-   void draw(sf::RenderTarget & drawer) const;
-   void draw_above(sf::RenderTarget & drawer) const;
+   void draw(sf::RenderTarget & drawer, float now) const;
 };
