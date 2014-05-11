@@ -1,5 +1,5 @@
 #include "tests.hh"
-#include "sprites.hh"
+#include "Animation.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>

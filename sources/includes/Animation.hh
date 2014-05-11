@@ -1,11 +1,15 @@
 #pragma once
 
+#include "resources.hh"
+
 #include <SFML/Graphics.hpp>
 
 #include <vector>
 #include <list>
 
-class AnimationResource
+
+
+class AnimationResource : public Resource
 {
 private:
    std::list<sf::Image> Images;
@@ -15,10 +19,12 @@ private:
 
 public:
    AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
-   ~AnimationResource();
+   ~AnimationResource() override;
 
    const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
    float remaining_time(float elapsed_time, float stopping_since) const;
+
+   void load(const std::string & basepath) override;
 };
 
 class Animation
@@ -31,6 +37,7 @@ private:
 
 public:
    Animation(const AnimationResource * r);
+   Animation(const Animation &);
 
    void start(float at);
    void stop(float at);

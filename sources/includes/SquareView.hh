@@ -1,12 +1,14 @@
 #pragma once
 
-#include "sprites.hh"
+#include "Animation.hh"
 
 #include <SFML/Graphics.hpp>
 
 class SquareView
 {
 public:
+   virtual ~SquareView();
+
    virtual void draw(sf::RenderTarget & drawer, float now)       const = 0;
    virtual void draw_above(sf::RenderTarget & drawer, float now) const = 0;
 
@@ -18,7 +20,7 @@ public:
 
 class AnimatedSquareView : public SquareView
 {
-private:
+protected:
    Animation Appearing;
    Animation Appearing_above;
 
@@ -37,6 +39,8 @@ public:
 
 		      ,const AnimationResource * disappearing
 		      ,const AnimationResource * disappearing_above);
+
+   AnimatedSquareView(const AnimatedSquareView &);
 
    void appear(float at)    override;
    void disappear(float at) override;

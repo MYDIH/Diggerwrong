@@ -42,7 +42,7 @@ Board::Board(unsigned width, unsigned height, double difficulty
         }
     }
 
-   Square * tmp = new SDigged;
+   Square * tmp = new Digged;
    replaceSquare(Digger.x, Digger.y, tmp);
    tmp -> release();
 }
@@ -123,9 +123,9 @@ Square* Board::newRandomSquare(double difficulty, unsigned longestside)
    double pbomb  = difficulty * 0.12;
    double pbonus = (1-difficulty) * 0.017;
 
-   if      (r <= pbomb)          return new SBomb(); // bomb
-   else if (r <= pbomb + pbonus) return new SBonus(difficulty, longestside); // bonus
-   else                          return new SNormal(difficulty, longestside); // normal
+   if      (r <= pbomb)          return new Bomb(); // bomb
+   else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
+   else                          return new Normal(difficulty, longestside); // normal
 }
 
 const std::string Board::toString(const int &charSet) const
@@ -251,3 +251,13 @@ unsigned Board::getBonusLifes() const
 
 
 
+void Board::registerObserver(observer o)
+{ Observers.insert(o); }
+void Board::unregisterObserver(observer o)
+{ Observers.erase(o); }
+void Board::notify(const change & c) const
+{
+   for (observer o : Observers)
+      if (o)
+	 o(c);
+}

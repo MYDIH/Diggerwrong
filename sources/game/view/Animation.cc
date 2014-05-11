@@ -1,4 +1,4 @@
-#include "sprites.hh"
+#include "Animation.hh"
 
 #include <iostream>
 #include <cfloat>
@@ -11,9 +11,9 @@ AnimationResource::AnimationResource(unsigned frame_count, float fps, bool loop)
    ,Loop(loop)
 {
    sf::Shape model;
-   model.AddPoint(0-15,0-15);
-   model.AddPoint(0+15,0-15);
-   model.AddPoint(0,0+15);
+   model.AddPoint(-7,-7);
+   model.AddPoint(+7,-7);
+   model.AddPoint(0,+10);
    model.EnableFill(true);
    model.EnableOutline(false);
    model.SetColor(sf::Color(50,150,0));
@@ -51,6 +51,9 @@ AnimationResource::~AnimationResource()
    for (sf::Drawable * frame : Frames)
       delete frame;
 }
+
+void AnimationResource::load(const std::string & basepath)
+{}
 
 const sf::Drawable & AnimationResource::frame(float elapsed_time, float stopping_since = FLT_MAX) const
 {
@@ -130,6 +133,12 @@ Animation::Animation(const AnimationResource * r)
    :Resource(r)
    ,Start_at(FLT_MAX)
    ,Stop_after(0)
+{}
+
+Animation::Animation(const Animation & o)
+   :Resource(o.Resource)
+   ,Start_at(o.Start_at)
+   ,Stop_after(o.Stop_after)
 {}
 
 void Animation::start(float at)

@@ -3,6 +3,7 @@
 #include "Square.hh"
 #include "utils.hh"
 
+#include <set>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -29,8 +30,47 @@ struct point
 // représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
 class Board
 {
+public:
+   struct change
+   {
+      enum
+      {
+	 SCORE
+	 ,SCORE_BONUS
+	 ,LIFE_BONUS
+	 ,MOVE
+	 ,LOST
+	 ,WON
+	 ,REPLACE
+	 
+      } type;
+
+      union
+      {
+	 unsigned value;
+	 // SCORE* et LIFE*
+
+	 point location;
+	 // MOVE
+
+	 struct
+	 {
+	    point location;
+	    const Square * square;
+
+	 } square;
+	 // REPLACE
+
+      } infos;
+   };
+
+   typedef void (*observer)(const change &);
+
+
+
 private:
    std::vector< std::vector<Square*> > Squares;
+   std::set<observer> Observers;
 
    point Digger;
 
@@ -46,6 +86,10 @@ private:
 
    GameState State;
 
+   void copySquares(const Board &m);
+   void releaseSquares();
+
+   void notify(const change&) const;
 
    // temporaire ; la génération aléatoire sera plus complexe
    Square* newRandomSquare(double difficulty, unsigned longestside);
@@ -55,9 +99,6 @@ public:
    Board(const Board &m);
 
    const Board & operator=(const Board &m);
-
-   void copySquares(const Board &m);
-   void releaseSquares();
 
    ~Board();
 
@@ -83,6 +124,9 @@ public:
    unsigned getWidth()  const;
    unsigned getHeight() const;
 
+
+   void registerObserver(observer o);
+   void unregisterObserver(observer o);
 
 
    // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception

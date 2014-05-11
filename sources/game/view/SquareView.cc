@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
+SquareView::~SquareView()
+{}
+
 void SquareView::tick(float now)
 {}
 
@@ -23,6 +26,17 @@ AnimatedSquareView::AnimatedSquareView(const AnimationResource * appearing
 
    ,Disappearing(disappearing)
    ,Disappearing_above(disappearing_above)
+{}
+
+AnimatedSquareView::AnimatedSquareView(const AnimatedSquareView & o)
+   :Appearing(o.Appearing)
+   ,Appearing_above(o.Appearing_above)
+
+   ,Appeared(o.Appeared)
+   ,Appeared_above(o.Appeared_above)
+
+   ,Disappearing(o.Disappearing)
+   ,Disappearing_above(o.Disappearing_above)
 {}
    
 void AnimatedSquareView::appear(float at)

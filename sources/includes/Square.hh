@@ -10,7 +10,7 @@
 class Board;
 
 // Classe abstraite. Représente une case (model du MVC).
-// Est manipulé dans une collection hétérogène de manière générique/unique (pas de transtypage/identification...).
+// Est manipulé par Board dans une collection hétérogène de manière générique/unique (pas de transtypage/identification...).
 class Square
 {
 private:
@@ -22,7 +22,7 @@ public:
    virtual bool dig(Board & model, int x, int y
 		    ,int dx=0, int dy=0, int distance=-1) = 0;
 
-   virtual Square * clone() = 0;
+   virtual Square * clone() const = 0;
 
 
    void retain();

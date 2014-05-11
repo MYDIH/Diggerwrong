@@ -2,9 +2,15 @@
 
 #include "Square.hh"
 #include "SquareView.hh"
+#include "resources.hh"
 
-
-
+///////////////////////////////////////////
+///////////////////////////////////////////
+//////
+//////   Normal
+//////
+///////////////////////////////////////////
+///////////////////////////////////////////
 class SNormal : public Square
 {
 protected:
@@ -19,13 +25,35 @@ public:
 
    bool dig(Board & model, int x, int y
 	    ,int dx, int dy, int distance) override;
-   Square * clone() override;
+
 };
+
 class Normal : public SNormal, public AnimatedSquareView
-{};
+{
+private:
+   static AnimationResource appeared;
+
+public:
+   static void init(ResourcesPool & pool);
+   static Square * create(double difficulty, unsigned width, unsigned height);
+
+   Normal(double, unsigned);
+
+   Normal(const Normal &);
+   Square * clone() const override;
+   
+   void draw(sf::RenderTarget & drawer, float now) const override;
+};
 
 
 
+///////////////////////////////////////////
+///////////////////////////////////////////
+//////
+//////   Bonus
+//////
+///////////////////////////////////////////
+///////////////////////////////////////////
 class SBonus : public SNormal
 {
 private:
@@ -41,13 +69,33 @@ public:
 
    bool dig(Board & model, int x, int y
 	    ,int dx, int dy, int distance) override;
-   Square * clone() override;
 };
+
 class Bonus : public SBonus, public AnimatedSquareView
-{};
+{
+private:
+   static AnimationResource appeared;
+
+public:
+   static void init(ResourcesPool & pool);
+   static Square * create(double difficulty, unsigned width, unsigned height);
+
+   Bonus(double, unsigned);
+
+   Bonus(const Bonus &);
+   Square * clone() const override;
+   
+   void draw(sf::RenderTarget & drawer, float now) const override;
+};
 
 
-
+///////////////////////////////////////////
+///////////////////////////////////////////
+//////
+//////   Digged
+//////
+///////////////////////////////////////////
+///////////////////////////////////////////
 class SDigged : public Square
 {
 public:
@@ -55,13 +103,31 @@ public:
 
    bool dig(Board & model, int x, int y
 	    ,int dx, int dy, int distance) override;
-   Square * clone() override;
 };
+
 class Digged : public SDigged, public AnimatedSquareView
-{};
+{
+private:
+   static AnimationResource appeared;
+
+public:
+   static void init(ResourcesPool & pool);
+   static Square * create(double difficulty, unsigned width, unsigned height);
+
+   Digged();
+
+   Square * clone() const override;
+};
 
 
 
+///////////////////////////////////////////
+///////////////////////////////////////////
+//////
+//////   Bomb
+//////
+///////////////////////////////////////////
+///////////////////////////////////////////
 class SBomb : public Square
 {
 public:
@@ -69,10 +135,22 @@ public:
 
    bool dig(Board & model, int x, int y
 	    ,int dx, int dy, int distance) override;
-   Square * clone() override;
 };
+
 class Bomb : public SBomb, public AnimatedSquareView
-{};
+{
+private:
+   static AnimationResource appeared;
+
+public:
+   static void init(ResourcesPool & pool);
+   static Square * create(double difficulty, unsigned width, unsigned height);
+
+   Bomb();
+
+   Square * clone() const override;
+};
+
 
 
 
