@@ -5,46 +5,49 @@
 #include <SFML/Graphics.hpp>
 
 #include <vector>
-#include <list>
-
-
+#include <string>
 
 class AnimationResource : public Resource
 {
 private:
-   std::list<sf::Image> Images;
-   std::vector<sf::Drawable *> Frames;
-   float Fps;
-   bool Loop;
+  sf::Image Image;
+  std::vector<sf::Drawable *> Frames;
+  std::string Dir = "No Dir";
+  float Fps;
+  bool Loop;
 
 public:
-   AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
-   ~AnimationResource() override;
+  AnimationResource(std::string dir);
+  AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
+  ~AnimationResource() override;
 
-   const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
-   float remaining_time(float elapsed_time, float stopping_since) const;
+  const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
+  float remaining_time(float elapsed_time, float stopping_since) const;
 
-   void load(const std::string & basepath) override;
+  void dealloc();
+
+  void load(const std::string & basepath) override;
+  void createErrorImg();
 };
 
 class Animation
 {
 private:
-   const AnimationResource * Resource;
+  const AnimationResource * Resource;
 
-   float Start_at;
-   float Stop_after;
+  float Start_at;
+  float Stop_after;
 
 public:
-   Animation(const AnimationResource * r);
-   Animation(const Animation &);
+  Animation(const AnimationResource * r);
+  Animation(const Animation &);
 
-   void start(float at);
-   void stop(float at);
+  void start(float at);
+  void stop(float at);
 
-   bool running(float at) const;
+  bool running(float at) const;
 
-   float remaining_time(float at) const;
+  float remaining_time(float at) const;
 
-   void draw(sf::RenderTarget & drawer, float now) const;
+  void draw(sf::RenderTarget & drawer, float now) const;
 };

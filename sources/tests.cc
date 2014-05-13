@@ -12,10 +12,10 @@ void animation()
 
 
 
-   AnimationResource once(60,30,false);
-   AnimationResource loop(200,30,true);
+   AnimationResource sonicAnim("sonic/");
+   sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
 
-   Animation a(&loop);
+   Animation a(&sonicAnim);
 
    // SquareAnimation sa(&once
    // 		      ,nullptr
@@ -26,7 +26,7 @@ void animation()
    // 		      ,&once
    // 		      ,nullptr);
 
-   
+
    float now = clock.GetElapsedTime();
 
    // sa.appear(now + 1);
@@ -34,11 +34,8 @@ void animation()
 
 
    a.start(now + 2);
-   a.stop(now + 10);
 
-   sf::View v(sf::FloatRect(-100,-100,100,100));
-   sf::View v2(sf::FloatRect(-100,-100,100,100));
-   v2.Move(-30,-30);
+   sf::View v2(sf::FloatRect(-200,-200, 200,200));
 
 
    while (true)
