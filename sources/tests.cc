@@ -13,7 +13,11 @@ void animation()
 
 
    AnimationResource once(60,30,false);
+
+
    AnimationResource loop(200,30,true);
+
+
 
    Animation a(&loop);
 

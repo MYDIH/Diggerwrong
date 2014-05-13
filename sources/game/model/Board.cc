@@ -9,6 +9,26 @@
 #include <iostream> // debug
 
 
+void Board::Observer::push(const Board::change& c)
+{
+   if ( care(c) )
+      Changes.push(c);
+}
+bool Board::Observer::care(const Board::change& c) const
+{ return true; }
+void Board::Observer::pop()
+{ 
+   if (Changes.size() > 0)
+      Changes.pop();
+}
+const Board::change * Board::Observer::front()
+{
+   if (Changes.size() > 0)
+      return &Changes.front();
+   else
+      return nullptr;
+}
+
 Board::Board(unsigned width, unsigned height, double difficulty
 	     ,unsigned target)
 
@@ -249,15 +269,17 @@ unsigned Board::getBonusScore() const
 unsigned Board::getBonusLifes() const
 { return Bonus_lifes; }
 
+const Square * Board::getSquare(unsigned x, unsigned y) const
+{ return Squares[x][y]; }
 
 
-void Board::registerObserver(observer o)
+void Board::registerObserver(Observer* o)
 { Observers.insert(o); }
-void Board::unregisterObserver(observer o)
+void Board::unregisterObserver(Observer* o)
 { Observers.erase(o); }
 void Board::notify(const change & c) const
 {
-   for (observer o : Observers)
+   for (Observer* o : Observers)
       if (o)
-	 o(c);
+	 o -> push(c);
 }

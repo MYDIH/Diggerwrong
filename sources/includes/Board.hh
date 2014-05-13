@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <queue>
 
 
 class Square;
@@ -27,6 +28,7 @@ struct point
 };
 
 
+
 // représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
 class Board
 {
@@ -42,35 +44,40 @@ public:
 	 ,LOST
 	 ,WON
 	 ,REPLACE
+	 ,DESTRUCT
 	 
       } type;
+
+      point location;
 
       union
       {
 	 unsigned value;
-	 // SCORE* et LIFE*
+	 // SCORE* LIFE*
 
-	 point location;
-	 // MOVE
-
-	 struct
-	 {
-	    point location;
-	    const Square * square;
-
-	 } square;
+	 const Square * square;
 	 // REPLACE
 
       } infos;
    };
 
-   typedef void (*observer)(const change &);
+   class Observer
+   {
+   private:
+      std::queue<Board::change> Changes;
+   protected:
+      void pop();
+      const Board::change * front();
+   public:
+      void push(const Board::change&);
+      virtual bool care(const Board::change&) const;
+   };
 
 
 
 private:
    std::vector< std::vector<Square*> > Squares;
-   std::set<observer> Observers;
+   std::set<Observer*> Observers;
 
    point Digger;
 
@@ -123,10 +130,11 @@ public:
    point    getDigger() const;
    unsigned getWidth()  const;
    unsigned getHeight() const;
+   const Square * getSquare(unsigned x, unsigned y) const;
 
 
-   void registerObserver(observer o);
-   void unregisterObserver(observer o);
+   void registerObserver(Observer* o);
+   void unregisterObserver(Observer* o);
 
 
    // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
