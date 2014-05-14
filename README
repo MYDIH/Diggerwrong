@@ -24,3 +24,15 @@ Lancer les tests unitaires :
   $ make test
 
 Merci.
+
+
+
+-- selection de sprites :
+
+http://opengameart.org/content/dutone-tileset-objects-and-character
+
+http://opengameart.org/content/rectangle-gems-etc-16px
+
+http://opengameart.org/art-search-advanced?keys=explosion&field_art_type_tid[0]=9&field_art_licenses_tid[2]=2&field_art_licenses_tid[3]=3&field_art_licenses_tid[6]=6&field_art_licenses_tid[5]=5&field_art_licenses_tid[4]=4&field_art_licenses_tid[8]=8&field_art_licenses_tid[7]=7&field_art_tags_tid_op=and&field_art_tags_tid=&name=&sort_by=created&sort_order=DESC&items_per_page=24&collection=&Collection=
+
+http://opengameart.org/content/clouds-set-01
