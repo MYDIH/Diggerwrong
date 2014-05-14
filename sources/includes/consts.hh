@@ -14,3 +14,6 @@ const std::string CHARS[][8] = {{" ☠ ", "☾", "☽", " ☉ ", "+", "+", "|", 
 
 const std::string DESC_FILENAME = "Desc.desc";
 const std::string SPRITE_FILENAME = "Sprite.png";
+
+const float SQUARE_HEIGHT = 20;
+const float SQUARE_WIDTH  = SQUARE_HEIGHT;

@@ -14,7 +14,7 @@ void Board::Observer::push(const Board::change& c)
    if ( care(c) )
       Changes.push(c);
 }
-bool Board::Observer::care(const Board::change& c) const
+bool Board::Observer::care(const Board::change& c)
 { return true; }
 void Board::Observer::pop()
 { 
@@ -115,6 +115,7 @@ const Board & Board::operator=(const Board &m)
 
 Board::~Board()
 {
+   notify( {change::DESTRUCT} );
    releaseSquares();
 }
 
@@ -128,8 +129,16 @@ GameState Board::move(int dx, int dy)
       if (dy > 0) dy = 1;
       else if (dy < 0) dy = -1;
 
-      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) ) State = LOST;
-      else if (Reached >= Target) State = WON;
+      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+      {
+	 State = LOST;
+	 notify( {change::LOST, {Digger.x,Digger.y}} );
+      }
+      else if (Reached >= Target)
+      {
+	 State = WON;
+	 notify( {change::WON, {Digger.x,Digger.y}, {Reached-Target,Reached}} );
+      }
    }
 
    return State;
@@ -203,6 +212,8 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
       Digger.y = y;
       Reached++;
 
+      notify( {change::MOVE, {Digger.x,Digger.y}, {1,Reached}} );
+
       square -> retain(); // on retarde l'éventuelle désallocation de la case pour garentir la bonne execution de dig()
       const bool ret = square -> dig(*this,x,y,dx,dy,distance);
       square -> release();
@@ -214,16 +225,22 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
 void Board::addScore(unsigned score)
 {
    Score += score;
+
+   notify( {change::SCORE, {Digger.x, Digger.y}, {score, Score}} );
 }
 
 void Board::addBonusScore(unsigned score)
 {
    Bonus_score += score;
+
+   notify( {change::SCORE_BONUS, {Digger.x, Digger.y}, {score, Bonus_score}} );
 }
 
 void Board::addBonusLifes(unsigned lifes)
 {
    Bonus_lifes += lifes;
+
+   notify( {change::LIFE_BONUS, {Digger.x, Digger.y}, {lifes, Bonus_lifes}} );
 }
 
 
@@ -235,6 +252,10 @@ void Board::replaceSquare(int x, int y, Square * newone)
 
       newone -> retain();
       Squares[x][y] = newone;
+
+      change c = {change::REPLACE, {(unsigned)x,(unsigned)y}};
+      c.infos.square = newone;
+      notify( c );
    }
 }
 

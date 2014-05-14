@@ -16,16 +16,18 @@ private:
    Board * Observed;
 
    void delete_squares();
-   void replace(unsigned x, unsigned y, const Square * newone, float now);
+   void replace(unsigned x, unsigned y, Square * newone, float now);
+   void draw_squares(sf::RenderTarget & drawer, float now, bool above) const;
 
 public:
    BoardView();
    ~BoardView();
 
-   bool care(const Board::change&) const override;
+   bool care(const Board::change&) override;
 
    void observe(Board * b);
    void tick(float now);
 
+   void draw(sf::RenderTarget & drawer, float now) const;
 };
 

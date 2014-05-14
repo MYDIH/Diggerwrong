@@ -1,5 +1,7 @@
 #include "tests.hh"
 #include "Animation.hh"
+#include "Board.hh"
+#include "BoardView.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -10,7 +12,10 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(400,400,32), "test animations");
    window.SetFramerateLimit(30);
 
-
+   Board b(10,10,0.5,10);
+   BoardView bv;
+   bv.observe(&b);
+   
 
    AnimationResource sonicAnim("sonic/");
    sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
@@ -36,7 +41,8 @@ void animation()
    a.start(now + 2);
 
    sf::View v2(sf::FloatRect(-200,-200, 200,200));
-
+   window.SetView(v2);
+      
 
    while (true)
    {
@@ -45,10 +51,13 @@ void animation()
 
       window.Clear();
 
+
+      //bv.tick(now);
+      //bv.draw(window, now);
       //window.SetView(v);
       //sa.draw(window, now);
 
-      window.SetView(v2);
+      
       a.draw(window, now);
 
       window.Display();

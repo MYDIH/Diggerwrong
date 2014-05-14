@@ -52,10 +52,15 @@ public:
 
       union
       {
-	 unsigned value;
-	 // SCORE* LIFE*
+	 struct
+	 {
+	    unsigned delta;
+	    unsigned total;
 
-	 const Square * square;
+	 } value;
+	 // SCORE* LIFE* MOVE (Reached)
+
+	 Square * square;
 	 // REPLACE
 
       } infos;
@@ -70,7 +75,7 @@ public:
       const Board::change * front();
    public:
       void push(const Board::change&);
-      virtual bool care(const Board::change&) const;
+      virtual bool care(const Board::change&);
    };
 
 
