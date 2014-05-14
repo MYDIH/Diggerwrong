@@ -2,11 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+
 SquareView::~SquareView()
 {}
 
 void SquareView::tick(float now)
-{}
+{
+   std::cout << "-- TICK\n";
+}
 
 
 AnimatedSquareView::AnimatedSquareView(const AnimationResource * appearing

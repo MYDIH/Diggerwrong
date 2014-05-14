@@ -14,7 +14,7 @@ void animation()
 
    Board b(10,10,0.5,10);
    BoardView bv;
-   bv.observe(&b);
+   bv.observe(&b, 0);
    
 
    AnimationResource sonicAnim("sonic/");
@@ -52,8 +52,8 @@ void animation()
       window.Clear();
 
 
-      //bv.tick(now);
-      //bv.draw(window, now);
+      bv.tick(now);
+      bv.draw(window, now);
       //window.SetView(v);
       //sa.draw(window, now);
 

@@ -11,7 +11,7 @@
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Normal::appeared(60,30,true);
+AnimationResource Normal::appeared(120,30,true);
 
 void Normal::init(ResourcesPool & pool)
 {
@@ -97,7 +97,7 @@ bool SNormal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bonus::appeared(60,20,true);
+AnimationResource Bonus::appeared(60,10,true);
 
 void Bonus::init(ResourcesPool & pool)
 {
@@ -186,7 +186,7 @@ const std::string SBonus::toString(const int &charSet) const
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Digged::appeared(60,30,false);
+AnimationResource Digged::appeared(60,30,true);
 
 void Digged::init(ResourcesPool & pool)
 {
@@ -233,7 +233,7 @@ Square * Bomb::create(double difficulty, unsigned width, unsigned height)
 
 Bomb::Bomb()
    :AnimatedSquareView(nullptr,nullptr
-		       ,nullptr,nullptr
+		       ,&Bomb::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 

@@ -25,7 +25,7 @@ public:
 
    bool care(const Board::change&) override;
 
-   void observe(Board * b);
+   void observe(Board * b, float appear_at);
    void tick(float now);
 
    void draw(sf::RenderTarget & drawer, float now) const;

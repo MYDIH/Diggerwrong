@@ -1,6 +1,9 @@
 #include "BoardView.hh"
 #include "consts.hh"
 
+#include <iostream>
+
+
 BoardView::BoardView()
    :Observed(nullptr)
 {}
@@ -24,12 +27,21 @@ void BoardView::delete_squares()
       }
 }
 
-void BoardView::observe(Board * b)
+void BoardView::observe(Board * b, float appear_at)
 {
    if (Observed)
       Observed -> unregisterObserver(this);
 
    delete_squares();
+
+
+   if (b == nullptr)
+   {
+      Observed = nullptr;
+      Squares.clear();
+      return;
+   }
+
    
    Observed = b;
    Observed -> registerObserver(this);
@@ -45,7 +57,8 @@ void BoardView::observe(Board * b)
 	 const Square * s = Observed -> getSquare(x,y);
 	 if ( dynamic_cast<const SquareView*>(s) ) // le module est compatible avec SquareView
 	 {
-	    Squares[x][y].second = (SquareView*) s->clone(); // copie
+	    Squares[x][y].second = dynamic_cast<SquareView*>(s->clone()); // copie
+	    Squares[x][y].second -> appear(appear_at);
 	 }
 	 else
 	    Squares[x][y].second = nullptr;
@@ -77,6 +90,8 @@ void BoardView::tick(float now)
    const Board::change * c;
    while ( (c = front()) )
    {
+      std::cout << "> a change\n";
+
       if ( c -> type == bc::MOVE )
       {
 	 // --
@@ -96,18 +111,29 @@ void BoardView::tick(float now)
       pop();
    }
 
+   std::cout << "changes finito\n";
+   std::cout << "H: " << Squares.size() << "  W: " << Squares[0].size() << "\n";
+
+
+
    for (auto & col : Squares)
       for (auto & pair : col)
       {
+	 std::cout << "-- loop\n";
+	 
+	 std::cout << "first: " << pair.first << "   second:" << pair.second << "\n";
+
 	 if (pair.first)  pair.first  -> tick(now);
 	 if (pair.second) pair.second -> tick(now);
       }
+
+   std::cout << "tick finito\n";
 }
 
 void BoardView::replace(unsigned x, unsigned y, Square * newone, float now)
 {
    SquareView * s = ( dynamic_cast<const SquareView*>(newone) ) ?
-      (SquareView*) newone->clone() // copie
+      dynamic_cast<SquareView*>(newone->clone()) // copie
       :
       nullptr;
 
@@ -116,8 +142,8 @@ void BoardView::replace(unsigned x, unsigned y, Square * newone, float now)
    std::swap(Squares[x][y].first, Squares[x][y].second);
    Squares[x][y].second = s;
 
-   Squares[x][y].first  -> disappear(now);
-   Squares[x][y].second -> appear(now);
+   if (Squares[x][y].first)  Squares[x][y].first  -> disappear(now);
+   if (Squares[x][y].second) Squares[x][y].second -> appear(now);
 }
 
 
@@ -127,8 +153,8 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    sf::View view(orig);
    drawer.SetView(view);
 
-   view.Move( -(Squares.size()*SQUARE_WIDTH)/2 + SQUARE_WIDTH/2
-	      ,-(Squares[0].size()*SQUARE_HEIGHT)/2 + SQUARE_HEIGHT/2);
+   view.Move( (Squares.size()*SQUARE_WIDTH)/2 - SQUARE_WIDTH/2
+   	      ,(Squares[0].size()*SQUARE_HEIGHT)/2 - SQUARE_HEIGHT/2);
 
    draw_squares(drawer,now,false);
 
@@ -160,10 +186,12 @@ void BoardView::draw_squares(sf::RenderTarget & drawer, float now, bool above) c
 	    if (Squares[x][y].second) Squares[x][y].second -> draw(drawer,now);
 	 }
 
-	 view.Move(0, SQUARE_HEIGHT);
+	 view.Move(0, -SQUARE_HEIGHT);
+	 std::cout << "draw X: " << x << "    Y: " << y << "\n";
+//		   << "view X: " << view.X();
       }
       
-      view.Move(SQUARE_WIDTH, - (Squares[0].size()-1)*SQUARE_HEIGHT);
+      view.Move(-SQUARE_WIDTH, Squares[0].size()*SQUARE_HEIGHT);
    }
 
    drawer.SetView(orig);

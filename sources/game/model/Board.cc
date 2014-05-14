@@ -137,7 +137,11 @@ GameState Board::move(int dx, int dy)
       else if (Reached >= Target)
       {
 	 State = WON;
-	 notify( {change::WON, {Digger.x,Digger.y}, {Reached-Target,Reached}} );
+
+
+	 change c = {change::WON, {Digger.x,Digger.y}};
+	 c.infos.value = {Reached-Target, Reached};
+	 notify( c );
       }
    }
 
@@ -212,7 +216,9 @@ bool Board::digAt(int x, int y, int dx, int dy, int distance)
       Digger.y = y;
       Reached++;
 
-      notify( {change::MOVE, {Digger.x,Digger.y}, {1,Reached}} );
+      change c = {change::MOVE, {Digger.x,Digger.y}};
+      c.infos.value = {1,Reached};
+      notify( c );
 
       square -> retain(); // on retarde l'éventuelle désallocation de la case pour garentir la bonne execution de dig()
       const bool ret = square -> dig(*this,x,y,dx,dy,distance);
@@ -226,21 +232,27 @@ void Board::addScore(unsigned score)
 {
    Score += score;
 
-   notify( {change::SCORE, {Digger.x, Digger.y}, {score, Score}} );
+   change c = {change::SCORE, {Digger.x, Digger.y}};
+   c.infos.value = {score, Score};
+   notify( c );
 }
 
 void Board::addBonusScore(unsigned score)
 {
    Bonus_score += score;
 
-   notify( {change::SCORE_BONUS, {Digger.x, Digger.y}, {score, Bonus_score}} );
+   change c = {change::SCORE_BONUS, {Digger.x, Digger.y}};
+   c.infos.value = {score, Bonus_score};
+   notify( c );
 }
 
 void Board::addBonusLifes(unsigned lifes)
 {
    Bonus_lifes += lifes;
 
-   notify( {change::LIFE_BONUS, {Digger.x, Digger.y}, {lifes, Bonus_lifes}} );
+   change c = {change::LIFE_BONUS, {Digger.x, Digger.y}};
+   c.infos.value = {lifes, Bonus_lifes};
+   notify( c );
 }
 
 
