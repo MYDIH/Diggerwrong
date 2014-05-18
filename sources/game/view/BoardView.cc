@@ -90,7 +90,7 @@ void BoardView::tick(float now)
    const Board::change * c;
    while ( (c = front()) )
    {
-      std::cout << "> a change\n";
+//      std::cout << "> a change\n";
 
       if ( c -> type == bc::MOVE )
       {
@@ -111,23 +111,23 @@ void BoardView::tick(float now)
       pop();
    }
 
-   std::cout << "changes finito\n";
-   std::cout << "H: " << Squares.size() << "  W: " << Squares[0].size() << "\n";
+//   std::cout << "changes finito\n";
+//   std::cout << "H: " << Squares.size() << "  W: " << Squares[0].size() << "\n";
 
 
 
    for (auto & col : Squares)
       for (auto & pair : col)
       {
-	 std::cout << "-- loop\n";
+//	 std::cout << "-- loop\n";
 	 
-	 std::cout << "first: " << pair.first << "   second:" << pair.second << "\n";
+//	 std::cout << "first: " << pair.first << "   second:" << pair.second << "\n";
 
 	 if (pair.first)  pair.first  -> tick(now);
 	 if (pair.second) pair.second -> tick(now);
       }
 
-   std::cout << "tick finito\n";
+//   std::cout << "tick finito\n";
 }
 
 void BoardView::replace(unsigned x, unsigned y, Square * newone, float now)
@@ -187,7 +187,7 @@ void BoardView::draw_squares(sf::RenderTarget & drawer, float now, bool above) c
 	 }
 
 	 view.Move(0, -SQUARE_HEIGHT);
-	 std::cout << "draw X: " << x << "    Y: " << y << "\n";
+//	 std::cout << "draw X: " << x << "    Y: " << y << "\n";
 //		   << "view X: " << view.X();
       }
       

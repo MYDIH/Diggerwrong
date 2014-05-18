@@ -10,12 +10,16 @@
 //////   Normal
 //////
 ///////////////////////////////////////////
-///////////////////////////////////////////
-AnimationResource Normal::appeared(120,30,true);
+//////////////////////////////////////////
+AnimationResource Normal::appearing("normal/ap");
+AnimationResource Normal::appeared("normal/loop");
+AnimationResource Normal::disappearing("normal/disap");
 
 void Normal::init(ResourcesPool & pool)
 {
-   pool.add( &Normal::appeared );
+   pool.add( &Normal::appearing    );
+   pool.add( &Normal::appeared     );
+   pool.add( &Normal::disappearing );
 }
 
 Square * Normal::create(double difficulty, unsigned width, unsigned height)
@@ -23,9 +27,9 @@ Square * Normal::create(double difficulty, unsigned width, unsigned height)
 
 Normal::Normal(double d, unsigned l)
    :SNormal(d,l)
-   ,AnimatedSquareView(nullptr,nullptr
+   ,AnimatedSquareView(&Normal::appearing,nullptr
 		       ,&Normal::appeared,nullptr
-		       ,nullptr,nullptr)
+		       ,&Normal::disappearing,nullptr)
 {}
 
 Normal::Normal(const Normal& o)

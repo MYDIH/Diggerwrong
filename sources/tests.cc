@@ -2,6 +2,8 @@
 #include "Animation.hh"
 #include "Board.hh"
 #include "BoardView.hh"
+#include "squares.hh"
+#include "resources.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -15,12 +17,16 @@ void animation()
    Board b(10,10,0.5,10);
    BoardView bv;
    bv.observe(&b, 0);
-   
+
+   ResourcesPool p;
+   Normal::init( p );
+   p.load("default");
 
    AnimationResource sonicAnim("sonic/");
    sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
 
-   Animation a(&sonicAnim);
+//   Animation a(&sonicAnim);
+   Animation a(nullptr);
 
    // SquareAnimation sa(&once
    // 		      ,nullptr

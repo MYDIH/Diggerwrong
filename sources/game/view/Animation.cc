@@ -35,10 +35,10 @@ AnimationResource::AnimationResource(unsigned frame_count, float fps, bool loop)
 
         for (unsigned i = 0; i < frame_count; i++)
         {
-            sf::Shape * shape = new sf::Shape(model);
-            Frames.push_back(shape);
-
-            shape -> Rotate(i * rotation);
+	   sf::Shape * shape = new sf::Shape(model);
+	   Frames.push_back(shape);
+	    
+	   shape -> Rotate(i * rotation);
 //	 std::cout << "frame rot=" << (unsigned)(2*i*rotation) << "\n";
         }
     }
@@ -150,27 +150,29 @@ void AnimationResource::load(const std::string & basepath)
 
     dealloc();
 
-    std::cout << basepath + Dir + DESC_FILENAME << std::endl;
-    parseFile(descMap, basepath + Dir + DESC_FILENAME);
+//    exit(1);
+
+    std::cout << basepath +'/'+ Dir +'/'+ DESC_FILENAME << std::endl;
+    parseFile(descMap, basepath +'/'+ Dir +'/'+ DESC_FILENAME);
     if(descMap.size() >= 3)
     {
         try
         {
-            if(Image.LoadFromFile(basepath + Dir + SPRITE_FILENAME))
+            if(Image.LoadFromFile(basepath +'/'+ Dir +'/'+ SPRITE_FILENAME))
             {
-                int spriteX = 0;
+	        int spriteX = 0;
                 int frameWidth = Image.GetWidth() / std::stoi(descMap.at("NbFrames"));
                 Fps = std::stof(descMap.at("Fps"));
                 descMap.at("Loop") == "true" ? Loop = true : Loop = false;
-
+		
                 for(int i = 1; i<=std::stoi(descMap.at("NbFrames")); i++)
                 {
                     sf::IntRect clipRect(spriteX, 0, frameWidth*i, Image.GetHeight());
-
+		    
                     Frames.push_back(new sf::Sprite(Image));
                     ((sf::Sprite*)Frames.back())->SetSubRect(clipRect);
                     ((sf::Sprite*)Frames.back())->SetCenter(frameWidth/2, Image.GetHeight()/2);
-
+		    
                     spriteX += frameWidth;
                 }
             }

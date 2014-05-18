@@ -9,7 +9,7 @@ SquareView::~SquareView()
 
 void SquareView::tick(float now)
 {
-   std::cout << "-- TICK\n";
+//   std::cout << "-- TICK\n";
 }
 
 
