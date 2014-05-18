@@ -1,4 +1,3 @@
-NbFrames=14
+NbFrames=10
 Loop=true
-Fps=25
-
+Fps=10

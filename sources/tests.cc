@@ -14,13 +14,15 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(400,400,32), "test animations");
    window.SetFramerateLimit(30);
 
-   Board b(10,10,0.5,10);
-   BoardView bv;
-   bv.observe(&b, 0);
-
    ResourcesPool p;
    Normal::init( p );
    p.load("default");
+
+
+   Board b(10,10,0.5,10);
+   BoardView bv;
+   bv.observe(&b, 1);
+
 
    AnimationResource sonicAnim("sonic/");
    sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
@@ -39,17 +41,17 @@ void animation()
 
 
    float now = clock.GetElapsedTime();
-
+   
    // sa.appear(now + 1);
    // sa.disappear(now + 15);
 
 
    a.start(now + 2);
 
-   sf::View v2(sf::FloatRect(-200,-200, 200,200));
-   window.SetView(v2);
+   sf::View v2(sf::FloatRect(-200,-200,200,200));
+window.SetView(v2);
       
-
+//   exit(0);
    while (true)
    {
       now = clock.GetElapsedTime();

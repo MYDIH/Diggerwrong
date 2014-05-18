@@ -64,7 +64,10 @@ void AnimatedSquareView::disappear(float at)
 void AnimatedSquareView::draw(sf::RenderTarget & drawer, float now) const
 {
    if (Appearing.running(now))
+   {
+      std::cout << "";
       Appearing.draw(drawer, now);
+   }
 
    else if (Appeared.running(now))
       Appeared.draw(drawer, now);

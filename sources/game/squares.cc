@@ -114,7 +114,7 @@ Square * Bonus::create(double difficulty, unsigned width, unsigned height)
 Bonus::Bonus(double d, unsigned l)
    :SBonus(d,l)
    ,AnimatedSquareView(nullptr,nullptr
-		       ,&Bonus::appeared,nullptr
+		       ,nullptr,nullptr//&Bonus::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
@@ -202,7 +202,7 @@ Square * Digged::create(double difficulty, unsigned width, unsigned height)
 
 Digged::Digged()
    :AnimatedSquareView(nullptr,nullptr
-		       ,&Digged::appeared,nullptr
+		       ,nullptr,nullptr//&Digged::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
@@ -237,7 +237,7 @@ Square * Bomb::create(double difficulty, unsigned width, unsigned height)
 
 Bomb::Bomb()
    :AnimatedSquareView(nullptr,nullptr
-		       ,&Bomb::appeared,nullptr
+		       ,nullptr,nullptr//&Bomb::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
