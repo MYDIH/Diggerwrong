@@ -11,7 +11,9 @@ void ResourcesPool::add(Resource* r)
 void ResourcesPool::load(const std::string & basepath)
 {
    for (Resource* r : Pool)
+   {
       r -> load(basepath);
+   }
 }
 
 

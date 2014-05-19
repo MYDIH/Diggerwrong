@@ -4,24 +4,30 @@
 #include "SquareView.hh"
 
 #include <queue>
+#include <vector>
+#include <tuple>
 
-class BoardView
+class BoardView : public Board::Observer
 {
-
 private:
-   std::vector< std::vector<SquareView*> > Squares;
+   typedef Board::change bc;
 
-   const Board * Observed;
-   std::queue<Board::change> Changes;
+   std::vector< std::vector< std::pair<SquareView*, SquareView*> > > Squares;
+   Board * Observed;
 
    void delete_squares();
+   void replace(unsigned x, unsigned y, Square * newone, float now);
+   void draw_squares(sf::RenderTarget & drawer, float now, bool above) const;
 
 public:
    BoardView();
    ~BoardView();
 
+   bool care(const Board::change&) override;
 
-   void push(const Board::change&);
-   void observe(const Board * b);
+   void observe(Board * b, float appear_at);
+   void tick(float now);
 
+   void draw(sf::RenderTarget & drawer, float now) const;
 };
+

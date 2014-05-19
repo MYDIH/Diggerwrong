@@ -10,12 +10,16 @@
 //////   Normal
 //////
 ///////////////////////////////////////////
-///////////////////////////////////////////
-AnimationResource Normal::appeared(60,30,true);
+//////////////////////////////////////////
+AnimationResource Normal::appearing("normal/ap");
+AnimationResource Normal::appeared("normal/loop");
+AnimationResource Normal::disappearing("normal/disap");
 
 void Normal::init(ResourcesPool & pool)
 {
-   pool.add( &Normal::appeared );
+   pool.add( &Normal::appearing    );
+   pool.add( &Normal::appeared     );
+   pool.add( &Normal::disappearing );
 }
 
 Square * Normal::create(double difficulty, unsigned width, unsigned height)
@@ -23,9 +27,9 @@ Square * Normal::create(double difficulty, unsigned width, unsigned height)
 
 Normal::Normal(double d, unsigned l)
    :SNormal(d,l)
-   ,AnimatedSquareView(nullptr,nullptr
+   ,AnimatedSquareView(&Normal::appearing,nullptr
 		       ,&Normal::appeared,nullptr
-		       ,nullptr,nullptr)
+		       ,&Normal::disappearing,nullptr)
 {}
 
 Normal::Normal(const Normal& o)
@@ -97,7 +101,7 @@ bool SNormal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bonus::appeared(60,20,true);
+AnimationResource Bonus::appeared(60,10,true);
 
 void Bonus::init(ResourcesPool & pool)
 {
@@ -110,7 +114,7 @@ Square * Bonus::create(double difficulty, unsigned width, unsigned height)
 Bonus::Bonus(double d, unsigned l)
    :SBonus(d,l)
    ,AnimatedSquareView(nullptr,nullptr
-		       ,&Bonus::appeared,nullptr
+		       ,nullptr,nullptr//&Bonus::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
@@ -186,7 +190,7 @@ const std::string SBonus::toString(const int &charSet) const
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Digged::appeared(60,30,false);
+AnimationResource Digged::appeared(60,30,true);
 
 void Digged::init(ResourcesPool & pool)
 {
@@ -198,7 +202,7 @@ Square * Digged::create(double difficulty, unsigned width, unsigned height)
 
 Digged::Digged()
    :AnimatedSquareView(nullptr,nullptr
-		       ,&Digged::appeared,nullptr
+		       ,nullptr,nullptr//&Digged::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
@@ -233,7 +237,7 @@ Square * Bomb::create(double difficulty, unsigned width, unsigned height)
 
 Bomb::Bomb()
    :AnimatedSquareView(nullptr,nullptr
-		       ,nullptr,nullptr
+		       ,nullptr,nullptr//&Bomb::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 

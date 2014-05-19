@@ -30,8 +30,11 @@ public:
 
 class Normal : public SNormal, public AnimatedSquareView
 {
-private:
+public: // DEBUG
+//private:
+   static AnimationResource appearing;
    static AnimationResource appeared;
+   static AnimationResource disappearing;
 
 public:
    static void init(ResourcesPool & pool);

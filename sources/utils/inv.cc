@@ -24,6 +24,9 @@ void parseFile(std::map<std::string, std::string> &result, const std::string &pa
     std::string tmp = "";
     std::vector<std::string> tmpVect;
 
+    std::cout << path << "\n\n";
+//    exit(1);
+
     f.open(path.c_str());
 
     if(f.is_open())

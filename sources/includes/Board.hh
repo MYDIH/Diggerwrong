@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <queue>
 
 class Square;
 
@@ -26,10 +27,16 @@ struct point
     unsigned y;
 };
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8cdafa96a618da366be8308e3ea605d892749688
 // représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
 class Board
 {
 public:
+<<<<<<< HEAD
     struct change
     {
         enum
@@ -56,22 +63,72 @@ public:
             {
                 point location;
                 const Square * square;
+=======
+   struct change
+   {
+      enum
+      {
+	 SCORE
+	 ,SCORE_BONUS
+	 ,LIFE_BONUS
+	 ,MOVE
+	 ,LOST
+	 ,WON
+	 ,REPLACE
+	 ,DESTRUCT
+	 
+      } type;
+
+      point location;
+
+      union
+      {
+	 struct
+	 {
+	    unsigned delta;
+	    unsigned total;
+
+	 } value;
+	 // SCORE* LIFE* MOVE (Reached)
+
+	 Square * square;
+	 // REPLACE
+>>>>>>> 8cdafa96a618da366be8308e3ea605d892749688
 
             } square;
             // REPLACE
 
+<<<<<<< HEAD
         } infos;
     };
 
     typedef void (*observer)(const change &);
+=======
+   class Observer
+   {
+   private:
+      std::queue<Board::change> Changes;
+   protected:
+      void pop();
+      const Board::change * front();
+   public:
+      void push(const Board::change&);
+      virtual bool care(const Board::change&);
+   };
+>>>>>>> 8cdafa96a618da366be8308e3ea605d892749688
 
 
 
 private:
+<<<<<<< HEAD
     std::vector< std::vector<Square*> > Squares;
     std::set<observer> Observers;
 
     point Digger;
+=======
+   std::vector< std::vector<Square*> > Squares;
+   std::set<Observer*> Observers;
+>>>>>>> 8cdafa96a618da366be8308e3ea605d892749688
 
     unsigned Target;
     unsigned Reached;
@@ -115,6 +172,7 @@ public:
     void replaceSquare(int x, int y, Square * newone);
 
 
+<<<<<<< HEAD
     // accesseurs
     unsigned getTarget()  const;
     unsigned getReached() const;
@@ -128,6 +186,22 @@ public:
 
     void registerObserver(observer o);
     void unregisterObserver(observer o);
+=======
+   // accesseurs
+   unsigned getTarget()  const;
+   unsigned getReached() const;
+   unsigned getScore()      const;
+   unsigned getBonusScore() const;
+   unsigned getBonusLifes() const;
+   point    getDigger() const;
+   unsigned getWidth()  const;
+   unsigned getHeight() const;
+   const Square * getSquare(unsigned x, unsigned y) const;
+
+
+   void registerObserver(Observer* o);
+   void unregisterObserver(Observer* o);
+>>>>>>> 8cdafa96a618da366be8308e3ea605d892749688
 
 
     // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception

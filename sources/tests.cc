@@ -1,6 +1,9 @@
 #include "tests.hh"
 #include "Animation.hh"
-#include "Button.hh"
+#include "Board.hh"
+#include "BoardView.hh"
+#include "squares.hh"
+#include "resources.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -11,12 +14,21 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(400,400,32), "test animations");
    window.SetFramerateLimit(30);
 
-   AnimationResource sonicAnim("smiley/");
-   sonicAnim.load("/home/nicgomez/Documents/Diggewrong/ressources/Default/");
+   ResourcesPool p;
+   Normal::init( p );
+   p.load("default");
 
-   SpriteAnimation a(&sonicAnim);
-   ValueAnimation b(255, 100, 3, true);
-   Button butt;
+
+   Board b(10,10,0.5,10);
+   BoardView bv;
+   bv.observe(&b, 1);
+
+
+   AnimationResource sonicAnim("sonic/");
+   sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
+
+//   Animation a(&sonicAnim);
+   Animation a(nullptr);
 
    // SquareAnimation sa(&once
    // 		      ,nullptr
@@ -37,9 +49,10 @@ void animation()
    a.start(now + 2);
    b.start(now + 3);
 
-   sf::View v2(sf::FloatRect(-200,-200, 200,200));
+   sf::View v2(sf::FloatRect(-200,-200,200,200));
+    window.SetView(v2);
 
-
+//   exit(0);
    while (true)
    {
       now = clock.GetElapsedTime();
@@ -47,14 +60,13 @@ void animation()
 
       window.Clear();
 
+
+      bv.tick(now);
+      bv.draw(window, now);
       //window.SetView(v);
       //sa.draw(window, now);
 
-      window.SetView(v2);
-      butt.draw(window);
-      butt.SetColor(sf::Color(b.getValue(now), 0, 0));
-      //a.draw(window, now);
-      std::cout << b.getValue(now) << std::endl;
+      a.draw(window, now);
 
       window.Display();
    }

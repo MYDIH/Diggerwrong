@@ -9,6 +9,26 @@
 #include <iostream> // debug
 
 
+void Board::Observer::push(const Board::change& c)
+{
+   if ( care(c) )
+      Changes.push(c);
+}
+bool Board::Observer::care(const Board::change& c)
+{ return true; }
+void Board::Observer::pop()
+{
+   if (Changes.size() > 0)
+      Changes.pop();
+}
+const Board::change * Board::Observer::front()
+{
+   if (Changes.size() > 0)
+      return &Changes.front();
+   else
+      return nullptr;
+}
+
 Board::Board(unsigned width, unsigned height, double difficulty
              ,unsigned target, unsigned timeLimit)
 
@@ -93,7 +113,8 @@ const Board & Board::operator=(const Board &m)
 
 Board::~Board()
 {
-    releaseSquares();
+   notify( {change::DESTRUCT} );
+   releaseSquares();
 }
 
 GameState Board::move(int dx, int dy)
@@ -106,9 +127,21 @@ GameState Board::move(int dx, int dy)
         if (dy > 0) dy = 1;
         else if (dy < 0) dy = -1;
 
-        if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) ) State = LOST;
-        else if (Reached >= Target) State = WON;
-    }
+      if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
+      {
+	 State = LOST;
+	 notify( {change::LOST, {Digger.x,Digger.y}} );
+      }
+      else if (Reached >= Target)
+      {
+	 State = WON;
+
+
+	 change c = {change::WON, {Digger.x,Digger.y}};
+	 c.infos.value = {Reached-Target, Reached};
+	 notify( c );
+      }
+   }
 
     return State;
 }
@@ -169,39 +202,55 @@ bool Board::isOutOfRange(int x, int y) const
 
 bool Board::digAt(int x, int y, int dx, int dy, int distance)
 {
-    if (isOutOfRange(x,y))
-    {
-        return true;
-    }
-    else
-    {
-        Square * square = Squares[x][y];
+   if (isOutOfRange(x,y))
+   {
+      return true;
+   }
+   else
+   {
+      Square * square = Squares[x][y];
 
-        Digger.x = x;
-        Digger.y = y;
-        Reached++;
+      Digger.x = x;
+      Digger.y = y;
+      Reached++;
 
-        square -> retain(); // on retarde l'éventuelle désallocation de la case pour garentir la bonne execution de dig()
-        const bool ret = square -> dig(*this,x,y,dx,dy,distance);
-        square -> release();
+      change c = {change::MOVE, {Digger.x,Digger.y}};
+      c.infos.value = {1,Reached};
+      notify( c );
 
-        return ret;
-    }
+      square -> retain(); // on retarde l'éventuelle désallocation de la case pour garentir la bonne execution de dig()
+      const bool ret = square -> dig(*this,x,y,dx,dy,distance);
+      square -> release();
+
+      return ret;
+   }
 }
 
 void Board::addScore(unsigned score)
 {
-    Score += score;
+   Score += score;
+
+   change c = {change::SCORE, {Digger.x, Digger.y}};
+   c.infos.value = {score, Score};
+   notify( c );
 }
 
 void Board::addBonusScore(unsigned score)
 {
-    Bonus_score += score;
+   Bonus_score += score;
+
+   change c = {change::SCORE_BONUS, {Digger.x, Digger.y}};
+   c.infos.value = {score, Bonus_score};
+   notify( c );
 }
 
 void Board::addBonusLifes(unsigned lifes)
 {
-    Bonus_lifes += lifes;
+   Bonus_lifes += lifes;
+
+   change c = {change::LIFE_BONUS, {Digger.x, Digger.y}};
+   c.infos.value = {lifes, Bonus_lifes};
+   notify( c );
 }
 
 
@@ -210,10 +259,13 @@ void Board::replaceSquare(int x, int y, Square * newone)
     if (not isOutOfRange(x,y))
     {
         Squares[x][y] -> release();
+      newone -> retain();
+      Squares[x][y] = newone;
 
-        newone -> retain();
-        Squares[x][y] = newone;
-    }
+      change c = {change::REPLACE, {(unsigned)x,(unsigned)y}};
+      c.infos.square = newone;
+      notify( c );
+   }
 }
 
 // Accesseurs :
@@ -257,24 +309,19 @@ unsigned Board::getBonusScore() const
 }
 
 unsigned Board::getBonusLifes() const
-{
-    return Bonus_lifes;
-}
+{ return Bonus_lifes; }
+
+const Square * Board::getSquare(unsigned x, unsigned y) const
+{ return Squares[x][y]; }
 
 
-void Board::registerObserver(observer o)
-{
-    Observers.insert(o);
-}
-
-void Board::unregisterObserver(observer o)
-{
-    Observers.erase(o);
-}
-
+void Board::registerObserver(Observer* o)
+{ Observers.insert(o); }
+void Board::unregisterObserver(Observer* o)
+{ Observers.erase(o); }
 void Board::notify(const change & c) const
 {
-    for (observer o : Observers)
-        if (o)
-            o(c);
+   for (Observer* o : Observers)
+      if (o)
+	 o -> push(c);
 }

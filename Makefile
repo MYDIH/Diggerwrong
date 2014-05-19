@@ -3,8 +3,8 @@ CXX      = g++
 
 CXXFLAGS = -Wall -iquote sources/includes -std=c++11 -I /usr/include/sfml-1.6
 
-LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system -lboost_program_options
-#LDLIBS =  -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6 -lboost_program_options
+#LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system -lboost_program_options
+LDLIBS =  -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6 -lboost_program_options
 
 
 # constantes
@@ -19,6 +19,7 @@ SHELL    = /bin/bash -O extglob -O globstar -c
 # recherche des sources
 src_release = $(shell echo sources/**/!(.*|unit|*.unit|*_flymake).cc)
 src_unit    = $(shell echo sources/**/!(.*|main|*_flymake).cc)
+
 unit    = $(src_unit:%.cc=$(cache)/%.o)
 release = $(src_release:%.cc=$(cache)/%.o)
 debug   = $(src_release:%.cc=$(cache)/%.debug.o)

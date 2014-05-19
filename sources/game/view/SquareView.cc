@@ -2,11 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+
 SquareView::~SquareView()
 {}
 
 void SquareView::tick(float now)
-{}
+{
+//   std::cout << "-- TICK\n";
+}
 
 
 AnimatedSquareView::AnimatedSquareView(const AnimationResource * appearing
@@ -60,7 +64,10 @@ void AnimatedSquareView::disappear(float at)
 void AnimatedSquareView::draw(sf::RenderTarget & drawer, float now) const
 {
    if (Appearing.running(now))
+   {
+      std::cout << "";
       Appearing.draw(drawer, now);
+   }
 
    else if (Appeared.running(now))
       Appeared.draw(drawer, now);

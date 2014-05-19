@@ -16,14 +16,14 @@ public:
    virtual void load(const std::string & basepath) = 0;
 };
 
-class ResourcesPool
+class ResourcesPool : public Resource
 {
 private:
    std::list<Resource*> Pool;
 
 public:
    void add(Resource*);
-   void load(const std::string & basepath);
+   void load(const std::string & basepath) override;
 };
 
 class GuiResource : public Resource
