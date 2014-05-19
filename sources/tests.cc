@@ -11,12 +11,14 @@
 void animation()
 {
    const sf::Clock clock;
-   sf::RenderWindow window(sf::VideoMode(400,400,32), "test animations");
+   sf::RenderWindow window(sf::VideoMode(500,500,32), "test animations");
    window.SetFramerateLimit(30);
 
    ResourcesPool p;
    Normal::init( p );
-   p.load("default");
+   Bonus::init( p );
+   Bomb::init( p );
+   p.load("themes/default");
 
 
    Board b(10,10,0.5,10);
@@ -48,7 +50,7 @@ void animation()
 
    a.start(now + 2);
 
-   sf::View v2(sf::FloatRect(-200,-200,200,200));
+   sf::View v2(sf::FloatRect(-250,-250,250,250));
 window.SetView(v2);
       
 //   exit(0);

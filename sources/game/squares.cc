@@ -101,11 +101,15 @@ bool SNormal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bonus::appeared(60,10,true);
+AnimationResource Bonus::appearing("bonus/ap");
+AnimationResource Bonus::appeared("bonus/loop");
+AnimationResource Bonus::disappearing("bonus/disap");
 
 void Bonus::init(ResourcesPool & pool)
 {
+   pool.add( &Bonus::appearing );
    pool.add( &Bonus::appeared );
+   pool.add( &Bonus::disappearing );
 }
 
 Square * Bonus::create(double difficulty, unsigned width, unsigned height)
@@ -113,9 +117,9 @@ Square * Bonus::create(double difficulty, unsigned width, unsigned height)
 
 Bonus::Bonus(double d, unsigned l)
    :SBonus(d,l)
-   ,AnimatedSquareView(nullptr,nullptr
-		       ,nullptr,nullptr//&Bonus::appeared,nullptr
-		       ,nullptr,nullptr)
+   ,AnimatedSquareView(&Bonus::appearing,nullptr
+		       ,&Bonus::appeared,nullptr
+		       ,&Bonus::disappearing,nullptr)
 {}
 
 Bonus::Bonus(const Bonus& o)
@@ -225,20 +229,24 @@ const std::string SDigged::toString(const int &charSet) const
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bomb::appeared(60,3,true);
+AnimationResource Bomb::appearing("bomb/ap");
+AnimationResource Bomb::appeared("bomb/loop");
+AnimationResource Bomb::disappearing("bomb/disap");
 
 void Bomb::init(ResourcesPool & pool)
 {
+   pool.add( &Bomb::appearing );
    pool.add( &Bomb::appeared );
+   pool.add( &Bomb::disappearing );
 }
 
 Square * Bomb::create(double difficulty, unsigned width, unsigned height)
 { return new Bomb(); }
 
 Bomb::Bomb()
-   :AnimatedSquareView(nullptr,nullptr
-		       ,nullptr,nullptr//&Bomb::appeared,nullptr
-		       ,nullptr,nullptr)
+   :AnimatedSquareView(&Bomb::appearing,nullptr
+		       ,&Bomb::appeared,nullptr//&Bomb::appeared,nullptr
+		       ,&Bomb::disappearing,nullptr)
 {}
 
 

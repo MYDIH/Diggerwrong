@@ -77,7 +77,9 @@ public:
 class Bonus : public SBonus, public AnimatedSquareView
 {
 private:
+   static AnimationResource appearing;
    static AnimationResource appeared;
+   static AnimationResource disappearing;
 
 public:
    static void init(ResourcesPool & pool);
@@ -143,7 +145,10 @@ public:
 class Bomb : public SBomb, public AnimatedSquareView
 {
 private:
+   static AnimationResource appearing;
    static AnimationResource appeared;
+   static AnimationResource disappearing;
+
 
 public:
    static void init(ResourcesPool & pool);

@@ -153,8 +153,10 @@ Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 {
    double r = rand() / (double) RAND_MAX;
 
-   double pbomb  = difficulty * 0.12;
-   double pbonus = (1-difficulty) * 0.017;
+   //double pbomb  = difficulty * 0.12;
+   //double pbonus = (1-difficulty) * 0.017;
+   double pbomb = 0.1;
+   double pbonus = 0.1;
 
    if      (r <= pbomb)          return new Bomb(); // bomb
    else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
