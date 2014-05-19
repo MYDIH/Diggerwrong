@@ -1,7 +1,13 @@
 #pragma once
 
+#include "utils.hh"
+
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <list>
+#include <map>
+#include <stdexcept>
+#include <iostream>
 
 class Resource
 {
@@ -18,4 +24,18 @@ private:
 public:
    void add(Resource*);
    void load(const std::string & basepath);
+};
+
+class GuiResource : public Resource
+{
+private:
+    std::string m_filename;
+    std::map<std::string, std::string> params;
+    sf::Color envColor;
+
+public:
+    GuiResource(const std::string &filename);
+    ~GuiResource() override;
+
+    void load(const std::string &basepath) override;
 };

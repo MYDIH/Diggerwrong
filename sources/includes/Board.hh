@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Square.hh"
+#include "Chrono.hh"
 #include "utils.hh"
 
 #include <set>
@@ -8,128 +9,128 @@
 #include <string>
 #include <sstream>
 
-
 class Square;
 
 enum GameState
 {
-   WON,
-   CONTINUE,
-   LOST,
+    WON,
+    CONTINUE,
+    LOST,
 
-   QUIT // temporaire ; ne devrai pas être lié à Board
+    QUIT // temporaire ; ne devrai pas être lié à Board
 };
 
 struct point
 {
-   unsigned x;
-   unsigned y;
+    unsigned x;
+    unsigned y;
 };
-
 
 // représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
 class Board
 {
 public:
-   struct change
-   {
-      enum
-      {
-	 SCORE
-	 ,SCORE_BONUS
-	 ,LIFE_BONUS
-	 ,MOVE
-	 ,LOST
-	 ,WON
-	 ,REPLACE
-	 
-      } type;
+    struct change
+    {
+        enum
+        {
+            SCORE
+            ,SCORE_BONUS
+            ,LIFE_BONUS
+            ,MOVE
+            ,LOST
+            ,WON
+            ,REPLACE
 
-      union
-      {
-	 unsigned value;
-	 // SCORE* et LIFE*
+        } type;
 
-	 point location;
-	 // MOVE
+        union
+        {
+            unsigned value;
+            // SCORE* et LIFE*
 
-	 struct
-	 {
-	    point location;
-	    const Square * square;
+            point location;
+            // MOVE
 
-	 } square;
-	 // REPLACE
+            struct
+            {
+                point location;
+                const Square * square;
 
-      } infos;
-   };
+            } square;
+            // REPLACE
 
-   typedef void (*observer)(const change &);
+        } infos;
+    };
+
+    typedef void (*observer)(const change &);
 
 
 
 private:
-   std::vector< std::vector<Square*> > Squares;
-   std::set<observer> Observers;
+    std::vector< std::vector<Square*> > Squares;
+    std::set<observer> Observers;
 
-   point Digger;
+    point Digger;
 
-   unsigned Target;
-   unsigned Reached;
+    unsigned Target;
+    unsigned Reached;
 
-   unsigned Score;
-   //unsigned Timelimit;
+    unsigned Score;
+    unsigned Timelimit;
 
-   unsigned Bonus_score;
-   unsigned Bonus_lifes;
-   //unsigned Bonus_time;
+    unsigned Bonus_score;
+    unsigned Bonus_lifes;
+    unsigned Bonus_time;
 
-   GameState State;
+    GameState State;
 
-   void copySquares(const Board &m);
-   void releaseSquares();
+    Chrono levelChrono;
 
-   void notify(const change&) const;
+    void copySquares(const Board &m);
+    void releaseSquares();
 
-   // temporaire ; la génération aléatoire sera plus complexe
-   Square* newRandomSquare(double difficulty, unsigned longestside);
+    void notify(const change&) const;
+
+    // temporaire ; la génération aléatoire sera plus complexe
+    Square* newRandomSquare(double difficulty, unsigned longestside);
 
 public:
-   Board(unsigned width, unsigned height, double difficulty, unsigned target);
-   Board(const Board &m);
+    Board(unsigned width, unsigned height, double difficulty, unsigned target, unsigned timeLimit);
+    Board(const Board &m);
 
-   const Board & operator=(const Board &m);
+    const Board & operator=(const Board &m);
 
-   ~Board();
+    ~Board();
 
-   GameState move(int dx, int dy);
+    GameState move(int dx, int dy);
 
-   // interface pour Square
-   void addScore(unsigned score);
-   void addBonusScore(unsigned score);
-   void addBonusLifes(unsigned lifes);
-   bool isOutOfRange(int x, int y) const;
-   bool digAt(int x, int y
-	      ,int dx = 0, int dy = 0, int distance = -1);
-   void replaceSquare(int x, int y, Square * newone);
-
-
-   // accesseurs
-   unsigned getTarget()  const;
-   unsigned getReached() const;
-   unsigned getScore()      const;
-   unsigned getBonusScore() const;
-   unsigned getBonusLifes() const;
-   point    getDigger() const;
-   unsigned getWidth()  const;
-   unsigned getHeight() const;
+    // interface pour Square
+    void addScore(unsigned score);
+    void addBonusScore(unsigned score);
+    void addBonusLifes(unsigned lifes);
+    bool isOutOfRange(int x, int y) const;
+    bool digAt(int x, int y
+               ,int dx = 0, int dy = 0, int distance = -1);
+    void replaceSquare(int x, int y, Square * newone);
 
 
-   void registerObserver(observer o);
-   void unregisterObserver(observer o);
+    // accesseurs
+    unsigned getTarget()  const;
+    unsigned getReached() const;
+    unsigned getScore()      const;
+    unsigned getBonusScore() const;
+    unsigned getBonusLifes() const;
+    point    getDigger() const;
+    unsigned getWidth()  const;
+    unsigned getHeight() const;
 
 
-   // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
-   const std::string toString(const int &charSet) const;
+    void registerObserver(observer o);
+    void unregisterObserver(observer o);
+
+
+    // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
+    const std::string toString(const int &charSet) const;
 };
 

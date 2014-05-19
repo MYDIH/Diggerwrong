@@ -1,5 +1,6 @@
 #include "tests.hh"
 #include "Animation.hh"
+#include "Button.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -10,12 +11,12 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(400,400,32), "test animations");
    window.SetFramerateLimit(30);
 
+   AnimationResource sonicAnim("smiley/");
+   sonicAnim.load("/home/nicgomez/Documents/Diggewrong/ressources/Default/");
 
-
-   AnimationResource sonicAnim("sonic/");
-   sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
-
-   Animation a(&sonicAnim);
+   SpriteAnimation a(&sonicAnim);
+   ValueAnimation b(255, 100, 3, true);
+   Button butt;
 
    // SquareAnimation sa(&once
    // 		      ,nullptr
@@ -34,6 +35,7 @@ void animation()
 
 
    a.start(now + 2);
+   b.start(now + 3);
 
    sf::View v2(sf::FloatRect(-200,-200, 200,200));
 
@@ -49,7 +51,10 @@ void animation()
       //sa.draw(window, now);
 
       window.SetView(v2);
-      a.draw(window, now);
+      butt.draw(window);
+      butt.SetColor(sf::Color(b.getValue(now), 0, 0));
+      //a.draw(window, now);
+      std::cout << b.getValue(now) << std::endl;
 
       window.Display();
    }

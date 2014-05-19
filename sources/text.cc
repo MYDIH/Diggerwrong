@@ -152,14 +152,14 @@ GameState try_level(int charSet, unsigned & lifes, unsigned & score, unsigned le
    while (true)
    {
       printModel(&atry, lifes, score, level, charSet);
-	 
+
       switch (menu(&atry, lifes))
       {
 	 case WON:
 	    score += atry.getScore() + atry.getBonusScore();
 	    lifes += atry.getBonusLifes();
 	    return WON;
-	    
+
 	 case LOST:
 	 {
 	    if (lifes < 1)
@@ -168,7 +168,7 @@ GameState try_level(int charSet, unsigned & lifes, unsigned & score, unsigned le
 	       atry = orig;
 	 }
 	 break;
-	    
+
 	 case QUIT:
 	    return QUIT;
 
@@ -186,17 +186,17 @@ GameState play(int charSet)
 
    while (true)
    {
-      Board board(18,18, inv(level), 22);
+      Board board(18,18, inv(level), 22, 60);
 
       switch ( try_level(charSet, lifes, score, level, board) )
       {
 	 case WON:
 	    level++;
 	    break;
-	    
+
 	 case LOST:
 	    return LOST;
-	    
+
 	 case QUIT:
 	    return QUIT;
 
