@@ -15,19 +15,19 @@ public:
    virtual ~EventHandler();
 
    int run(sf::RenderWindow & w);
-   int call(sf::RenderWindow & w, sf::Event & t);
+   int call(sf::RenderWindow & w, sf::Event & t, float now);
    void need_refresh();
       
       
    /* Evenements */
-   virtual void draw(sf::RenderWindow & w);
+   virtual void draw(sf::RenderWindow & w, float now);
    virtual int tick(sf::RenderWindow & w, float now);
-   virtual int mouse_button_pressed(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e);
-   virtual int mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e);
-   virtual int key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e);
-   virtual int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e);
-   virtual int mouse_moved(sf::RenderWindow & w, sf::Event::MouseMoveEvent & e);
-   virtual int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e);
-   virtual int closed(sf::RenderWindow & w);
+   virtual int mouse_button_pressed(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now);
+   virtual int mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now);
+   virtual int key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now);
+   virtual int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now);
+   virtual int mouse_moved(sf::RenderWindow & w, sf::Event::MouseMoveEvent & e, float now);
+   virtual int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now);
+   virtual int closed(sf::RenderWindow & w, float now);
 };
 

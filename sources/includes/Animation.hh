@@ -32,22 +32,53 @@ public:
 
 class Animation
 {
+protected:
+    float Start_at;
+    float Stop_after;
+
+public:
+    Animation(float start, float stop);
+
+    virtual void start(float at) = 0;
+    virtual void stop(float at) = 0;
+    virtual bool running(float at) const = 0;
+    virtual float remaining_time(float at) const = 0;
+};
+
+class ValueAnimation : public Animation
+{
+private:
+    float m_startValue;
+    float m_endValue;
+    float m_duration;
+    bool m_loop;
+
+public:
+    ValueAnimation(float endValue, float startValue = 0, float duration = 10, bool loop = false);
+
+    void start(float at) override;
+    void stop(float at) override;
+    bool running(float at) const override;
+    float remaining_time(float at) const override;
+
+    float getValue(float now);
+};
+
+class SpriteAnimation : public Animation
+{
 private:
   const AnimationResource * Resource;
 
-  float Start_at;
-  float Stop_after;
-
 public:
-  Animation(const AnimationResource * r);
-  Animation(const Animation &);
+  SpriteAnimation(const AnimationResource * r);
+  SpriteAnimation(const SpriteAnimation &);
 
-  void start(float at);
-  void stop(float at);
+  void start(float at) override;
+  void stop(float at) override;
 
-  bool running(float at) const;
+  bool running(float at) const override;
 
-  float remaining_time(float at) const;
+  float remaining_time(float at) const override;
 
   void draw(sf::RenderTarget & drawer, float now) const;
 };

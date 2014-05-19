@@ -21,38 +21,18 @@ void animation()
    p.load("themes/default");
 
 
-   Board b(10,10,0.5,10);
+   Board b(10,10,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
 
-   AnimationResource sonicAnim("sonic/");
-   sonicAnim.load("/info-nfs/users/nicgomez/Projet/Diggewrong/ressources/Default/");
-
-//   Animation a(&sonicAnim);
-   Animation a(nullptr);
-
-   // SquareAnimation sa(&once
-   // 		      ,nullptr
-
-   // 		      ,&loop
-   // 		      ,nullptr
-
-   // 		      ,&once
-   // 		      ,nullptr);
-
 
    float now = clock.GetElapsedTime();
-   
-   // sa.appear(now + 1);
-   // sa.disappear(now + 15);
-
-
-   a.start(now + 2);
 
    sf::View v2(sf::FloatRect(-250,-250,250,250));
-window.SetView(v2);
+   window.SetView(v2);
       
+
 //   exit(0);
    while (true)
    {
@@ -66,9 +46,6 @@ window.SetView(v2);
       bv.draw(window, now);
       //window.SetView(v);
       //sa.draw(window, now);
-
-      
-      a.draw(window, now);
 
       window.Display();
    }

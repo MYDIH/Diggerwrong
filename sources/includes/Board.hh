@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Square.hh"
+#include "Chrono.hh"
 #include "utils.hh"
 
 #include <set>
@@ -8,7 +9,6 @@
 #include <string>
 #include <sstream>
 #include <queue>
-
 
 class Square;
 
@@ -45,7 +45,7 @@ public:
 	 ,WON
 	 ,REPLACE
 	 ,DESTRUCT
-	 
+
       } type;
 
       point location;
@@ -90,24 +90,26 @@ private:
    unsigned Reached;
 
    unsigned Score;
-   //unsigned Timelimit;
+   unsigned Timelimit;
 
    unsigned Bonus_score;
    unsigned Bonus_lifes;
-   //unsigned Bonus_time;
+   unsigned Bonus_time;
 
    GameState State;
+
+   Chrono levelChrono;
 
    void copySquares(const Board &m);
    void releaseSquares();
 
    void notify(const change&) const;
 
-   // temporaire ; la génération aléatoire sera plus complexe
+// temporaire ; la génération aléatoire sera plus complexe
    Square* newRandomSquare(double difficulty, unsigned longestside);
 
 public:
-   Board(unsigned width, unsigned height, double difficulty, unsigned target);
+   Board(unsigned width, unsigned height, double difficulty, unsigned target, unsigned timeLimit);
    Board(const Board &m);
 
    const Board & operator=(const Board &m);
@@ -116,7 +118,7 @@ public:
 
    GameState move(int dx, int dy);
 
-   // interface pour Square
+// interface pour Square
    void addScore(unsigned score);
    void addBonusScore(unsigned score);
    void addBonusLifes(unsigned lifes);
@@ -125,8 +127,7 @@ public:
 	      ,int dx = 0, int dy = 0, int distance = -1);
    void replaceSquare(int x, int y, Square * newone);
 
-
-   // accesseurs
+// accesseurs
    unsigned getTarget()  const;
    unsigned getReached() const;
    unsigned getScore()      const;
@@ -142,7 +143,7 @@ public:
    void unregisterObserver(Observer* o);
 
 
-   // pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
+// pour tests / affichage en mode texte uniquement ; n'entre pas dans la logique de la conception
    const std::string toString(const int &charSet) const;
 };
 
