@@ -68,7 +68,7 @@ void EventHandler::need_refresh()
    Need_refresh = true;
 }
 
-void EventHandler::draw(sf::RenderWindow & w, float now)
+void EventHandler::draw(sf::RenderTarget & r, float now)
 {
 
 }
@@ -113,7 +113,7 @@ int EventHandler::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float 
    // éviter l'auto-resize chelou
    w.GetDefaultView().SetFromRect(sf::FloatRect(0, 0, w.GetWidth(), w.GetHeight()));
 
-   Need_refresh = true;
+   need_refresh();
    return 0;
 }
 

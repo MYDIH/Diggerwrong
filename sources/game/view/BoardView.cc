@@ -59,7 +59,7 @@ void BoardView::observe(Board * b, float appear_at)
 	 {
 	    Squares[x][y].second = dynamic_cast<SquareView*>(s->clone()); // copie
 	    Squares[x][y].second -> appear(appear_at);
-//	    Squares[x][y].second -> disappear(appear_at + 5); // TEST
+	    Squares[x][y].second -> disappear(appear_at + 5); // TEST
 	 }
 	 else
 	    Squares[x][y].second = nullptr;

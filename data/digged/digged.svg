@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   id="svg3480"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="digged.svg">
+  <defs
+     id="defs3482">
+    <inkscape:perspective
+       id="perspective10"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="31.678384"
+     inkscape:cx="-0.24784348"
+     inkscape:cy="11.035405"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3373"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1058"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="false"
+     inkscape:snap-grids="false"
+     inkscape:snap-page="true"
+     inkscape:snap-nodes="false"
+     inkscape:bbox-nodes="true" />
+  <metadata
+     id="metadata3485">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1036.3622)">
+    <rect
+       style="fill:#000000;fill-opacity:0.34841632"
+       id="rect3738"
+       width="87.589287"
+       height="124.375"
+       x="-137.41072"
+       y="1038.5229" />
+    <g
+       transform="translate(0,144.00002)"
+       id="layer1-7"
+       inkscape:label="Layer 1">
+      <g
+         id="g3373"
+         transform="translate(-48,-64)">
+        <path
+           sodipodi:nodetypes="cccccccccc"
+           inkscape:connector-curvature="0"
+           id="path4217"
+           d="m 48,956.36218 0,16 16,0 0,-16 z m 2,2 12,0 0,12 -12,0 z"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="opacity:0.80000000000000004;fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4219"
+           width="2"
+           height="2"
+           x="60"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="958.36218"
+           x="60"
+           height="2"
+           width="2"
+           id="rect4221"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.90000000000000002;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="968.36218"
+           x="52"
+           height="2"
+           width="2"
+           id="rect4223"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225"
+           width="2"
+           height="2"
+           x="50"
+           y="960.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <path
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.90000000000000002;"
+           d="m 54,958.36218 2,0 0,2 -2,0 z"
+           id="rect4227" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.94999999999999996;"
+           id="rect4229"
+           width="2"
+           height="2"
+           x="50"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="968.36218"
+           x="54"
+           height="2"
+           width="2"
+           id="rect4223-1"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.90000000000000002;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="966.36218"
+           x="54"
+           height="2"
+           width="2"
+           id="rect4223-7"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.84999999999999998;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-4"
+           width="2"
+           height="2"
+           x="50"
+           y="958.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-0"
+           width="2"
+           height="2"
+           x="52"
+           y="958.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-9"
+           width="2"
+           height="2"
+           x="56"
+           y="958.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-48"
+           width="2"
+           height="2"
+           x="58"
+           y="958.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-8"
+           width="2"
+           height="2"
+           x="50"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-2"
+           width="2"
+           height="2"
+           x="50"
+           y="966.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-45"
+           width="2"
+           height="2"
+           x="50"
+           y="968.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.94999999999999996;"
+           id="rect4225-5"
+           width="2"
+           height="2"
+           x="52"
+           y="960.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-1"
+           width="2"
+           height="2"
+           x="54"
+           y="960.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-7"
+           width="2"
+           height="2"
+           x="56"
+           y="960.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-11"
+           width="2"
+           height="2"
+           x="54"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-52"
+           width="2"
+           height="2"
+           x="60"
+           y="960.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-76"
+           width="2"
+           height="2"
+           x="52"
+           y="966.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-14"
+           width="2"
+           height="2"
+           x="52"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-23"
+           width="2"
+           height="2"
+           x="54"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-22"
+           width="2"
+           height="2"
+           x="52"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-16"
+           width="2"
+           height="2"
+           x="56"
+           y="966.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-85"
+           width="2"
+           height="2"
+           x="56"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="968.36218"
+           x="58"
+           height="2"
+           width="2"
+           id="rect4223-76"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="968.36218"
+           x="60"
+           height="2"
+           width="2"
+           id="rect4223-1-1"
+           style="opacity:0.90000000000000002;fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-45-8"
+           width="2"
+           height="2"
+           x="56"
+           y="968.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="opacity:0.94999999999999996;fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4229-9"
+           width="2"
+           height="2"
+           x="56"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-22-2"
+           width="2"
+           height="2"
+           x="58"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-16-7"
+           width="2"
+           height="2"
+           x="60"
+           y="964.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-22-2-9"
+           width="2"
+           height="2"
+           x="58"
+           y="962.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           id="rect4225-22-2-5"
+           width="2"
+           height="2"
+           x="60"
+           y="966.36218"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="960.36218"
+           x="58"
+           height="2"
+           width="2"
+           id="rect4223-76-4"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+        <rect
+           y="966.36218"
+           x="58"
+           height="2"
+           width="2"
+           id="rect4223-76-3"
+           style="fill:#505050;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+           inkscape:export-filename="/home/qubodup/gemdropx-0.9/data/images/explode4.png"
+           inkscape:export-xdpi="270"
+           inkscape:export-ydpi="270" />
+      </g>
+    </g>
+  </g>
+</svg>

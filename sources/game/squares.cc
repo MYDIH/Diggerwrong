@@ -1,7 +1,10 @@
 #include "Square.hh"
 #include "squares.hh"
+#include "Animation.hh"
+#include "consts.hh"
 
 #include <cmath>
+#include <string>
 
 
 ///////////////////////////////////////////
@@ -11,15 +14,17 @@
 //////
 ///////////////////////////////////////////
 //////////////////////////////////////////
-AnimationResource Normal::appearing("normal/ap");
-AnimationResource Normal::appeared("normal/loop");
-AnimationResource Normal::disappearing("normal/disap");
+AnimationResource Normal::appearing("normal", "appearing.txt");
+AnimationResource Normal::appeared("normal", "appeared.txt");
+AnimationResource Normal::disappearing("normal", "disappearing.txt");
+FontResource Normal::Font("normal", "font.txt");
 
 void Normal::init(ResourcesPool & pool)
 {
    pool.add( &Normal::appearing    );
    pool.add( &Normal::appeared     );
    pool.add( &Normal::disappearing );
+   pool.add( &Normal::Font );
 }
 
 Square * Normal::create(double difficulty, unsigned width, unsigned height)
@@ -27,14 +32,18 @@ Square * Normal::create(double difficulty, unsigned width, unsigned height)
 
 Normal::Normal(double d, unsigned l)
    :SNormal(d,l)
-   ,AnimatedSquareView(&Normal::appearing,nullptr
-		       ,&Normal::appeared,nullptr
-		       ,&Normal::disappearing,nullptr)
+   ,AnimatedSquareView(&appearing,nullptr
+		       ,&appeared,nullptr
+		       ,&disappearing,nullptr)
+   ,Fade_in(1,0,0.3)
+   ,Fade_out(0,1,0.2)
 {}
 
 Normal::Normal(const Normal& o)
    :SNormal(o)
    ,AnimatedSquareView(o)
+   ,Fade_in(1,0,0.3)
+   ,Fade_out(0,1,0.2)
 {}
 
 Square* Normal::clone() const
@@ -44,6 +53,22 @@ Square* Normal::clone() const
 void Normal::draw(sf::RenderTarget & drawer, float now) const
 {
    AnimatedSquareView::draw(drawer,now);
+
+   Font.draw_string(drawer, std::to_string(Value)
+		    ,-SQUARE_WIDTH/2, -SQUARE_HEIGHT/2
+		    ,Fade_in.getValue(now) * Fade_out.getValue(now) );
+}
+
+void Normal::appear(float at)
+{
+   AnimatedSquareView::appear(at);
+   Fade_in.start(at + Appearing.remaining_time(at));
+}
+
+void Normal::disappear(float at)
+{
+   AnimatedSquareView::disappear(at);
+   Fade_out.start(at);
 }
 
 SNormal::SNormal(unsigned val)
@@ -101,9 +126,9 @@ bool SNormal::dig(Board & m, int x, int y, int dx, int dy, int distance)
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bonus::appearing("bonus/ap");
-AnimationResource Bonus::appeared("bonus/loop");
-AnimationResource Bonus::disappearing("bonus/disap");
+AnimationResource Bonus::appearing("bonus", "appearing.txt");
+AnimationResource Bonus::appeared("bonus", "appeared.txt");
+AnimationResource Bonus::disappearing("bonus", "disappearing.txt");
 
 void Bonus::init(ResourcesPool & pool)
 {
@@ -120,11 +145,15 @@ Bonus::Bonus(double d, unsigned l)
    ,AnimatedSquareView(&Bonus::appearing,nullptr
 		       ,&Bonus::appeared,nullptr
 		       ,&Bonus::disappearing,nullptr)
+   ,Fade_in(1,0,0.3)
+   ,Fade_out(0,1,0.2)
 {}
 
 Bonus::Bonus(const Bonus& o)
    :SBonus(o)
    ,AnimatedSquareView(o)
+   ,Fade_in(1,0,0.3)
+   ,Fade_out(0,1,0.2)
 {}
 
 
@@ -134,7 +163,25 @@ Square* Bonus::clone() const
 void Bonus::draw(sf::RenderTarget & drawer, float now) const
 {
    AnimatedSquareView::draw(drawer,now);
+
+   Normal::Font.draw_string(drawer, std::to_string(Value)
+			    ,-SQUARE_WIDTH/2, -SQUARE_HEIGHT/2
+			    ,Fade_in.getValue(now) * Fade_out.getValue(now) );
+
 }
+
+void Bonus::appear(float at)
+{
+   AnimatedSquareView::appear(at);
+   Fade_in.start(at + Appearing.remaining_time(at));
+}
+
+void Bonus::disappear(float at)
+{
+   AnimatedSquareView::disappear(at);
+   Fade_out.start(at);
+}
+
 
 SBonus::SBonus(unsigned val, unsigned life, unsigned score) : SNormal(val)
 {
@@ -194,19 +241,21 @@ const std::string SBonus::toString(const int &charSet) const
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Digged::appeared(60,30,true);
+AnimationResource Digged::appearing("digged", "appearing.txt");
+AnimationResource Digged::appeared("digged", "appeared.txt");
 
 void Digged::init(ResourcesPool & pool)
 {
-   pool.add( &Digged::appeared );
+   pool.add( &Digged::appearing );
+   pool.add( &Digged::appeared  );
 }
 
 Square * Digged::create(double difficulty, unsigned width, unsigned height)
 { return new Digged(); }
 
 Digged::Digged()
-   :AnimatedSquareView(nullptr,nullptr
-		       ,nullptr,nullptr//&Digged::appeared,nullptr
+   :AnimatedSquareView(&Digged::appearing,nullptr
+		       ,&Digged::appeared,nullptr
 		       ,nullptr,nullptr)
 {}
 
@@ -229,9 +278,9 @@ const std::string SDigged::toString(const int &charSet) const
 //////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-AnimationResource Bomb::appearing("bomb/ap");
-AnimationResource Bomb::appeared("bomb/loop");
-AnimationResource Bomb::disappearing("bomb/disap");
+AnimationResource Bomb::appearing("bomb", "appearing.txt");
+AnimationResource Bomb::appeared("bomb", "appeared.txt");
+AnimationResource Bomb::disappearing("bomb", "disappearing.txt");
 
 void Bomb::init(ResourcesPool & pool)
 {

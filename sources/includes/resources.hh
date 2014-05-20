@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <iostream>
 
+
 class Resource
 {
 public:
@@ -38,4 +39,22 @@ public:
     ~GuiResource() override;
 
     void load(const std::string &basepath) override;
+};
+
+class FontResource : public Resource
+{
+private:
+   std::string Dir;
+   std::string File;
+   sf::Color Back;
+   sf::Color Front;
+   unsigned Size;
+   sf::Font  Font;
+
+public:
+   FontResource(const std::string & dir, const std::string & file);
+   
+   void draw_string(sf::RenderTarget & drawer, const std::string & str, float dx, float dy, float opacity) const;
+
+   void load(const std::string & basepath) override;
 };
