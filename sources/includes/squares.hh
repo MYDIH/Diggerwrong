@@ -3,6 +3,8 @@
 #include "Square.hh"
 #include "SquareView.hh"
 #include "resources.hh"
+#include "Animation.hh"
+
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -15,7 +17,6 @@ class SNormal : public Square
 {
 protected:
    unsigned Value;
-
 public:
    SNormal(unsigned val);
    SNormal(double difficulty, unsigned longestside);
@@ -30,13 +31,16 @@ public:
 
 class Normal : public SNormal, public AnimatedSquareView
 {
-public: // DEBUG
-//private:
+private:
    static AnimationResource appearing;
    static AnimationResource appeared;
    static AnimationResource disappearing;
 
+   ValueAnimation Fade_in;
+   ValueAnimation Fade_out;
+
 public:
+   static FontResource Font;
    static void init(ResourcesPool & pool);
    static Square * create(double difficulty, unsigned width, unsigned height);
 
@@ -46,6 +50,8 @@ public:
    Square * clone() const override;
    
    void draw(sf::RenderTarget & drawer, float now) const override;
+   void appear(float at) override;
+   void disappear(float at) override;
 };
 
 
@@ -81,6 +87,10 @@ private:
    static AnimationResource appeared;
    static AnimationResource disappearing;
 
+   ValueAnimation Fade_in;
+   ValueAnimation Fade_out;
+
+
 public:
    static void init(ResourcesPool & pool);
    static Square * create(double difficulty, unsigned width, unsigned height);
@@ -91,6 +101,8 @@ public:
    Square * clone() const override;
    
    void draw(sf::RenderTarget & drawer, float now) const override;
+   void appear(float at) override;
+   void disappear(float at) override;
 };
 
 
@@ -113,6 +125,7 @@ public:
 class Digged : public SDigged, public AnimatedSquareView
 {
 private:
+   static AnimationResource appearing;
    static AnimationResource appeared;
 
 public:

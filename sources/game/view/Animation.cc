@@ -11,51 +11,52 @@
 
 #define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
 
-AnimationResource::AnimationResource(std::string dir) :
-   Dir(dir)
-{
-   Frames.push_back(new sf::Sprite());
-}
+const sf::Sprite AnimationResource::Empty;
 
-AnimationResource::AnimationResource(unsigned frame_count, float fps, bool loop)
-   :Fps(fps)
-   ,Loop(loop)
-{
-   sf::Shape model;
-   model.AddPoint(-7,-7);
-   model.AddPoint(+7,-7);
-   model.AddPoint(0,+10);
-   model.EnableFill(true);
-   model.EnableOutline(false);
-   model.SetColor(sf::Color(50,150,0));
+AnimationResource::AnimationResource(const std::string & dir, const std::string & file)
+   :Dir(dir + '/')
+   ,File(file)
+{}
 
-   if (loop)
-   {
-      const float rotation = 720 / (float)frame_count;
+// AnimationResource::AnimationResource(unsigned frame_count, float fps, bool loop)
+//    :Fps(fps)
+//    ,Loop(loop)
+// {
+//    sf::Shape model;
+//    model.AddPoint(-7,-7);
+//    model.AddPoint(+7,-7);
+//    model.AddPoint(0,+10);
+//    model.EnableFill(true);
+//    model.EnableOutline(false);
+//    model.SetColor(sf::Color(50,150,0));
 
-      for (unsigned i = 0; i < frame_count; i++)
-      {
-	 sf::Shape * shape = new sf::Shape(model);
-	 Frames.push_back(shape);
+//    if (loop)
+//    {
+//       const float rotation = 720 / (float)frame_count;
 
-	 shape -> Rotate(i * rotation);
-//	 std::cout << "frame rot=" << (unsigned)(2*i*rotation) << "\n";
-      }
-   }
-   else
-   {
-      const float alpha = 255 / (float)frame_count;
+//       for (unsigned i = 0; i < frame_count; i++)
+//       {
+// 	 sf::Shape * shape = new sf::Shape(model);
+// 	 Frames.push_back(shape);
 
-      unsigned i;
-      for (i = 0; i < frame_count; i++)
-      {
-	 sf::Shape * shape = new sf::Shape(model);
-	 Frames.push_back(shape);
+// 	 shape -> Rotate(i * rotation);
+// //	 std::cout << "frame rot=" << (unsigned)(2*i*rotation) << "\n";
+//       }
+//    }
+//    else
+//    {
+//       const float alpha = 255 / (float)frame_count;
 
-	 shape -> SetColor(sf::Color(50,150,0,i*alpha));
-      }
-   }
-}
+//       unsigned i;
+//       for (i = 0; i < frame_count; i++)
+//       {
+// 	 sf::Shape * shape = new sf::Shape(model);
+// 	 Frames.push_back(shape);
+
+// 	 shape -> SetColor(sf::Color(50,150,0,i*alpha));
+//       }
+//    }
+// }
 
 AnimationResource::~AnimationResource()
 { dealloc(); }
@@ -64,6 +65,9 @@ AnimationResource::~AnimationResource()
 const sf::Drawable & AnimationResource::frame(float elapsed_time, float stopping_since = FLT_MAX) const
 {
    const unsigned size = Frames.size();
+
+   if (size == 0)
+      return Empty;
 
    if (Loop)
    {
@@ -116,6 +120,9 @@ float AnimationResource::remaining_time(float elapsed_time, float stopping_since
 {
    const unsigned size = Frames.size();
 
+   if (size == 0)
+      return 0;
+
    if (Loop)
    {
       if (elapsed_time >= stopping_since)
@@ -145,67 +152,59 @@ void AnimationResource::dealloc()
 
 void AnimationResource::load(const std::string & basepath)
 {
-   std::map<std::string, std::string> descMap;
-
    dealloc();
 
-//    exit(1);
+   std::map<std::string, std::string> descMap;
 
-   std::cout << basepath +'/'+ Dir +'/'+ DESC_FILENAME << std::endl;
-   parseFile(descMap, basepath +'/'+ Dir +'/'+ DESC_FILENAME);
-   if(descMap.size() >= 3)
+   if (not parseFile(descMap, basepath+Dir + File))
+      throw basepath+Dir + File;
+   
+   try
    {
-      try
+      if(not Image.LoadFromFile(basepath+Dir + descMap.at("image")))
+	 throw basepath+Dir + descMap.at("image");
+      
+      Image.SetSmooth(false);
+
+      const int frame_count = std::stoi(descMap.at("frames"));
+      int spriteX = 1;
+      const int frameWidth = Image.GetWidth() / frame_count;
+      Fps = std::stof(descMap.at("fps"));
+      Loop = (descMap.at("loop") == "true") ? true : false;
+
+
+      for(int i = 1; i<=frame_count; i++)
       {
-	 if(Image.LoadFromFile(basepath +'/'+ Dir +'/'+ SPRITE_FILENAME))
-	 {
-	    int spriteX = 1;
-	    const int frameWidth = Image.GetWidth() / std::stoi(descMap.at("NbFrames"));
-	    Fps = std::stof(descMap.at("Fps"));
-	    Loop = (descMap.at("Loop") == "true") ? true : false;
+	 sf::IntRect clipRect(spriteX, 1, frameWidth*i - 1, Image.GetHeight());
 
-	    std::cout << "parse.Loop: " << Loop << "\n";
+	 Frames.push_back(new sf::Sprite(Image));
+	 ((sf::Sprite*)Frames.back())->SetSubRect(clipRect);
+	 ((sf::Sprite*)Frames.back())->SetCenter(frameWidth/2, Image.GetHeight()/2);
 
-
-	    for(int i = 1; i<=std::stoi(descMap.at("NbFrames")); i++)
-	    {
-	       sf::IntRect clipRect(spriteX, 1, frameWidth*i - 1, Image.GetHeight());
-
-	       Frames.push_back(new sf::Sprite(Image));
-	       ((sf::Sprite*)Frames.back())->SetSubRect(clipRect);
-	       ((sf::Sprite*)Frames.back())->SetCenter(frameWidth/2, Image.GetHeight()/2);
-
-	       spriteX += frameWidth;
-	    }
-	 }
-	 else
-	 {
-	    std::cout << "img loading Error" << std::endl;
-	    createErrorImg();
-	 }
-      }
-      catch(const std::out_of_range &oor)
-      {
-	 createErrorImg();
-	 std::cout << "exception error" << std::endl;
+	 spriteX += frameWidth;
       }
    }
-   else
+   catch(const std::out_of_range &oor)
    {
-      createErrorImg();
-      std::cout << "Parse Error" << descMap.size() << std::endl;
+      throw basepath+Dir + File;
    }
+   catch(const std::invalid_argument &ia)
+   {
+      throw basepath+Dir + File;
+   }
+
+
 }
 
-void AnimationResource::createErrorImg()
-{
-   Image.Create(50, 50, sf::Color(255, 0, 0));
-   Fps = 1;
-   Loop = false;
+// void AnimationResource::createErrorImg()
+// {
+//    Image.Create(50, 50, sf::Color(255, 0, 0));
+//    Fps = 1;
+//    Loop = false;
 
-    Frames.push_back(new sf::Sprite(Image));
-    ((sf::Sprite*)Frames.back())->SetCenter(Image.GetWidth()/2, Image.GetHeight()/2);
-}
+//     Frames.push_back(new sf::Sprite(Image));
+//     ((sf::Sprite*)Frames.back())->SetCenter(Image.GetWidth()/2, Image.GetHeight()/2);
+// }
 
 //////////////////////////////////////////Animation/////////////////////////////////////////////////////
 
@@ -216,53 +215,49 @@ Animation::Animation(float start, float stop) :
 
 /////////////////////////////////////ValueAnimation//////////////////////////////////////////////////
 
-ValueAnimation::ValueAnimation(float endValue, float startValue, float duration, bool loop) :
-    Animation(FLT_MAX, 0),
-    m_startValue(startValue),
-    m_endValue(endValue),
-    m_duration(duration),
-    m_loop(loop)
+ValueAnimation::ValueAnimation(float endValue, float startValue, float duration) : //, bool loop) :
+   Animation(FLT_MAX, duration),
+   m_startValue(startValue),
+   m_endValue(endValue)
+//    ,m_loop(loop)
 {}
 
 void ValueAnimation::start(float at)
 {
-    Start_at = MAX(0, at);
-    if(m_duration > 0)
-        Stop_after = Start_at + m_duration;
+   Start_at = MAX(0, at);
 }
 
 void ValueAnimation::stop(float at)
 {
-    if(at >= Start_at)
-        Stop_after = at;
-    m_loop = false;
+   if(at >= Start_at)
+      Stop_after = at - Start_at;
+//   m_loop = false;
 }
 
 bool ValueAnimation::running(float at) const
 {
-    if(at >= Start_at && at <= Stop_after)
-        return true;
-    return false;
+   if(at >= Start_at && at <= Start_at + Stop_after)
+      return true;
+   else
+      return false;
 }
 
 float ValueAnimation::remaining_time(float at) const
 {
-    return Stop_after - Start_at;
+   return MAX(0,Start_at + Stop_after - at);
 }
 
-float ValueAnimation::getValue(float now)
+float ValueAnimation::getValue(float now) const
 {
-    if(m_loop && !running(now) && now > Start_at)
-        start(now);
+//   if(m_loop && !running(now) && now > Start_at)
+//        start(now);
 
-    if(running(now))
-        return m_startValue + ((m_endValue - m_startValue)/m_duration*(now - Start_at));
-    else if(now < Start_at)
-        return m_startValue;
-    else if(Stop_after < now)
-        return m_endValue;
-
-    return -1;
+   if(now < Start_at)
+      return m_startValue;
+   else if(now > Start_at + Stop_after)
+      return m_endValue;
+   else
+      return m_startValue + ((m_endValue - m_startValue)/Stop_after*(now - Start_at));
 }
 
 //////////////////////////////////////SpriteAnimation///////////////////////////////////////////////////

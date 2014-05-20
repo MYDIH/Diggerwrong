@@ -10,16 +10,18 @@
 class AnimationResource : public Resource
 {
 private:
-  sf::Image Image;
-  std::vector<sf::Drawable *> Frames;
-  std::string Dir = "No Dir";
-  float Fps;
-  bool Loop;
+   static const sf::Sprite Empty;
+   sf::Image Image;
+   std::vector<sf::Drawable *> Frames;
+   std::string Dir;
+   std::string File;
+   float Fps;
+   bool Loop;
 
 public:
-  AnimationResource(std::string dir);
-  AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
-  ~AnimationResource() override;
+   AnimationResource(const std::string & dir, const std::string & file);
+   //AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
+   ~AnimationResource() override;
 
   const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
   float remaining_time(float elapsed_time, float stopping_since) const;
@@ -50,18 +52,17 @@ class ValueAnimation : public Animation
 private:
     float m_startValue;
     float m_endValue;
-    float m_duration;
-    bool m_loop;
+//    bool m_loop;
 
 public:
-    ValueAnimation(float endValue, float startValue = 0, float duration = 10, bool loop = false);
+   ValueAnimation(float endValue, float startValue = 0, float duration = 10);//, bool loop = false);
 
     void start(float at) override;
     void stop(float at) override;
     bool running(float at) const override;
     float remaining_time(float at) const override;
 
-    float getValue(float now);
+    float getValue(float now) const;
 };
 
 class SpriteAnimation : public Animation

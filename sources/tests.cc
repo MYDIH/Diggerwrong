@@ -16,11 +16,22 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(500,500,32), "test animations");
    window.SetFramerateLimit(30);
 
+
    ResourcesPool p;
    Normal::init( p );
    Bonus::init( p );
    Bomb::init( p );
-   p.load("themes/default");
+   Digged::init( p );
+
+   try
+   {
+      p.load("themes/default");
+   }
+   catch (const std::string & f)
+   {
+      std::cout << "\n!! ERREUR concernant le fichier:\n" << f << "\n\n";
+      exit(1);
+   }
 
 
    //Board b(10,10,0.5,10, 10);
@@ -45,8 +56,9 @@ void animation()
       now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
-      window.Clear();
       //b.draw(window);
+      window.Clear(sf::Color(100,100,100));
+
 
       m.draw(window);
       //bv.tick(now);

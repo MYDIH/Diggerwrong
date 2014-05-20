@@ -1,7 +1,7 @@
 #include "Button.hh"
 
 Button::Button() :
-    sf::Shape(sf::Shape::Rectangle(0, 0, 100, 50, sf::Color(255, 0, 0), 5, sf::Color(100, 100, 100))),
+    Shape(Rectangle(0, 0, 100, 50, sf::Color(255, 0, 0), 5, sf::Color(100, 100, 100))),
     m_label("Default"),
     m_isAutoSized(true),
     m_isLabelCentered(true)
@@ -9,7 +9,7 @@ Button::Button() :
 
 Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const GuiResource &res,
                bool isAutoSized, bool isLabelCentered) :
-    sf::Shape(sf::Shape::Rectangle(pos, size, res.forCol, res.bordW, res.bordCol)),
+    Shape(Rectangle(pos, size, res.forCol, res.bordW, res.bordCol)),
     m_label(label),
     m_isAutoSized(isAutoSized),
     m_isLabelCentered(isLabelCentered)
@@ -17,7 +17,7 @@ Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::Stri
 
 Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const sf::Color &colBackground,
        const sf::Color &colBorder, float bordW, bool isAutoSized, bool isLabelCentered) :
-    sf::Shape(sf::Shape::Rectangle(pos, size, colBackground, bordW, colBorder)),
+    Shape(Rectangle(pos, size, colBackground, bordW, colBorder)),
     m_label(label),
     m_isAutoSized(isAutoSized),
     m_isLabelCentered(isLabelCentered)

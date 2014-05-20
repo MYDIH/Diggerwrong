@@ -20,7 +20,7 @@ public:
       
       
    /* Evenements */
-   virtual void draw(sf::RenderWindow & w, float now);
+   virtual void draw(sf::RenderTarget & r, float now);
    virtual int tick(sf::RenderWindow & w, float now);
    virtual int mouse_button_pressed(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now);
    virtual int mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now);

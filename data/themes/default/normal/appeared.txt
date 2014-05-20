@@ -1,0 +1,4 @@
+image=appeared.png
+frames=10
+loop=true
+fps=10
