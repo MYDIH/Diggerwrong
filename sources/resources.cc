@@ -3,6 +3,8 @@
 Resource::~Resource()
 {}
 
+/////////////////////////Ressource Pool/////////////////////////////
+
 void ResourcesPool::add(Resource* r)
 {
    Pool.push_back(r);
@@ -16,6 +18,7 @@ void ResourcesPool::load(const std::string & basepath)
    }
 }
 
+///////////////////////////GuiResource/////////////////////////////
 
 GuiResource::GuiResource(const std::string &filename) :
     m_filename(filename)
@@ -31,7 +34,9 @@ void GuiResource::load(const std::string &basepath)
     if(params.size() >= 1)
         try
         {
-            envColor = sf::Color(stoi(params.at("R")), stoi(params.at("V")), stoi(params.at("B")), stoi(params.at("A")));
+            forCol = sf::Color(stoi(params.at("forColR")), stoi(params.at("forColV")), stoi(params.at("forColB")), stoi(params.at("forColA")));
+            bordCol = sf::Color(stoi(params.at("bordColR")), stoi(params.at("bordColV")), stoi(params.at("bordColB")), stoi(params.at("bordColA")));
+            bordW = stof(params.at("bordW"));
         }
         catch(const std::out_of_range &oor)
         {

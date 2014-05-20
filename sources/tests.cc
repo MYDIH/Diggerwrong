@@ -4,6 +4,8 @@
 #include "BoardView.hh"
 #include "squares.hh"
 #include "resources.hh"
+#include "Button.hh"
+#include "MenuView.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -21,17 +23,21 @@ void animation()
    p.load("themes/default");
 
 
-   Board b(10,10,0.5,10, 10);
-   BoardView bv;
-   bv.observe(&b, 1);
+   //Board b(10,10,0.5,10, 10);
+   //BoardView bv;
+   //bv.observe(&b, 1);
 
 
 
    float now = clock.GetElapsedTime();
+   Button b;
+   b.setLabel(sf::String("Demmarer"));
+   MenuView m(window.GetDefaultView());
+   window.SetView(m);
 
-   sf::View v2(sf::FloatRect(-250,-250,250,250));
-   window.SetView(v2);
-      
+   //sf::View v2(sf::FloatRect(-250,-250,250,250));
+   //window.SetView(v2);
+
 
 //   exit(0);
    while (true)
@@ -40,10 +46,11 @@ void animation()
 //      std::cout << "[TICK] " << now << "\n";
 
       window.Clear();
+      //b.draw(window);
 
-
-      bv.tick(now);
-      bv.draw(window, now);
+      m.draw(window);
+      //bv.tick(now);
+      //bv.draw(window, now);
       //window.SetView(v);
       //sa.draw(window, now);
 
