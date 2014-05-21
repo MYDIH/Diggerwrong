@@ -71,10 +71,20 @@ void EventHandler::need_refresh()
 void EventHandler::draw(sf::RenderTarget & r, float now)
 {
 
+
+   sf::Shape s = sf::Shape::Rectangle(0,0,200,200, sf::Color(244,200,10));
+   
+   s.SetPosition(100,100);
+
+   r.Draw( s );
+
+
+
 }
 
 int EventHandler::tick(sf::RenderWindow & w, float now)
 {
+   need_refresh();
    return 0;
 }
 

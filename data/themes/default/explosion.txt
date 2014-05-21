@@ -1,0 +1,8 @@
+image=explosion1.png
+frames=30
+
+_image=explosion2.png
+_frames=30
+
+fps=30
+loop=false

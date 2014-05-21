@@ -3,10 +3,21 @@
 
 #include <iostream>
 
+AnimationResource BoardView::DiggerResource("","digger.txt");
+AnimationResource BoardView::ExplosionResource("","explosion.txt");
+AnimationResource BoardView::DeadResource("","dead.txt");
 
 BoardView::BoardView()
    :Observed(nullptr)
-{}
+   ,DiggerX(0,0,0.2)
+   ,DiggerY(0,0,0.25)
+   ,Digger(&DiggerResource)
+   ,Explosion(&ExplosionResource)
+   ,Dead(&DeadResource)
+
+{
+   Digger.start(0);
+}
 
 
 BoardView::~BoardView()
@@ -59,7 +70,7 @@ void BoardView::observe(Board * b, float appear_at)
 	 {
 	    Squares[x][y].second = dynamic_cast<SquareView*>(s->clone()); // copie
 	    Squares[x][y].second -> appear(appear_at);
-	    Squares[x][y].second -> disappear(appear_at + 5); // TEST
+//	    Squares[x][y].second -> disappear(appear_at + 15); // TEST
 	 }
 	 else
 	    Squares[x][y].second = nullptr;
@@ -67,16 +78,19 @@ void BoardView::observe(Board * b, float appear_at)
    }
 
 
-   
+   point pos = Observed -> getDigger();
+   DiggerX.set_value(pos.x);
+   DiggerY.set_value(pos.y);
+
 }
 
 bool BoardView::care(const Board::change& c)
 {
    switch (c.type)
    {
-//      case bc::LOST:     return true;
+      case bc::LOST:     return true;
 //      case bc::WON:      return true;
-//      case bc::MOVE:     return true;
+      case bc::MOVE:     return true;
       case bc::REPLACE:
 	 c.infos.square -> retain();
 	 return true;
@@ -89,21 +103,32 @@ bool BoardView::care(const Board::change& c)
 void BoardView::tick(float now)
 {
    const Board::change * c;
-   while ( (c = front()) )
+   while ( (c = front()) and not DiggerX.running(now) and not DiggerY.running(now) )
+      // si il y a un changement à traité et qu'aucun mouvement n'est en cours
    {
 //      std::cout << "> a change\n";
 
       if ( c -> type == bc::MOVE )
       {
-	 // --
+	 DiggerX.restart_at_end(c->location.x);
+	 DiggerY.restart_at_end(c->location.y);
 
-	 if (false) // tant que le mouvement n'est pas terminé
-	    break;
+	 DiggerX.start(now);
+	 DiggerY.start(now);
+
+	 std::cout << "[move catched]\n";
       }
       else switch ( c -> type )
 	   {
 	      case bc::REPLACE: 
+		 std::cout << "[replace catched]\n";
 		 replace(c -> location.x, c -> location.y, c -> infos.square, now);
+		 break;
+
+	      case bc::LOST:
+		 std::cout << "[lost catched]\n";
+		 Explosion.start(now);
+		 Digger.stop(now);
 		 break;
 	    
 	      default:;
@@ -159,7 +184,22 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
 
    draw_squares(drawer,now,false);
 
+
    // on dessine ici (entre les 2 calques) le digger / les scores qui volent ...
+   float x = DiggerX.value(now)*SQUARE_WIDTH;
+   float y = DiggerY.value(now)*SQUARE_HEIGHT;
+   view.Move(-x,-y);
+   //
+   if (Digger.running(now))
+      Digger.draw(drawer,now);
+   else
+      Dead.draw(drawer,now);
+
+   if (Explosion.running(now))
+      Explosion.draw(drawer,now);
+   //
+   view.Move(x,y);
+
 
    draw_squares(drawer,now,true);
 

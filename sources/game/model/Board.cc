@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 #include <iostream> // debug
+#include <cstdlib>
+#include <ctime>
 
 
 void Board::Observer::push(const Board::change& c)
@@ -28,6 +30,9 @@ const Board::change * Board::Observer::front()
    else
       return nullptr;
 }
+
+Board::Board()
+{}
 
 Board::Board(unsigned width, unsigned height, double difficulty
              ,unsigned target, unsigned timeLimit)
@@ -111,6 +116,55 @@ const Board & Board::operator=(const Board &m)
 }
 
 
+void Board::generate( unsigned width, unsigned height
+		      ,double difficulty, unsigned target
+		      ,const std::list<module*> & modules, const module & first )
+{
+   srand(time(NULL));
+
+
+   Digger  = {width/2, height/2};
+   Target  = target;
+   Reached = 0;
+   Score   = 0;
+   Bonus_score = 0;
+   Bonus_lifes = 0;
+
+
+   Squares.resize(width);
+
+   for (auto & column : Squares)
+   {
+      column.resize(height);
+
+      for (auto & square : column)
+      {
+	 const double r = rand() / (double) RAND_MAX;
+	 double p = 0;
+
+	 for (module * mod : modules)
+	 {
+	    p += mod->proba;
+
+	    if (r <= p)
+	    {
+	       square = mod->create(difficulty,width,height);
+	       break;
+	    }
+	    
+	 }
+      }
+      
+   }
+
+   Square * tmp = first.create(difficulty,width,height);
+   replaceSquare(Digger.x, Digger.y, tmp);
+   tmp -> release();
+}
+
+
+
+
 Board::~Board()
 {
    notify( {change::DESTRUCT} );
@@ -153,8 +207,8 @@ Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 
    //double pbomb  = difficulty * 0.12;
    //double pbonus = (1-difficulty) * 0.017;
-   double pbomb = 0.1;
-   double pbonus = 0.1;
+    double pbomb = 0.02;
+    double pbonus = 0.1;
 
 
     if      (r <= pbomb)          return new Bomb(); // bomb

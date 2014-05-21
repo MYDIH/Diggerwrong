@@ -1,4 +1,4 @@
 image=appearing.png
 frames=31
 loop=false
-fps=40
+fps=30

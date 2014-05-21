@@ -2,12 +2,23 @@
 
 #include "Board.hh"
 #include "consts.hh"
+#include "resources.hh"
 
 #include <string>
 #include <sstream>
 
 
+
 class Board;
+class Square;
+
+struct module
+{
+   void (*init)(ResourcesPool & pool);
+   Square * (*create)(double difficulty, unsigned width, unsigned height);
+   double proba;
+};
+
 
 // Classe abstraite. Représente une case (model du MVC).
 // Est manipulé par Board dans une collection hétérogène de manière générique/unique (pas de transtypage/identification...).

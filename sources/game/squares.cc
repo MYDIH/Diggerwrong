@@ -56,7 +56,7 @@ void Normal::draw(sf::RenderTarget & drawer, float now) const
 
    Font.draw_string(drawer, std::to_string(Value)
 		    ,-SQUARE_WIDTH/2, -SQUARE_HEIGHT/2
-		    ,Fade_in.getValue(now) * Fade_out.getValue(now) );
+		    ,Fade_in.value(now) * Fade_out.value(now) );
 }
 
 void Normal::appear(float at)
@@ -166,7 +166,7 @@ void Bonus::draw(sf::RenderTarget & drawer, float now) const
 
    Normal::Font.draw_string(drawer, std::to_string(Value)
 			    ,-SQUARE_WIDTH/2, -SQUARE_HEIGHT/2
-			    ,Fade_in.getValue(now) * Fade_out.getValue(now) );
+			    ,Fade_in.value(now) * Fade_out.value(now) );
 
 }
 

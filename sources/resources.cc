@@ -49,7 +49,6 @@ FontResource::FontResource(const std::string & dir, const std::string & file)
    ,Size(0)
 {}
 
-
 #define GET(str) std::stoi( f.at(str) )
 void FontResource::load(const std::string & basepath)
 {

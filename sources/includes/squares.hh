@@ -36,8 +36,8 @@ private:
    static AnimationResource appeared;
    static AnimationResource disappearing;
 
-   ValueAnimation Fade_in;
-   ValueAnimation Fade_out;
+   AnimatedValue Fade_in;
+   AnimatedValue Fade_out;
 
 public:
    static FontResource Font;
@@ -87,8 +87,8 @@ private:
    static AnimationResource appeared;
    static AnimationResource disappearing;
 
-   ValueAnimation Fade_in;
-   ValueAnimation Fade_out;
+   AnimatedValue Fade_in;
+   AnimatedValue Fade_out;
 
 
 public:
