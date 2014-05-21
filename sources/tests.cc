@@ -17,7 +17,7 @@ void animation()
    window.SetFramerateLimit(30);
 
 
-   ResourcesPool p;
+   /*ResourcesPool p;
    Normal::init( p );
    Bonus::init( p );
    Bomb::init( p );
@@ -34,36 +34,34 @@ void animation()
    }
 
 
-   //Board b(10,10,0.5,10, 10);
-   //BoardView bv;
-   //bv.observe(&b, 1);
+   Board b(10,10,0.5,10, 10);
+   BoardView bv;
+   bv.observe(&b, 1);
 
 
 
    float now = clock.GetElapsedTime();
-   Button b;
-   b.setLabel(sf::String("Demmarer"));
-   MenuView m(window.GetDefaultView());
-   window.SetView(m);
 
-   //sf::View v2(sf::FloatRect(-250,-250,250,250));
-   //window.SetView(v2);
+   sf::View v2(sf::FloatRect(-250,-250,250,250));
+   window.SetView(v2);*/
 
+   MenuView m;
+   m.start(clock.GetElapsedTime() + 3);
 
 //   exit(0);
    while (true)
    {
-      now = clock.GetElapsedTime();
+     //now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
       //b.draw(window);
       window.Clear(sf::Color(100,100,100));
 
-
+      m.update(clock.GetElapsedTime());
       m.draw(window);
       //bv.tick(now);
       //bv.draw(window, now);
-      //window.SetView(v);
+      //window.SetView(v2);
       //sa.draw(window, now);
 
       window.Display();
