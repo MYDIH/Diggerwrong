@@ -46,7 +46,7 @@ private:
 //    bool m_loop;
 
 public:
-   AnimatedValue(float endValue, float startValue, float duration);//, bool loop = false);
+   AnimatedValue(float endValue = 1, float startValue = 0, float duration = 10);//, bool loop = false);
 
    void start(float at);
    void stop(float at);

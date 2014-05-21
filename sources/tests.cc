@@ -5,6 +5,8 @@
 #include "squares.hh"
 #include "resources.hh"
 #include "EventHandler.hh"
+#include "Button.hh"
+#include "MenuView.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -12,7 +14,9 @@
 void animation()
 {
    const sf::Clock clock;
-   sf::RenderWindow window(sf::VideoMode(500,500,32), "test animations");
+   float now = clock.GetElapsedTime();
+
+   sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
    EventHandler c;
@@ -41,17 +45,18 @@ void animation()
    }
 
 
-   Board b(10,10,0.5,10, 10);
+   Board b(8,8,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
 
 
-   float now = clock.GetElapsedTime();
 
-   sf::View v2(sf::FloatRect(-250,-250,250,250));
-   window.SetView(v2);
-      
+   sf::View view(sf::FloatRect(-500,-500,500,500));
+   window.SetView(view);
+
+   MenuView m;
+   m.start(now + 3);
 
 
    bool shot = false;
@@ -74,16 +79,21 @@ void animation()
 	 std::cout << "--> GOCOWS!\n";
       }
 
-
-
+      
+      
 
       window.Clear(sf::Color(100,100,100));
 
+      m.update(now);
+      m.draw(window);
 
       bv.tick(now);
+
+      view.Move(200,200);
+      // --
       bv.draw(window, now);
-      //window.SetView(v);
-      //sa.draw(window, now);
+      // --
+      view.Move(-200,-200);
 
       window.Display();
    }

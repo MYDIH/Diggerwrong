@@ -220,7 +220,7 @@ void AnimationResource::load(const std::string & basepath)
 
 /////////////////////////////////////AnimatedValue//////////////////////////////////////////////////
 
-AnimatedValue::AnimatedValue(float endValue = 1, float startValue = 0, float duration = 10) //, bool loop) :
+AnimatedValue::AnimatedValue(float endValue, float startValue, float duration) //, bool loop) :
    :Start_at(FLT_MAX)
    ,Stop_after(duration)
    ,m_startValue(startValue)

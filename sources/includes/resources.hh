@@ -29,16 +29,20 @@ public:
 
 class GuiResource : public Resource
 {
-private:
-    std::string m_filename;
-    std::map<std::string, std::string> params;
-    sf::Color envColor;
-
 public:
     GuiResource(const std::string &filename);
     ~GuiResource() override;
 
     void load(const std::string &basepath) override;
+
+    //Paramètres
+    sf::Color forCol;
+    sf::Color bordCol;
+    float bordW;
+
+private:
+    std::string m_filename;
+    std::map<std::string, std::string> params;
 };
 
 class FontResource : public Resource
