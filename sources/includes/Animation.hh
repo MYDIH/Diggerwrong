@@ -12,74 +12,79 @@ class AnimationResource : public Resource
 private:
    static const sf::Sprite Empty;
    sf::Image Image;
+   sf::Image Image2;
    std::vector<sf::Drawable *> Frames;
    std::string Dir;
    std::string File;
    float Fps;
    bool Loop;
 
+   void load_image(sf::Image & image, const std::string & file, unsigned frames);
+
 public:
    AnimationResource(const std::string & dir, const std::string & file);
    //AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
    ~AnimationResource() override;
 
-  const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
-  float remaining_time(float elapsed_time, float stopping_since) const;
+   const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
+   float remaining_time(float elapsed_time, float stopping_since) const;
 
-  void dealloc();
+   void dealloc();
 
-  void load(const std::string & basepath) override;
-  void createErrorImg();
+   void load(const std::string & basepath) override;
+   void createErrorImg();
+};
+
+
+class AnimatedValue
+{
+private:
+   float Start_at;
+   float Stop_after;
+   float m_startValue;
+   float m_endValue;
+//    bool m_loop;
+
+public:
+   AnimatedValue(float endValue = 1, float startValue = 0, float duration = 10);//, bool loop = false);
+
+   void start(float at);
+   void stop(float at);
+
+   bool running(float at) const;
+
+   float remaining_time(float at) const;
+
+   float value(float now) const;
+
+   // accesseurs
+   float start_value() const;
+   float end_value()   const;
+
+   void set_value(float value);
+   void restart_at_end(float newend);
+
 };
 
 class Animation
 {
-protected:
-    float Start_at;
-    float Stop_after;
-
-public:
-    Animation(float start, float stop);
-
-    virtual void start(float at) = 0;
-    virtual void stop(float at) = 0;
-    virtual bool running(float at) const = 0;
-    virtual float remaining_time(float at) const = 0;
-};
-
-class ValueAnimation : public Animation
-{
 private:
-    float m_startValue;
-    float m_endValue;
-//    bool m_loop;
+   float Start_at;
+   float Stop_after;
+   const AnimationResource * Resource;
 
 public:
-   ValueAnimation(float endValue, float startValue = 0, float duration = 10);//, bool loop = false);
+   Animation(const AnimationResource * r);
+   Animation(const Animation&);
 
-    void start(float at) override;
-    void stop(float at) override;
-    bool running(float at) const override;
-    float remaining_time(float at) const override;
+   void start(float at);
+   void stop(float at);
 
-    float getValue(float now) const;
+   bool running(float at) const;
+
+   float remaining_time(float at) const;
+
+   void draw(sf::RenderTarget & drawer, float now) const;
 };
 
-class SpriteAnimation : public Animation
-{
-private:
-  const AnimationResource * Resource;
 
-public:
-  SpriteAnimation(const AnimationResource * r);
-  SpriteAnimation(const SpriteAnimation &);
-
-  void start(float at) override;
-  void stop(float at) override;
-
-  bool running(float at) const override;
-
-  float remaining_time(float at) const override;
-
-  void draw(sf::RenderTarget & drawer, float now) const;
-};

@@ -150,39 +150,49 @@ void AnimationResource::dealloc()
    Frames.clear();
 }
 
+void AnimationResource::load_image(sf::Image & image, const std::string & file, unsigned frames)
+{
+   if(not image.LoadFromFile(file))
+      throw file;
+   
+   image.SetSmooth(false);
+
+   int spriteX = 1;
+   const int frameWidth = image.GetWidth() / frames;
+
+   for(unsigned i = 1; i<=frames; i++)
+   {
+      sf::IntRect clipRect(spriteX, 1, frameWidth*i - 1, image.GetHeight());
+
+      Frames.push_back(new sf::Sprite(image));
+      ((sf::Sprite*)Frames.back())->SetSubRect(clipRect);
+      ((sf::Sprite*)Frames.back())->SetCenter(frameWidth/2, image.GetHeight()/2);
+
+      spriteX += frameWidth;
+   }
+
+}
+
 void AnimationResource::load(const std::string & basepath)
 {
    dealloc();
 
-   std::map<std::string, std::string> descMap;
+   const std::string base = basepath+Dir;
+   std::map<std::string, std::string> f;
 
-   if (not parseFile(descMap, basepath+Dir + File))
-      throw basepath+Dir + File;
+   if (not parseFile(f, basepath+Dir + File))
+      throw base + File;
    
    try
    {
-      if(not Image.LoadFromFile(basepath+Dir + descMap.at("image")))
-	 throw basepath+Dir + descMap.at("image");
-      
-      Image.SetSmooth(false);
+      Fps = std::stof(f.at("fps"));
+      Loop = (f.at("loop") == "true") ? true : false;
 
-      const int frame_count = std::stoi(descMap.at("frames"));
-      int spriteX = 1;
-      const int frameWidth = Image.GetWidth() / frame_count;
-      Fps = std::stof(descMap.at("fps"));
-      Loop = (descMap.at("loop") == "true") ? true : false;
+      load_image(Image, base + f.at("image"), std::stoi(f.at("frames")));
 
+      if (f.count("_image"))
+	 load_image(Image2, base + f.at("_image"), std::stoi(f.at("_frames")));
 
-      for(int i = 1; i<=frame_count; i++)
-      {
-	 sf::IntRect clipRect(spriteX, 1, frameWidth*i - 1, Image.GetHeight());
-
-	 Frames.push_back(new sf::Sprite(Image));
-	 ((sf::Sprite*)Frames.back())->SetSubRect(clipRect);
-	 ((sf::Sprite*)Frames.back())->SetCenter(frameWidth/2, Image.GetHeight()/2);
-
-	 spriteX += frameWidth;
-      }
    }
    catch(const std::out_of_range &oor)
    {
@@ -206,35 +216,30 @@ void AnimationResource::load(const std::string & basepath)
 //     ((sf::Sprite*)Frames.back())->SetCenter(Image.GetWidth()/2, Image.GetHeight()/2);
 // }
 
-//////////////////////////////////////////Animation/////////////////////////////////////////////////////
 
-Animation::Animation(float start, float stop) :
-    Start_at(start),
-    Stop_after(stop)
+
+/////////////////////////////////////AnimatedValue//////////////////////////////////////////////////
+
+AnimatedValue::AnimatedValue(float endValue, float startValue, float duration) //, bool loop) :
+   :Start_at(FLT_MAX)
+   ,Stop_after(duration)
+   ,m_startValue(startValue)
+   ,m_endValue(endValue)
 {}
 
-/////////////////////////////////////ValueAnimation//////////////////////////////////////////////////
-
-ValueAnimation::ValueAnimation(float endValue, float startValue, float duration) : //, bool loop) :
-   Animation(FLT_MAX, duration),
-   m_startValue(startValue),
-   m_endValue(endValue)
-//    ,m_loop(loop)
-{}
-
-void ValueAnimation::start(float at)
+void AnimatedValue::start(float at)
 {
    Start_at = MAX(0, at);
 }
 
-void ValueAnimation::stop(float at)
+void AnimatedValue::stop(float at)
 {
    if(at >= Start_at)
       Stop_after = at - Start_at;
 //   m_loop = false;
 }
 
-bool ValueAnimation::running(float at) const
+bool AnimatedValue::running(float at) const
 {
    if(at >= Start_at && at <= Start_at + Stop_after)
       return true;
@@ -242,12 +247,12 @@ bool ValueAnimation::running(float at) const
       return false;
 }
 
-float ValueAnimation::remaining_time(float at) const
+float AnimatedValue::remaining_time(float at) const
 {
    return MAX(0,Start_at + Stop_after - at);
 }
 
-float ValueAnimation::getValue(float now) const
+float AnimatedValue::value(float now) const
 {
 //   if(m_loop && !running(now) && now > Start_at)
 //        start(now);
@@ -260,19 +265,39 @@ float ValueAnimation::getValue(float now) const
       return m_startValue + ((m_endValue - m_startValue)/Stop_after*(now - Start_at));
 }
 
-//////////////////////////////////////SpriteAnimation///////////////////////////////////////////////////
+float AnimatedValue::start_value() const
+{ return m_startValue; }
+float AnimatedValue::end_value()   const
+{ return m_endValue;   }
 
-SpriteAnimation::SpriteAnimation(const AnimationResource * r)
-    :Animation(FLT_MAX, 0)
-    ,Resource(r)
+void AnimatedValue::set_value(float v)
+{
+   m_startValue = v;
+   m_endValue   = v;
+}
+
+void AnimatedValue::restart_at_end(float endValue)
+{
+   m_startValue = m_endValue;
+   m_endValue   = endValue;
+}
+
+
+//////////////////////////////////////Animation///////////////////////////////////////////////////
+
+Animation::Animation(const AnimationResource * r)
+   :Start_at(FLT_MAX)
+   ,Stop_after(0)
+   ,Resource(r)
 {}
 
-SpriteAnimation::SpriteAnimation(const SpriteAnimation & o)
-    :Animation(o.Start_at, o.Stop_after)
-    ,Resource(o.Resource)
+Animation::Animation(const Animation & o)
+   :Start_at(o.Start_at)
+   ,Stop_after(o.Stop_after)
+   ,Resource(o.Resource)
 {}
 
-void SpriteAnimation::start(float at)
+void Animation::start(float at)
 {
    Start_at = MAX(0, at);
 
@@ -280,13 +305,13 @@ void SpriteAnimation::start(float at)
 
 }
 
-void SpriteAnimation::stop(float at)
+void Animation::stop(float at)
 {
    if (at >= Start_at)
       Stop_after = at - Start_at;
 }
 
-bool SpriteAnimation::running(float at) const
+bool Animation::running(float at) const
 {
    if (at >= Start_at and at < (Start_at+Stop_after + remaining_time(Start_at + Stop_after)))
       return true;
@@ -294,7 +319,7 @@ bool SpriteAnimation::running(float at) const
       return false;
 }
 
-float SpriteAnimation::remaining_time(float at) const
+float Animation::remaining_time(float at) const
 {
    if (Resource != nullptr)
       return Resource -> remaining_time(MAX(0, at - Start_at), Stop_after);
@@ -302,7 +327,7 @@ float SpriteAnimation::remaining_time(float at) const
       return 0;
 }
 
-void SpriteAnimation::draw(sf::RenderTarget & drawer, float now) const
+void Animation::draw(sf::RenderTarget & drawer, float now) const
 {
    if (Resource != nullptr)
       drawer.Draw( Resource -> frame(MAX(0, now - Start_at), Stop_after) );

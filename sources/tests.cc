@@ -4,6 +4,8 @@
 #include "BoardView.hh"
 #include "squares.hh"
 #include "resources.hh"
+#include "EventHandler.hh"
+#include "Button.hh"
 #include "MenuView.hh"
 
 #include <iostream>
@@ -12,15 +14,25 @@
 void animation()
 {
    const sf::Clock clock;
-   sf::RenderWindow window(sf::VideoMode(500,500,32), "test animations");
+   float now = clock.GetElapsedTime();
+
+   sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
+   EventHandler c;
+//   c.run(window);
 
-   /*ResourcesPool p;
+   
+
+   ResourcesPool p;
    Normal::init( p );
    Bonus::init( p );
    Bomb::init( p );
    Digged::init( p );
+
+   p.add(&BoardView::DiggerResource);
+   p.add(&BoardView::ExplosionResource);
+   p.add(&BoardView::DeadResource);
 
    try
    {
@@ -33,33 +45,50 @@ void animation()
    }
 
 
-   Board b(10,10,0.5,10, 10);
+   Board b(8,8,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
 
 
-   float now = clock.GetElapsedTime();
 
-   sf::View v2(sf::FloatRect(-250,-250,250,250));
-   window.SetView(v2);*/
+   sf::View view(sf::FloatRect(-500,-500,500,500));
+   window.SetView(view);
 
    MenuView m(window.GetDefaultView());
+   bool shot = false;
 
 //   exit(0);
    while (true)
    {
-     //now = clock.GetElapsedTime();
+      now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
-      //b.draw(window);
+      if (now > 6 and not shot)
+      {
+	 b.move(-1,0);
+	 b.move(0,1);
+	 b.move(1,1);
+	 b.move(1,0);
+	 b.move(0,-1);
+	 shot = true;
+	 std::cout << "--> GOCOWS!\n";
+      }
+
+      
+      
+
       window.Clear(sf::Color(100,100,100));
 
       m.draw(window);
-      //bv.tick(now);
-      //bv.draw(window, now);
-      //window.SetView(v2);
-      //sa.draw(window, now);
+
+      bv.tick(now);
+
+      view.Move(200,200);
+      // --
+      bv.draw(window, now);
+      // --
+      view.Move(-200,-200);
 
       window.Display();
    }

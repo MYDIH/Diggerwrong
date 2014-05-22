@@ -21,14 +21,14 @@ public:
 class AnimatedSquareView : public SquareView
 {
 protected:
-   SpriteAnimation Appearing;
-   SpriteAnimation Appearing_above;
+   Animation Appearing;
+   Animation Appearing_above;
 
-   SpriteAnimation Appeared;
-   SpriteAnimation Appeared_above;
+   Animation Appeared;
+   Animation Appeared_above;
 
-   SpriteAnimation Disappearing;
-   SpriteAnimation Disappearing_above;
+   Animation Disappearing;
+   Animation Disappearing_above;
 
 public:
    AnimatedSquareView(const AnimationResource * appearing

@@ -9,8 +9,10 @@
 #include <string>
 #include <sstream>
 #include <queue>
+#include <list>
 
 class Square;
+struct module;
 
 enum GameState
 {
@@ -109,10 +111,16 @@ private:
    Square* newRandomSquare(double difficulty, unsigned longestside);
 
 public:
+   Board();
    Board(unsigned width, unsigned height, double difficulty, unsigned target, unsigned timeLimit);
    Board(const Board &m);
 
    const Board & operator=(const Board &m);
+
+   
+   void generate( unsigned width, unsigned height
+		  ,double difficulty, unsigned target
+		  ,const std::list<module*> & modules, const module & first);
 
    ~Board();
 

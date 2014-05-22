@@ -1,6 +1,6 @@
 font=font.ttf
 
-size=13
+size=12
 
 R=40
 G=40

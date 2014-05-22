@@ -2,6 +2,8 @@
 
 #include "Board.hh"
 #include "SquareView.hh"
+#include "Animation.hh"
+#include "resources.hh"
 
 #include <queue>
 #include <vector>
@@ -15,11 +17,22 @@ private:
    std::vector< std::vector< std::pair<SquareView*, SquareView*> > > Squares;
    Board * Observed;
 
+   AnimatedValue DiggerX;
+   AnimatedValue DiggerY;
+   Animation Digger;
+   Animation Explosion;
+   Animation Dead;
+
+
    void delete_squares();
    void replace(unsigned x, unsigned y, Square * newone, float now);
    void draw_squares(sf::RenderTarget & drawer, float now, bool above) const;
 
 public:
+   static AnimationResource ExplosionResource;
+   static AnimationResource DiggerResource;
+   static AnimationResource DeadResource;
+
    BoardView();
    ~BoardView();
 
