@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+
 const unsigned DECALAGE_CONSOLE = 35; // Distance entre Statu et Explications
 
 const std::string CHARS[][8] = {{" ☠ ", "☾", "☽", " ☉ ", "+", "+", "|", ""},

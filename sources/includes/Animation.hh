@@ -6,6 +6,23 @@
 
 #include <vector>
 #include <string>
+#include <cmath>
+
+
+float LINEAR(float);
+
+template<unsigned LINE>
+// LINE doit être dans ]0;+inf[ , quand LINE tend vers 0, la fonction tend vers f(x)=x (linéaire)
+float EASE_IN_OUT(const float x)
+{
+   if (x == 0 or x == 1) return x;
+
+   else                  return ( atan((x-0.5) * LINE)
+				  / (-2 * atan(-0.5*LINE))
+				  + 0.5 );
+}
+
+
 
 class AnimationResource : public Resource
 {
@@ -22,6 +39,7 @@ private:
    void load_image(sf::Image & image, const std::string & file, unsigned frames);
 
 public:
+
    AnimationResource(const std::string & dir, const std::string & file);
    //AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
    ~AnimationResource() override;
@@ -41,12 +59,14 @@ class AnimatedValue
 private:
    float Start_at;
    float Stop_after;
-   float m_startValue;
-   float m_endValue;
+   float Start_value;
+   float End_value;
+   float (*Function)(float);
 //    bool m_loop;
 
 public:
-   AnimatedValue(float endValue = 1, float startValue = 0, float duration = 10);//, bool loop = false);
+   AnimatedValue(float endValue = 1, float startValue = 0
+		 ,float duration = 10, float (*function)(float) = LINEAR);//, bool loop = false);
 
    void start(float at);
    void stop(float at);

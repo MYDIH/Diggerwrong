@@ -74,7 +74,7 @@ public:
       std::queue<Board::change> Changes;
    protected:
       void pop();
-      const Board::change * front();
+      const Board::change * front() const;
    public:
       void push(const Board::change&);
       virtual bool care(const Board::change&);
@@ -118,9 +118,8 @@ public:
    const Board & operator=(const Board &m);
 
    
-   void generate( unsigned width, unsigned height
-		  ,double difficulty, unsigned target
-		  ,const std::list<module*> & modules, const module & first);
+   void generate( unsigned width, unsigned height, unsigned target
+		  ,double difficulty, const std::list<module> & modules, const module & first );
 
    ~Board();
 
@@ -138,6 +137,7 @@ public:
 // accesseurs
    unsigned getTarget()  const;
    unsigned getReached() const;
+   unsigned getRemainingDigs() const;
    unsigned getScore()      const;
    unsigned getBonusScore() const;
    unsigned getBonusLifes() const;

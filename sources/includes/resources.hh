@@ -52,13 +52,16 @@ private:
    std::string File;
    sf::Color Back;
    sf::Color Front;
-   unsigned Size;
+   unsigned  Size;
    sf::Font  Font;
 
 public:
    FontResource(const std::string & dir, const std::string & file);
    
-   void draw_string(sf::RenderTarget & drawer, const std::string & str, float dx, float dy, float opacity) const;
+   sf::Vector2f draw_string(sf::RenderTarget & drawer, const std::string & str
+		    ,float dx = 0, float dy = 0, bool centered = true, float opacity = 1) const;
+
+   const sf::Font & font() const;
 
    void load(const std::string & basepath) override;
 };

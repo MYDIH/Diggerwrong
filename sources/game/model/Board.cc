@@ -2,6 +2,7 @@
 #include "consts.hh"
 #include "squares.hh"
 #include "Square.hh"
+#include "utils.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -9,6 +10,7 @@
 #include <iostream> // debug
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 
 void Board::Observer::push(const Board::change& c)
@@ -23,7 +25,7 @@ void Board::Observer::pop()
    if (Changes.size() > 0)
       Changes.pop();
 }
-const Board::change * Board::Observer::front()
+const Board::change * Board::Observer::front() const
 {
    if (Changes.size() > 0)
       return &Changes.front();
@@ -37,92 +39,91 @@ Board::Board()
 Board::Board(unsigned width, unsigned height, double difficulty
              ,unsigned target, unsigned timeLimit)
 
-    :Squares(width)
+   :Squares(width)
 
-    ,Digger({width/2, height/2})
+   ,Digger({width/2, height/2})
 
-    ,Target(target)
-    ,Reached(0)
+   ,Target(target)
+   ,Reached(0)
 
-    ,Score(0)
+   ,Score(0)
 
-    ,Bonus_score(0)
-    ,Bonus_lifes(0)
-    ,Bonus_time(0)
+   ,Bonus_score(0)
+   ,Bonus_lifes(0)
+   ,Bonus_time(0)
 
-    ,State(CONTINUE)
-    ,levelChrono(timeLimit)
+   ,State(CONTINUE)
+   ,levelChrono(timeLimit)
 {
-    const unsigned longestside = (width > height) ? width : height;
+   const unsigned longestside = (width > height) ? width : height;
 
-    for (auto & column : Squares)
-    {
-        column.resize(height);
+   for (auto & column : Squares)
+   {
+      column.resize(height);
 
-        for (auto & square : column)
-        {
-            square = newRandomSquare(difficulty, longestside);
-        }
-    }
+      for (auto & square : column)
+      {
+	 square = newRandomSquare(difficulty, longestside);
+      }
+   }
 
-    Square * tmp = new Digged;
-    replaceSquare(Digger.x, Digger.y, tmp);
-    tmp -> release();
+   Square * tmp = new Digged;
+   replaceSquare(Digger.x, Digger.y, tmp);
+   tmp -> release();
 }
 
 void Board::releaseSquares()
 {
-    for(unsigned i = 0; i<Squares.size(); i++)
-        for(unsigned j = 0; j<Squares[0].size(); j++)
-            Squares[i][j]->release();
+   for(unsigned i = 0; i<Squares.size(); i++)
+      for(unsigned j = 0; j<Squares[0].size(); j++)
+	 Squares[i][j]->release();
 }
 
 void Board::copySquares(const Board &m)
 {
-    Squares.resize(m.Squares.size());
+   Squares.resize(m.Squares.size());
 
-    for(unsigned i = 0; i<m.Squares.size(); i++)
-    {
-        Squares[i].resize(m.Squares[0].size());
+   for(unsigned i = 0; i<m.Squares.size(); i++)
+   {
+      Squares[i].resize(m.Squares[0].size());
 
-        for(unsigned j = 0; j<m.Squares[0].size(); j++)
-            Squares[i][j] = m.Squares[i][j] -> clone();
-    }
+      for(unsigned j = 0; j<m.Squares[0].size(); j++)
+	 Squares[i][j] = m.Squares[i][j] -> clone();
+   }
 }
 
 Board::Board(const Board &m)
 {
-    operator=(m);
+   operator=(m);
 }
 
 const Board & Board::operator=(const Board &m)
 {
-    Digger = m.Digger;
+   Digger = m.Digger;
 
-    Target = m.Target;
-    Reached = m.Reached;
+   Target = m.Target;
+   Reached = m.Reached;
 
-    Score = m.Score;
+   Score = m.Score;
 
-    Bonus_score = m.Bonus_score;
-    Bonus_lifes = m.Bonus_lifes;
+   Bonus_score = m.Bonus_score;
+   Bonus_lifes = m.Bonus_lifes;
 
-    State = m.State;
+   State = m.State;
 
-    releaseSquares();
-    copySquares(m);
+   releaseSquares();
+   copySquares(m);
 
-    return *this;
+   return *this;
 }
 
 
-void Board::generate( unsigned width, unsigned height
-		      ,double difficulty, unsigned target
-		      ,const std::list<module*> & modules, const module & first )
+void Board::generate( unsigned width, unsigned height, unsigned target
+		      ,double difficulty, const std::list<module> & modules, const module & first )
 {
    srand(time(NULL));
 
-
+   
    Digger  = {width/2, height/2};
    Target  = target;
    Reached = 0;
@@ -130,8 +131,20 @@ void Board::generate( unsigned width, unsigned height
    Bonus_score = 0;
    Bonus_lifes = 0;
 
+   State = CONTINUE;
 
    Squares.resize(width);
+
+
+   const double badpower  = (1-difficulty) * 2;
+   const double goodpower = difficulty * 2;
+
+   double total = 0;
+   for (const module & mod : modules)
+   {
+      total += pow(mod.proba, (mod.good)? goodpower : badpower);
+   }
+
 
    for (auto & column : Squares)
    {
@@ -142,13 +155,13 @@ void Board::generate( unsigned width, unsigned height
 	 const double r = rand() / (double) RAND_MAX;
 	 double p = 0;
 
-	 for (module * mod : modules)
+	 for (const module & mod : modules)
 	 {
-	    p += mod->proba;
+	    p += pow(mod.proba, (mod.good)? goodpower : badpower) / total;
 
 	    if (r <= p)
 	    {
-	       square = mod->create(difficulty,width,height);
+	       square = mod.create(difficulty,width,height);
 	       break;
 	    }
 	    
@@ -173,13 +186,14 @@ Board::~Board()
 
 GameState Board::move(int dx, int dy)
 {
-    if (State == CONTINUE)
-    {
-        if (dx > 0) dx = 1;
-        else if (dx < 0) dx = -1;
+   
+   if (State == CONTINUE)
+   {
+      if (dx > 0) dx = 1;
+      else if (dx < 0) dx = -1;
 
-        if (dy > 0) dy = 1;
-        else if (dy < 0) dy = -1;
+      if (dy > 0) dy = 1;
+      else if (dy < 0) dy = -1;
 
       if ( digAt(Digger.x + dx, Digger.y + dy, dx, dy) )
       {
@@ -197,64 +211,67 @@ GameState Board::move(int dx, int dy)
       }
    }
 
-    return State;
+
+   std::cout << "-----> Board::move  READCHED=" << Reached << "\tTARGET=" << Target << std::endl;
+   return State;
 }
+
 
 // temporaire ; devra être indépendant de Board
 Square* Board::newRandomSquare(double difficulty, unsigned longestside)
 {
-    double r = rand() / (double) RAND_MAX;
+   double r = rand() / (double) RAND_MAX;
 
    //double pbomb  = difficulty * 0.12;
    //double pbonus = (1-difficulty) * 0.017;
-    double pbomb = 0.02;
-    double pbonus = 0.1;
+   double pbomb = 0.2;
+   double pbonus = 0.1;
 
 
-    if      (r <= pbomb)          return new Bomb(); // bomb
-    else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
-    else                          return new Normal(difficulty, longestside); // normal
+   if      (r <= pbomb)          return new Bomb(); // bomb
+   else if (r <= pbomb + pbonus) return new Bonus(difficulty, longestside); // bonus
+   else                          return new Normal(difficulty, longestside); // normal
 }
 
 const std::string Board::toString(const int &charSet) const
 {
-    std::string tempString = "";
-    std::string tempLine = "";
+   std::string tempString = "";
+   std::string tempLine = "";
 
-    tempLine += CHARS[charSet][4];
-    for(unsigned i=0; i<Squares[0].size(); i++)
-        tempLine += "----";
-    tempLine.pop_back();
-    tempLine += CHARS[charSet][5];
+   tempLine += CHARS[charSet][4];
+   for(unsigned i=0; i<Squares[0].size(); i++)
+      tempLine += "----";
+   tempLine.pop_back();
+   tempLine += CHARS[charSet][5];
 
-    for(unsigned i=0; i<Squares.size(); i++)
-    {
-        for(unsigned j=0; j<Squares[i].size(); j++)
-        {
-            if(i == 0 && j == 0)
-                tempString += tempLine + '\n';
-            tempString += CHARS[charSet][6];
-            if(i == Digger.x && j == Digger.y)
-                tempString += CHARS[charSet][3];
-            else
-                tempString += Squares[i][j]->toString(charSet);
-            if(j == Squares[i].size() - 1)
-                tempString += CHARS[charSet][6];
-        }
-        tempString += '\n';
-        if(i == Squares.size() - 1)
-            tempString += tempLine;
-    }
+   for(unsigned i=0; i<Squares.size(); i++)
+   {
+      for(unsigned j=0; j<Squares[i].size(); j++)
+      {
+	 if(i == 0 && j == 0)
+	    tempString += tempLine + '\n';
+	 tempString += CHARS[charSet][6];
+	 if(i == Digger.x && j == Digger.y)
+	    tempString += CHARS[charSet][3];
+	 else
+	    tempString += Squares[i][j]->toString(charSet);
+	 if(j == Squares[i].size() - 1)
+	    tempString += CHARS[charSet][6];
+      }
+      tempString += '\n';
+      if(i == Squares.size() - 1)
+	 tempString += tempLine;
+   }
 
-    return tempString;
+   return tempString;
 }
 
 bool Board::isOutOfRange(int x, int y) const
 {
-    if (x >= 0 and y >= 0 and (unsigned)x < Squares.size() and (unsigned)y < Squares[0].size())
-        return false;
-    else
-        return true;
+   if (x >= 0 and y >= 0 and (unsigned)x < Squares.size() and (unsigned)y < Squares[0].size())
+      return false;
+   else
+      return true;
 }
 
 bool Board::digAt(int x, int y, int dx, int dy, int distance)
@@ -313,9 +330,9 @@ void Board::addBonusLifes(unsigned lifes)
 
 void Board::replaceSquare(int x, int y, Square * newone)
 {
-    if (not isOutOfRange(x,y))
-    {
-        Squares[x][y] -> release();
+   if (not isOutOfRange(x,y))
+   {
+      Squares[x][y] -> release();
       newone -> retain();
       Squares[x][y] = newone;
 
@@ -329,40 +346,43 @@ void Board::replaceSquare(int x, int y, Square * newone)
 
 unsigned Board::getTarget() const
 {
-    return Target;
+   return Target;
 }
 
 unsigned Board::getReached() const
 {
-    return Reached;
+   return Reached;
 }
-
+unsigned Board::getRemainingDigs() const
+{
+   return MAX(0, (int)Target - (int)Reached);
+}
 unsigned Board::getScore() const
 {
-    return Score;
+   return Score;
 }
 
 unsigned Board::getWidth()   const
 {
-    return Squares.size();
+   return Squares.size();
 }
 
 unsigned Board::getHeight()  const
 {
-    if (Squares.size() < 1)
-        return 0;
-    else
-        return Squares[0].size();
+   if (Squares.size() < 1)
+      return 0;
+   else
+      return Squares[0].size();
 }
 
 point Board::getDigger() const
 {
-    return Digger;
+   return Digger;
 }
 
 unsigned Board::getBonusScore() const
 {
-    return Bonus_score;
+   return Bonus_score;
 }
 
 unsigned Board::getBonusLifes() const

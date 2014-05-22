@@ -7,6 +7,7 @@
 #include "EventHandler.hh"
 #include "Button.hh"
 #include "MenuView.hh"
+#include "GameController.hh"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -19,9 +20,6 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
-   EventHandler c;
-//   c.run(window);
-
    
 
    ResourcesPool p;
@@ -33,6 +31,10 @@ void animation()
    p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
    p.add(&BoardView::DeadResource);
+   p.add(&BoardView::Score_font);
+   p.add(&BoardView::Score_value_font);
+
+   p.add(&GameController::Big_font);
 
    try
    {
@@ -61,6 +63,19 @@ void animation()
 
    bool shot = false;
 
+
+   std::list<module> modules = { {Normal::init, Normal::create, 0.92, true}
+				 ,{Bonus::init, Bonus::create , 0.01, true}
+				 ,{Bomb::init , Bomb::create  , 0.07, false} };
+
+   module first = {Digged::init, Digged::create, 0};
+
+   GameController game;
+   game.Modules = &modules;
+   game.First   = &first;
+   
+   game.new_game(15,15,10,2,3,0);
+   game.run(window);
 
 //   exit(0);
    while (true)

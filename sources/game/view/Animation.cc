@@ -9,7 +9,6 @@
 #include <map>
 #include <stdexcept>
 
-#define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
 
 const sf::Sprite AnimationResource::Empty;
 
@@ -220,16 +219,18 @@ void AnimationResource::load(const std::string & basepath)
 
 /////////////////////////////////////AnimatedValue//////////////////////////////////////////////////
 
-AnimatedValue::AnimatedValue(float endValue, float startValue, float duration) //, bool loop) :
+AnimatedValue::AnimatedValue(float endValue, float startValue
+			     ,float duration, float (*function)(float)) //, bool loop) :
    :Start_at(FLT_MAX)
    ,Stop_after(duration)
-   ,m_startValue(startValue)
-   ,m_endValue(endValue)
+   ,Start_value(startValue)
+   ,End_value(endValue)
+   ,Function(function)
 {}
 
 void AnimatedValue::start(float at)
 {
-   Start_at = MAX(0, at);
+   Start_at = at;
 }
 
 void AnimatedValue::stop(float at)
@@ -258,30 +259,35 @@ float AnimatedValue::value(float now) const
 //        start(now);
 
    if(now < Start_at)
-      return m_startValue;
+      return Start_value;
    else if(now > Start_at + Stop_after)
-      return m_endValue;
+      return End_value;
    else
-      return m_startValue + ((m_endValue - m_startValue)/Stop_after*(now - Start_at));
+   {
+      return Start_value + (End_value - Start_value) * Function( (now - Start_at)/Stop_after );
+   }
 }
 
 float AnimatedValue::start_value() const
-{ return m_startValue; }
+{ return Start_value; }
 float AnimatedValue::end_value()   const
-{ return m_endValue;   }
+{ return End_value;   }
 
 void AnimatedValue::set_value(float v)
 {
-   m_startValue = v;
-   m_endValue   = v;
+   Start_value = v;
+   End_value   = v;
 }
 
 void AnimatedValue::restart_at_end(float endValue)
 {
-   m_startValue = m_endValue;
-   m_endValue   = endValue;
+   Start_value = End_value;
+   End_value   = endValue;
 }
 
+
+float LINEAR(float x)
+{ return x; }
 
 //////////////////////////////////////Animation///////////////////////////////////////////////////
 

@@ -1,16 +1,22 @@
 #include "BoardView.hh"
 #include "consts.hh"
+#include "utils.hh"
 
 #include <iostream>
+#include <cfloat>
 
 AnimationResource BoardView::DiggerResource("","digger.txt");
 AnimationResource BoardView::ExplosionResource("","explosion.txt");
 AnimationResource BoardView::DeadResource("","dead.txt");
 
+FontResource BoardView::Score_font("", "score-font.txt");
+FontResource BoardView::Score_value_font("", "score-value-font.txt");
+
+
 BoardView::BoardView()
    :Observed(nullptr)
-   ,DiggerX(0,0,0.2)
-   ,DiggerY(0,0,0.25)
+   ,DiggerX(0,0,0.13)
+   ,DiggerY(0,0,0.20)
    ,Digger(&DiggerResource)
    ,Explosion(&ExplosionResource)
    ,Dead(&DeadResource)
@@ -82,15 +88,27 @@ void BoardView::observe(Board * b, float appear_at)
    DiggerX.set_value(pos.x);
    DiggerY.set_value(pos.y);
 
+   Target      = Observed -> getTarget();
+   Reached     = Observed -> getReached();
+   Score       = Observed -> getScore();
+   Bonus_score = Observed -> getBonusScore();
+   Bonus_lifes = Observed -> getBonusLifes();
+
+   Digger.start(0);
+   Explosion.start(FLT_MAX);
 }
 
 bool BoardView::care(const Board::change& c)
 {
    switch (c.type)
    {
-      case bc::LOST:     return true;
-//      case bc::WON:      return true;
-      case bc::MOVE:     return true;
+      case bc::LOST:  return true;
+      case bc::WON:   return true;
+      case bc::MOVE:  return true;
+      case bc::SCORE: return true;
+      case bc::SCORE_BONUS: return true;
+      case bc::LIFE_BONUS:  return true;
+
       case bc::REPLACE:
 	 c.infos.square -> retain();
 	 return true;
@@ -98,6 +116,15 @@ bool BoardView::care(const Board::change& c)
 
       default: return false;
    }
+}
+
+bool BoardView::moving() const
+{
+   return ((front()) and front()->type == bc::MOVE);
+}
+bool BoardView::finished() const
+{
+   return (front() == nullptr);
 }
 
 void BoardView::tick(float now)
@@ -116,7 +143,9 @@ void BoardView::tick(float now)
 	 DiggerX.start(now);
 	 DiggerY.start(now);
 
-	 std::cout << "[move catched]\n";
+	 Reached = c -> infos.value.total;
+
+	 std::cout << "[move catched] REACHED=" << Reached << "\tmyTARGET=" << Target << std::endl;
       }
       else switch ( c -> type )
 	   {
@@ -130,6 +159,19 @@ void BoardView::tick(float now)
 		 Explosion.start(now);
 		 Digger.stop(now);
 		 break;
+
+	      case bc::SCORE:
+		 Score = c -> infos.value.total;
+		 break;
+
+	      case bc::SCORE_BONUS:
+		 Bonus_score = c -> infos.value.total;
+		 break;
+
+	      case bc::LIFE_BONUS:
+		 Bonus_lifes = c -> infos.value.total;
+		 break;
+
 	    
 	      default:;
 	   }
@@ -179,26 +221,61 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    sf::View view(orig);
    drawer.SetView(view);
 
-   view.Move( (Squares.size()*SQUARE_WIDTH)/2 - SQUARE_WIDTH/2
-   	      ,(Squares[0].size()*SQUARE_HEIGHT)/2 - SQUARE_HEIGHT/2);
+
+   const float width = Squares.size()*SQUARE_WIDTH;
+   const float height = Squares[0].size()*SQUARE_HEIGHT;
+
+   view.Move( width/2    - SQUARE_WIDTH/2
+   	      ,height/2  - SQUARE_HEIGHT/2 );
 
    draw_squares(drawer,now,false);
 
 
    // on dessine ici (entre les 2 calques) le digger / les scores qui volent ...
-   float x = DiggerX.value(now)*SQUARE_WIDTH;
-   float y = DiggerY.value(now)*SQUARE_HEIGHT;
-   view.Move(-x,-y);
-   //
-   if (Digger.running(now))
-      Digger.draw(drawer,now);
-   else
-      Dead.draw(drawer,now);
 
-   if (Explosion.running(now))
-      Explosion.draw(drawer,now);
-   //
-   view.Move(x,y);
+   // -- AFFICHAGE digger
+   {
+      float x = DiggerX.value(now)*SQUARE_WIDTH;
+      float y = DiggerY.value(now)*SQUARE_HEIGHT;
+      view.Move(-x,-y);
+
+      if (Digger.running(now))
+	 Digger.draw(drawer,now);
+      else
+	 Dead.draw(drawer,now);
+
+      if (Explosion.running(now))
+	 Explosion.draw(drawer,now);
+
+      view.Move(x,y);
+   }
+   // --
+
+   // -- AFFICHAGE scores
+   {
+      view.Move(SQUARE_WIDTH/2, -height + SQUARE_HEIGHT/2);
+
+      const std::string values = ( std::to_string( MAX(0, (int)Target - (int)Reached) )
+				   + "\n" + std::to_string( Score       )
+				   + "\n" + std::to_string( Bonus_score )
+				   + "\n" + std::to_string( Bonus_lifes ));
+      
+      
+      
+      const sf::Vector2f size = Score_value_font.draw_string(drawer, values, width/2 +30,0,false);
+
+      float d = width/2 +30 + 10;
+      d = MAX( d + size.x, d + Score_value_font.font().GetGlyph('0').Advance*3 );
+
+      Score_font.draw_string(drawer,("cases restantes\n"
+				     "score\n"
+				     "score bonus\n"
+				     "vies bonus"), d,0,false);
+
+
+      view.Move(-SQUARE_WIDTH/2, height - SQUARE_HEIGHT/2);
+   }
+   // --
 
 
    draw_squares(drawer,now,true);

@@ -75,7 +75,7 @@ void FontResource::load(const std::string & basepath)
       
       Size = GET("size");
 
-      if (not Font.LoadFromFile(basepath+Dir + f.at("font")))
+      if (not Font.LoadFromFile(basepath+Dir + f.at("font"), Size))
 	 throw basepath+Dir + f.at("font");
       
    }
@@ -91,12 +91,11 @@ void FontResource::load(const std::string & basepath)
 }
 
 
-void FontResource::draw_string(sf::RenderTarget & drawer, const std::string & str
-			       ,float dx = 0, float dy = 0, float opacity = 1) const
+sf::Vector2f FontResource::draw_string(sf::RenderTarget & drawer, const std::string & str
+			       ,float dx, float dy, bool centered, float opacity) const
 {
    sf::Color back  = Back;
    sf::Color front = Front;
-
    if (opacity < 1)
    {
       back.a  *= opacity;
@@ -108,12 +107,25 @@ void FontResource::draw_string(sf::RenderTarget & drawer, const std::string & st
 //   s.SetStyle(sf::String::Bold);
    s.SetText(str);
    s.SetSize(Size);
+
+   float x = dx;
+   float y = dy;
+   if (centered)
+   {
+      x -= s.GetRect().GetWidth()/2;
+      y -= s.GetRect().GetHeight()/2;
+   }
    
    s.SetColor(back);
-   s.Move(dx,dy);
+   s.Move(x,y);
    drawer.Draw( s );
    
    s.SetColor(front);
    s.Move(2,2);
    drawer.Draw( s );
+
+   return { s.GetRect().GetWidth(), s.GetRect().GetHeight() };
 }
+
+const sf::Font & FontResource::font() const
+{ return Font; }

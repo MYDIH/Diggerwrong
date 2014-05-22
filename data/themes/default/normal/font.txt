@@ -1,4 +1,4 @@
-font=font.ttf
+font=../beams.ttf
 
 size=12
 

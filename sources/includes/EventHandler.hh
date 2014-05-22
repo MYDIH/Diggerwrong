@@ -7,8 +7,11 @@
 class EventHandler
 {
 private:
-   bool Need_refresh;
    static const sf::Clock Clock;
+
+   sf::View View;
+   bool Need_refresh;
+
 
 public:
    EventHandler();

@@ -23,6 +23,12 @@ private:
    Animation Explosion;
    Animation Dead;
 
+   unsigned Target;
+   unsigned Reached;
+   unsigned Score;
+   unsigned Bonus_score;
+   unsigned Bonus_lifes;
+
 
    void delete_squares();
    void replace(unsigned x, unsigned y, Square * newone, float now);
@@ -32,6 +38,9 @@ public:
    static AnimationResource ExplosionResource;
    static AnimationResource DiggerResource;
    static AnimationResource DeadResource;
+   static FontResource Score_font;
+   static FontResource Score_value_font;
+
 
    BoardView();
    ~BoardView();
@@ -40,6 +49,9 @@ public:
 
    void observe(Board * b, float appear_at);
    void tick(float now);
+
+   bool moving() const;
+   bool finished() const;
 
    void draw(sf::RenderTarget & drawer, float now) const;
 };

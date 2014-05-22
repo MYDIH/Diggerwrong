@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 
+#define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
+
 const double LINE = 6;
 // doit être > 0 ; plus c'est grand plus la fonction est linéaire
 double inv(double x);
@@ -22,6 +24,15 @@ std::string typeToString(T x)
 
    return flux.str();
 }
+
+template<typename T>
+void swap(T & a, T & b)
+{
+   const T tmp = a;
+   a = b;
+   b = tmp;
+}
+
 
 /*
   class Cloneable
