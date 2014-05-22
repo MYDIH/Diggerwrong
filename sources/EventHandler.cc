@@ -19,6 +19,10 @@ EventHandler::~EventHandler()
 
 int EventHandler::run(sf::RenderWindow & w)
 {
+   w.SetView(View);
+   View.SetCenter(0,0);
+   View.SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
+
    while (true)
    {
       const float now = Clock.GetElapsedTime();
@@ -32,6 +36,7 @@ int EventHandler::run(sf::RenderWindow & w)
 
       if (Need_refresh)
       {
+	 w.Clear();
 	 draw(w,now);
 	 w.Display();
 	 Need_refresh = false;
@@ -121,7 +126,7 @@ int EventHandler::closed(sf::RenderWindow & w, float now)
 int EventHandler::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
 {
    // éviter l'auto-resize chelou
-   w.GetDefaultView().SetFromRect(sf::FloatRect(0, 0, w.GetWidth(), w.GetHeight()));
+   View.SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
 
    need_refresh();
    return 0;

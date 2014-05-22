@@ -10,7 +10,7 @@ public:
   Button();
   Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const GuiResource &res,
 	 bool isAutoSized = true, bool isLabelCentered = true);
-  Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const sf::Color &colBackground = sf::Color(255, 0, 0),
+  Button(const sf::Vector2f &pos, const sf::Vector2f &size = sf::Vector2f(100, 50), const sf::String &label = sf::String("Default"), const sf::Color &colBackground = sf::Color(255, 0, 0),
 	 const sf::Color &colBorder = sf::Color(100, 100, 100), float bordW = 2, bool isAutoSized = true, bool isLabelCentered = true);
 
   void draw(sf::RenderTarget &w);
@@ -18,13 +18,14 @@ public:
   //Accesseurs
   bool isAutoSized() const;
   bool isLabelCentered() const;
+  bool contains(const sf::Vector2f &p) const;
+  sf::Vector2f getSize() const;
   const sf::String& getLabel() const;
 
   void setSizePolicy(bool isAuto);
   void setCenteringPolicy(bool isCentered);
   void setSize(const sf::Vector2f &s);
   void setLabel(const sf::String &l);
-  void setPosition(const sf::Vector2f &pos);
 
 private:
   sf::String m_label;

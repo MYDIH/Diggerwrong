@@ -39,6 +39,12 @@ bool Button::isAutoSized() const
 bool Button::isLabelCentered() const
 { return m_isLabelCentered; }
 
+bool Button::contains(const sf::Vector2f &p) const
+{ return sf::Rect<float>(GetPointPosition(0).x, GetPointPosition(0).y, GetPointPosition(2).x, GetPointPosition(2).y).Contains(p.x, p.y); }
+
+sf::Vector2f Button::getSize() const
+{ return sf::Vector2f(GetPointPosition(2).x - GetPointPosition(0).x, GetPointPosition(2).y - GetPointPosition(0).y); }
+
 const sf::String& Button::getLabel() const
 { return m_label; }
 
@@ -59,9 +65,6 @@ void Button::setSize(const sf::Vector2f &s)
 
 void Button::setLabel(const sf::String &l)
 { m_label = l; }
-
-void Button::setPosition(const sf::Vector2f &pos)
-{}
 
 void Button::autoSize()
 {

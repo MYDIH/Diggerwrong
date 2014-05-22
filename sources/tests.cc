@@ -3,6 +3,7 @@
 #include "Board.hh"
 #include "BoardView.hh"
 #include "squares.hh"
+#include "GuiController.hh"
 #include "resources.hh"
 #include "EventHandler.hh"
 #include "Button.hh"
@@ -19,12 +20,14 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
-   EventHandler c;
+   GuiController gc;
+   gc.run(window);
+   //EventHandler c;
 //   c.run(window);
 
    
 
-   ResourcesPool p;
+   /*ResourcesPool p;
    Normal::init( p );
    Bonus::init( p );
    Bomb::init( p );
@@ -55,13 +58,15 @@ void animation()
    sf::View view(sf::FloatRect(-500,-500,500,500));
    window.SetView(view);
 
-   MenuView m(window.GetDefaultView());
+   sf::Shape s = sf::Shape::Rectangle(0, 0, 10, 10, sf::Color(255, 255, 255));
+
+   MenuView m;
    bool shot = false;
 
 //   exit(0);
    while (true)
    {
-      now = clock.GetElapsedTime();
+     //now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
       if (now > 6 and not shot)
@@ -73,7 +78,7 @@ void animation()
 	 b.move(0,-1);
 	 shot = true;
 	 std::cout << "--> GOCOWS!\n";
-      }
+	 }
 
       
       
@@ -83,7 +88,7 @@ void animation()
       m.draw(window);
 
       bv.tick(now);
-
+      window.Draw(s);
       view.Move(200,200);
       // --
       bv.draw(window, now);
@@ -91,7 +96,7 @@ void animation()
       view.Move(-200,-200);
 
       window.Display();
-   }
+   }*/
 
 }
 

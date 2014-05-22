@@ -200,7 +200,6 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    //
    view.Move(x,y);
 
-
    draw_squares(drawer,now,true);
 
    drawer.SetView(orig);

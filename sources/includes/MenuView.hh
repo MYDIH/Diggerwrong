@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 #include "Button.hh"
@@ -6,13 +8,16 @@
 class MenuView
 {
 public:
-    MenuView(const sf::View &windowV);
+  MenuView();
 
-    void draw(sf::RenderTarget &w);
+  void draw(sf::RenderTarget &w);
+  
+  void setOffset(const sf::Vector2f &o);
+
+  Button play;
+  Button options;
+  Button quit;
 
 private:
-    sf::View mView;
-    Button play;
-    Button options;
-    Button quit;
+  sf::Vector2f offset;
 };
