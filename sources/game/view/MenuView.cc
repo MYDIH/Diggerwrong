@@ -2,34 +2,23 @@
 
 #include <iostream>
 
-MenuView::MenuView() :
-  moveAnim(200)
+MenuView::MenuView(const sf::View &windowV) :
+    mView(windowV)
 {
-  play = new Button;
-  options = new Button;
-  quit = new Button;
-
-  play->SetPosition(0, 0);
-  gContainer.addDrawable(play);
-  options->SetPosition(0, 50);
-  gContainer.addDrawable(options);
-  quit->SetPosition(0, 100);
-  gContainer.addDrawable(quit);
-
-  //gContainer.SetPosition(sf::Vector2f(200, 0));
+    mView.SetCenter(25, 250);
+    play.SetPosition(sf::Vector2f(50, 50));
+    options.SetPosition(sf::Vector2f(50, 100));
+    quit.SetPosition(sf::Vector2f(50, 150));
 }
 
 void MenuView::draw(sf::RenderTarget &w)
 {
-  gContainer.draw(w);
-}
+    sf::View dw = w.GetDefaultView();
+    w.SetView(mView);
 
-void MenuView::start(float at)
-{
-  moveAnim.start(at);
-}
+    play.draw(w);
+    options.draw(w);
+    quit.draw(w);
 
-void MenuView::update(float now)
-{
-  gContainer.Move(sf::Vector2f(moveAnim.getValue(now), 0));
+    w.SetView(dw);
 }

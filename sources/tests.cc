@@ -4,7 +4,6 @@
 #include "BoardView.hh"
 #include "squares.hh"
 #include "resources.hh"
-#include "Button.hh"
 #include "MenuView.hh"
 
 #include <iostream>
@@ -45,8 +44,7 @@ void animation()
    sf::View v2(sf::FloatRect(-250,-250,250,250));
    window.SetView(v2);*/
 
-   MenuView m;
-   m.start(clock.GetElapsedTime() + 3);
+   MenuView m(window.GetDefaultView());
 
 //   exit(0);
    while (true)
@@ -57,7 +55,6 @@ void animation()
       //b.draw(window);
       window.Clear(sf::Color(100,100,100));
 
-      m.update(clock.GetElapsedTime());
       m.draw(window);
       //bv.tick(now);
       //bv.draw(window, now);
