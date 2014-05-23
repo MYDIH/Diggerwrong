@@ -38,7 +38,7 @@ void animation()
    p.add(&Button::corner);
    p.add(&Button::back);
 
-   /*p.add(&BoardView::DiggerResource);
+   p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
 
    p.add(&BoardView::DeadResource);
@@ -54,9 +54,10 @@ void animation()
    p.add(&GameController::Tryagain);
    p.add(&GameController::Levelup);
    p.add(&GameController::Gameover);
-   p.add(&GameController::Star);
+   p.add(&GameController::Star1);
+   p.add(&GameController::Star2);
 
-   p.add(&BoardView::DeadResource);*/
+   p.add(&BoardView::DeadResource);
 
 
    try
@@ -69,9 +70,9 @@ void animation()
       exit(1);
    }
    
-   gc.run(window);
+   //gc.run(window);
    
-   /*Board b(8,8,0.5,10, 10);
+   Board b(8,8,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
@@ -87,17 +88,19 @@ void animation()
    bool shot = false;
 
 
-   std::list<module> modules = { {Normal::init, Normal::create, 0.92, true}
-				 ,{Bonus::init, Bonus::create , 0.01, true}
-				 ,{Bomb::init , Bomb::create  , 0.07, false} };
+   std::vector<module> modules = {  {Bonus::init, Bonus::create , 0.05   , 0.001 }
+				   ,{Bomb::init , Bomb::create  , 0.01   , 0.1   } };
 
    module first = {Digged::init, Digged::create, 0};
+   module defaultmod ={Normal::init, Normal::create, 0    , 0};
+
 
    GameController game;
    game.Modules = &modules;
    game.First   = &first;
+   game.Default = &defaultmod;
    
-   game.new_game(25,15,20,2,3,0);
+   game.new_game(20,11,20,2,3,0);
    game.run(window);
 
 //   exit(0);
@@ -115,9 +118,7 @@ void animation()
 	 b.move(0,-1);
 	 shot = true;
 	 std::cout << "--> GOCOWS!\n";
-	 }
-
-
+      }
 
 
       window.Clear(sf::Color(100,100,100));
@@ -133,7 +134,7 @@ void animation()
       view.Move(-200,-200);
 
       window.Display();
-   }*/
+   }
 
 }
 

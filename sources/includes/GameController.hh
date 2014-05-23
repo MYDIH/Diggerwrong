@@ -44,11 +44,12 @@ private:
 
    AnimatedValue Slide;
 
-   AnimatedValue BackX;
-   AnimatedValue BackY;
+   AnimatedValue Back1;
+   AnimatedValue Back2;
 
 public:
-   static AnimationResource Star;
+   static AnimationResource Star1;
+   static AnimationResource Star2;
 
    static FontResource Big_font;
 
@@ -57,8 +58,9 @@ public:
    static SoundResource Levelup;
    static SoundResource Gameover;
 
-   const std::list<module> * Modules;
+   const std::vector<module> * Modules;
    const module * First;
+   const module * Default;
 
    GameController();
 
@@ -68,7 +70,9 @@ public:
 		 ,unsigned last_rank, unsigned lifes, unsigned score );
 
 
-   void draw_background(sf::RenderTarget & r, float now);
+   void draw_stars(sf::RenderTarget & r, float now
+		   ,float dx, float dy
+		   ,float var1, float var2);
 
    /* Evenements */
    void draw(sf::RenderTarget & r, float now) override;

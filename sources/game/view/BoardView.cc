@@ -233,8 +233,16 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    const float width = Squares.size()*SQUARE_WIDTH;
    const float height = Squares[0].size()*SQUARE_HEIGHT;
 
+
+   //const int h = Score_value_font.font().GetGlyph('0').Rectangle.GetHeight();
+   //drawer.Draw( sf::Shape::Rectangle(-width/2, -height/2, width/2, height/2, sf::Color(70,70,70,140)) );
+
+
+
+   // on se décale en haut à gauche
    view.Move( width/2    - SQUARE_WIDTH/2
    	      ,height/2  - SQUARE_HEIGHT/2 );
+
 
    draw_squares(drawer,now,false);
 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="200"
+   height="200"
+   id="svg3066"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="europa.svg">
+  <metadata
+     id="metadata3107">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1362"
+     inkscape:window-height="729"
+     id="namedview3105"
+     showgrid="false"
+     inkscape:zoom="2.0296296"
+     inkscape:cx="22.098369"
+     inkscape:cy="74.987827"
+     inkscape:window-x="0"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3066" />
+  <desc
+     id="desc3068">European flag</desc>
+  <defs
+     id="defs3070">
+    <g
+       id="s">
+      <g
+         id="c">
+        <path
+           id="t"
+           d="M 0,0 V 1 H 0.5 z"
+           transform="matrix(0.95105652,0.30901699,-0.30901699,0.95105652,0,-1)"
+           inkscape:connector-curvature="0" />
+        <use
+           xlink:href="#t"
+           transform="scale(-1,1)"
+           id="use3075"
+           x="0"
+           y="0"
+           width="810"
+           height="540" />
+      </g>
+      <g
+         id="a">
+        <use
+           xlink:href="#c"
+           transform="matrix(0.30901699,0.95105652,-0.95105652,0.30901699,0,0)"
+           id="use3078"
+           x="0"
+           y="0"
+           width="810"
+           height="540" />
+        <use
+           xlink:href="#c"
+           transform="matrix(-0.80901699,0.58778525,-0.58778525,-0.80901699,0,0)"
+           id="use3080"
+           x="0"
+           y="0"
+           width="810"
+           height="540" />
+      </g>
+      <use
+         xlink:href="#a"
+         transform="scale(-1,1)"
+         id="use3082"
+         x="0"
+         y="0"
+         width="810"
+         height="540" />
+    </g>
+  </defs>
+  <use
+     xlink:href="#s"
+     y="6"
+     id="use3208"
+     transform="matrix(88.281324,0,0,88.281324,99.705186,-420.58316)"
+     x="0"
+     width="810"
+     height="540"
+     style="fill:#003399;fill-opacity:1" />
+  <rect
+     width="810"
+     height="540"
+     id="rect3084"
+     x="-895.02032"
+     y="-389.96964"
+     style="fill:#003399" />
+  <rect
+     y="213.41971"
+     x="-116.68247"
+     height="238.46715"
+     width="298.57663"
+     id="rect3149"
+     style="opacity:0.66000001;fill:#565656;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <use
+     style="fill:#ffcc00"
+     height="540"
+     width="810"
+     x="0"
+     transform="matrix(88.281324,0,0,88.281324,101.70519,-418.58316)"
+     id="use3090"
+     y="6"
+     xlink:href="#s" />
+</svg>
