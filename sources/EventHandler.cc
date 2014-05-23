@@ -22,7 +22,8 @@ int EventHandler::run(sf::RenderWindow & w)
    w.SetView(View);
    View.SetCenter(0,0);
    View.SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
-   
+
+
    while (true)
    {
       const float now = Clock.GetElapsedTime();
@@ -37,6 +38,7 @@ int EventHandler::run(sf::RenderWindow & w)
       if (Need_refresh)
       {
 	 w.Clear(sf::Color(80,80,80));
+
 	 draw(w,now);
 	 w.Display();
 	 Need_refresh = false;

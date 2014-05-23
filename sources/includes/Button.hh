@@ -1,36 +1,48 @@
 #pragma once
 
 #include "resources.hh"
+#include "Animation.hh"
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
-class Button : public sf::Shape
+class Button
 {
 public:
-  Button();
-  Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const GuiResource &res,
-	 bool isAutoSized = true, bool isLabelCentered = true);
-  Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const sf::Color &colBackground = sf::Color(255, 0, 0),
-	 const sf::Color &colBorder = sf::Color(100, 100, 100), float bordW = 2, bool isAutoSized = true, bool isLabelCentered = true);
+  static const float w;
+  static const float h;
+  static AnimationResource corner;
+  static AnimationResource back;
+  
+  std::string name = "default";
 
-  void draw(sf::RenderTarget &w);
+  Button(sf::String label = sf::String("Default"), bool isLabelCentered = true, sf::Vector2f off = sf::Vector2f(0, 0));
+
+  void draw(sf::RenderTarget &w, float now);
 
   //Accesseurs
-  bool isAutoSized() const;
   bool isLabelCentered() const;
+  sf::Vector2f getSize() const;
   const sf::String& getLabel() const;
 
-  void setSizePolicy(bool isAuto);
   void setCenteringPolicy(bool isCentered);
-  void setSize(const sf::Vector2f &s);
+  bool contains(const sf::Vector2f &p) const;
   void setLabel(const sf::String &l);
-  void setPosition(const sf::Vector2f &pos);
+
+  void onEnter(float at);
+  void show(float at);
+  void onLeave(float at);
 
 private:
   sf::String m_label;
-  bool m_isAutoSized;
+  sf::Vector2f offset;
   bool m_isLabelCentered;
+  Animation cornerAnim;
+  Animation backAnim;
+  AnimatedValue opacity;
+  AnimatedValue backOpacity;
+  AnimatedValue cornerX;
+  AnimatedValue cornerY;
 
-  void autoSize();
-  void centerLabel();
+  void centerLabel(const sf::Vector2f &offView);
 };

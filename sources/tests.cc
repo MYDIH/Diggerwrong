@@ -3,6 +3,7 @@
 #include "Board.hh"
 #include "BoardView.hh"
 #include "squares.hh"
+#include "GuiController.hh"
 #include "resources.hh"
 #include "EventHandler.hh"
 #include "Button.hh"
@@ -20,7 +21,12 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
-   
+
+   GuiController gc;
+   //EventHandler c;
+//   c.run(window);
+
+
 
    ResourcesPool p;
    Normal::init( p );
@@ -28,8 +34,13 @@ void animation()
    Bomb::init( p );
    Digged::init( p );
 
-   p.add(&BoardView::DiggerResource);
+   p.add(&MenuView::menuCorner);
+   p.add(&Button::corner);
+   p.add(&Button::back);
+
+   /*p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
+
    p.add(&BoardView::DeadResource);
    p.add(&BoardView::Score_font);
    p.add(&BoardView::Score_value_font);
@@ -45,6 +56,9 @@ void animation()
    p.add(&GameController::Gameover);
    p.add(&GameController::Star);
 
+   p.add(&BoardView::DeadResource);*/
+
+
    try
    {
       p.load("themes/default");
@@ -54,9 +68,10 @@ void animation()
       std::cout << "\n!! ERREUR concernant le fichier:\n" << f << "\n\n";
       exit(1);
    }
-
-
-   Board b(8,8,0.5,10, 10);
+   
+   gc.run(window);
+   
+   /*Board b(8,8,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
@@ -66,10 +81,9 @@ void animation()
    sf::View view(sf::FloatRect(-500,-500,500,500));
    window.SetView(view);
 
+   sf::Shape s = sf::Shape::Rectangle(0, 0, 10, 10, sf::Color(255, 255, 255));
+
    MenuView m;
-   m.start(now + 3);
-
-
    bool shot = false;
 
 
@@ -89,7 +103,7 @@ void animation()
 //   exit(0);
    while (true)
    {
-      now = clock.GetElapsedTime();
+     now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
       if (now > 6 and not shot)
@@ -101,18 +115,17 @@ void animation()
 	 b.move(0,-1);
 	 shot = true;
 	 std::cout << "--> GOCOWS!\n";
-      }
+	 }
 
-      
-      
+
+
 
       window.Clear(sf::Color(100,100,100));
 
-      m.update(now);
-      m.draw(window);
+      //m.draw(window);
 
       bv.tick(now);
-
+      window.Draw(s);
       view.Move(200,200);
       // --
       bv.draw(window, now);
@@ -120,7 +133,7 @@ void animation()
       view.Move(-200,-200);
 
       window.Display();
-   }
+   }*/
 
 }
 

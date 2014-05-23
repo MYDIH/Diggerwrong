@@ -2,34 +2,76 @@
 
 #include <iostream>
 
+AnimationResource MenuView::menuCorner("gui","cadre.txt");
+
 MenuView::MenuView() :
-  moveAnim(200)
+   play(sf::String("Play"), false, sf::Vector2f(170, 10)),
+   options(sf::String("Options"), false, sf::Vector2f(170, -50)),
+   quit(sf::String("Quit"), false, sf::Vector2f(170, -110)),
+   offset(sf::Vector2f(0, 0)),
+   offBordX(220, 0, 0.8),
+   offBordY(130, 0, 0.8),
+   opacityMenu(255, 0, 0.4),
+   menuCornerTopLeft(&menuCorner),
+   menuCornerBottomRight(&menuCorner)
 {
-  play = new Button;
-  options = new Button;
-  quit = new Button;
-
-  play->SetPosition(0, 0);
-  gContainer.addDrawable(play);
-  options->SetPosition(0, 50);
-  gContainer.addDrawable(options);
-  quit->SetPosition(0, 100);
-  gContainer.addDrawable(quit);
-
-  //gContainer.SetPosition(sf::Vector2f(200, 0));
+   play.name = "play";
+   options.name = "options";
+   quit.name = "quit";
+   show(2);
 }
 
-void MenuView::draw(sf::RenderTarget &w)
+void MenuView::show(float at)
 {
-  gContainer.draw(w);
+   opacityMenu.start(at);
+   menuCornerTopLeft.start(at + 0.4);
+   menuCornerBottomRight.start(at + 0.4);
+   offBordX.start(at + 0.4);
+   offBordY.start(at +0.4);
+   play.show(at + 1.3);
+   options.show(at + 1.5);
+   quit.show(at + 1.7);
 }
 
-void MenuView::start(float at)
+const Button* MenuView::isInButton(const sf::Vector2f &p)
 {
-  moveAnim.start(at);
+   if(play.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
+     return &play;
+   else if(options.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
+      return &options;
+   else if(quit.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))   
+      return &quit;
+   return NULL;
 }
 
-void MenuView::update(float now)
+void MenuView::setOffset(const sf::Vector2f &o)
+{ offset = o; }
+
+void MenuView::draw(sf::RenderTarget &w, float now)
 {
-  gContainer.Move(sf::Vector2f(moveAnim.value(now), 0));
+   const sf::View & dw = w.GetView();
+   sf::View mView(dw);
+    
+   float bordX =  offBordX.value(now);
+   float bordY =  offBordY.value(now);
+    
+   w.SetView(mView);
+
+   mView.Move(offset);
+
+   play.draw(w, now);
+   options.draw(w, now);
+   quit.draw(w, now);
+
+   //--
+   mView.Move(bordX, bordY);
+   menuCornerTopLeft.draw(w, now, 0, sf::Color(255, 255, 255, opacityMenu.value(now)));
+   mView.Move(-bordX, -bordY);
+   //--
+   mView.Move(-bordX, -bordY);
+   menuCornerBottomRight.draw(w, now, 180, sf::Color(255, 255, 255, opacityMenu.value(now)));
+   mView.Move(bordX, bordY);
+   //--
+
+   w.SetView(dw);
 }

@@ -285,7 +285,6 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    }
    // --
 
-
    draw_squares(drawer,now,true);
 
    drawer.SetView(orig);

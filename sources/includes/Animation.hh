@@ -27,7 +27,7 @@ float EASE_IN_OUT(const float x)
 class AnimationResource : public Resource
 {
 private:
-   static const sf::Sprite Empty;
+   static sf::Sprite Empty;
    sf::Image Image;
    sf::Image Image2;
    std::vector<sf::Drawable *> Frames;
@@ -44,7 +44,7 @@ public:
    //AnimationResource(unsigned frame_count, float fps, bool loop); // constructeur de test (triangle qui tourne)
    ~AnimationResource() override;
 
-   const sf::Drawable & frame(float elapsed_time, float stopping_since) const;
+   sf::Drawable & frame(float elapsed_time, float stopping_since) const;
    float remaining_time(float elapsed_time, float stopping_since) const;
 
    void dealloc();
@@ -105,7 +105,7 @@ public:
 
    float remaining_time(float at) const;
 
-   void draw(sf::RenderTarget & drawer, float now) const;
+  void draw(sf::RenderTarget & drawer, float now, float rotation = 0, sf::Color alpha = sf::Color(255, 255, 255, 255)) const;
 };
 
 
