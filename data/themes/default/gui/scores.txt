@@ -1,0 +1,4 @@
+image=scores.png
+frames=11
+loop=false
+fps=30

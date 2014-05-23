@@ -4,6 +4,7 @@
 
 #include "Button.hh"
 #include "Animation.hh"
+#include "ScoresTab.hh"
 
 class MenuView
 {
@@ -32,4 +33,6 @@ private:
     AnimatedValue opacityTitle;
     Animation menuCornerTopLeft;
     Animation menuCornerBottomRight;
+
+    ScoresTab tab;
 };

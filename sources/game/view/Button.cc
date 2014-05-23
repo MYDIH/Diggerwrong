@@ -17,7 +17,7 @@ Button::Button(sf::String label, bool isLabelCentered, sf::Vector2f off) :
     cornerX(Button::w/2, 7, 0.8),
     cornerY(Button::h/2, 7, 0.8)
 {
-    show(5);
+    m_label.SetColor(sf::Color(180, 180, 180));
 }
 
 void Button::show(float at)
@@ -66,7 +66,7 @@ void Button::draw(sf::RenderTarget &w, float now)
     w.SetView(mView);
 
     mView.Move(offset);
-    m_label.SetColor(sf::Color(255, 255, 255, labelOpacity.value(now)));
+    m_label.SetColor(sf::Color(m_label.GetColor().r, m_label.GetColor().g, m_label.GetColor().b, labelOpacity.value(now)));
 
     //--
     mView.Move(cornX, cornY);
