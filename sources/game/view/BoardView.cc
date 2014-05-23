@@ -12,6 +12,10 @@ AnimationResource BoardView::DeadResource("","dead.txt");
 FontResource BoardView::Score_font("", "score-font.txt");
 FontResource BoardView::Score_value_font("", "score-value-font.txt");
 
+SoundResource BoardView::Score_sound("", "score-sound.txt");
+SoundResource BoardView::Bonus_sound("", "bonus-sound.txt");
+SoundResource BoardView::Life_sound("", "life-sound.txt");
+
 
 BoardView::BoardView()
    :Observed(nullptr)
@@ -162,14 +166,17 @@ void BoardView::tick(float now)
 
 	      case bc::SCORE:
 		 Score = c -> infos.value.total;
+		 Score_sound.play_new();
 		 break;
 
 	      case bc::SCORE_BONUS:
 		 Bonus_score = c -> infos.value.total;
+		 Bonus_sound.play_new();
 		 break;
 
 	      case bc::LIFE_BONUS:
 		 Bonus_lifes = c -> infos.value.total;
+		 Life_sound.play_new();
 		 break;
 
 	    

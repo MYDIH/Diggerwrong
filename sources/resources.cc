@@ -129,3 +129,105 @@ sf::Vector2f FontResource::draw_string(sf::RenderTarget & drawer, const std::str
 
 const sf::Font & FontResource::font() const
 { return Font; }
+
+
+SoundResource::SoundResource(const std::string & dir, const std::string & file)
+   :Dir(dir+'/')
+   ,File(file)
+   ,Is_long(false)
+   ,Short_pos(0)
+   ,Pitch(1)
+   ,Volume(100)
+{
+//   for (unsigned i = 0; i<SHORT_COUNT; i++)
+//      Short_sounds[i].SetBuffer(Short);
+}
+   
+void SoundResource::play()
+{
+   if (Is_long)
+      Long.Play();
+   else
+      Short_sound.Play();
+}
+void SoundResource::pause()
+{
+   if (Is_long)
+      Long.Pause();
+   else
+      Short_sound.Pause();
+}
+void SoundResource::stop()
+{
+   if (Is_long)
+      Long.Stop();
+   else
+      Short_sound.Stop();
+}
+
+// uniquement pour Long=false
+// permet de lancer plusieurs son en parallèle
+void SoundResource::play_new()
+{
+   if (not Is_long)
+   {
+      std::cout << "{playnew}" << std::endl;
+      Short_sounds[Short_pos].Play();
+      Short_pos = (Short_pos+1) % SHORT_COUNT;
+   }
+}
+
+void SoundResource::load(const std::string & basepath)
+{
+   const std::string base = basepath+Dir;
+
+   std::map<std::string, std::string> f;
+   if ( not parseFile(f, base+File) )
+      throw base+File;
+
+   try
+   {
+      Pitch  = std::stof( f.at("pitch") );
+      Volume = std::stof( f.at("volume") );
+      
+      if ( f.at("long") == "true" )
+      {
+	 Is_long = true;
+
+	 if (not Long.OpenFromFile( base + f.at("sound") ))
+	    throw base + f.at("sound");
+
+	 Long.SetPitch(Pitch);
+	 Long.SetVolume(Volume);
+      }
+      else
+      {
+	 Is_long = false;
+
+	 if (not Short.LoadFromFile( base + f.at("sound") ))
+	    throw base + f.at("sound");
+
+	 for (unsigned i = 0; i<SHORT_COUNT; i++)
+	 {
+	    Short_sounds[i].SetBuffer(Short);
+	    Short_sounds[i].SetPitch(Pitch);
+	    Short_sounds[i].SetVolume(Volume);
+	 }
+
+	 Short_sound.SetBuffer(Short);
+	 Short_sound.SetPitch(Pitch);
+	 Short_sound.SetVolume(Volume);
+	 
+
+      }
+
+   }
+   catch(const std::out_of_range &oor)
+   {
+      throw basepath+Dir + File;
+   }
+   catch(const std::invalid_argument &ia)
+   {
+      throw basepath+Dir + File;
+   }
+}

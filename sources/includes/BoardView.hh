@@ -38,8 +38,13 @@ public:
    static AnimationResource ExplosionResource;
    static AnimationResource DiggerResource;
    static AnimationResource DeadResource;
-   static FontResource Score_font;
-   static FontResource Score_value_font;
+
+   static FontResource  Score_font;
+   static FontResource  Score_value_font;
+
+   static SoundResource Score_sound;
+   static SoundResource Bonus_sound;
+   static SoundResource Life_sound;
 
 
    BoardView();

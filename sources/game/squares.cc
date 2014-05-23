@@ -192,7 +192,7 @@ SBonus::SBonus(unsigned val, unsigned life, unsigned score) : SNormal(val)
 SBonus::SBonus(double difficulty, unsigned longestside)
    : SNormal(difficulty, longestside)
 {
-   const double plife  = (1.1 - difficulty) * 0.2;
+   const double plife  = (1.1 - difficulty) * 0.3;
 
    const double r = rand() / (double) RAND_MAX;
 

@@ -187,7 +187,7 @@ Board::~Board()
 GameState Board::move(int dx, int dy)
 {
    
-   if (State == CONTINUE)
+   if (State == CONTINUE and not (dx == 0 and dy == 0))
    {
       if (dx > 0) dx = 1;
       else if (dx < 0) dx = -1;
@@ -311,20 +311,26 @@ void Board::addScore(unsigned score)
 
 void Board::addBonusScore(unsigned score)
 {
-   Bonus_score += score;
+   if (score > 0)
+   {
+      Bonus_score += score;
 
-   change c = {change::SCORE_BONUS, {Digger.x, Digger.y}};
-   c.infos.value = {score, Bonus_score};
-   notify( c );
+      change c = {change::SCORE_BONUS, {Digger.x, Digger.y}};
+      c.infos.value = {score, Bonus_score};
+      notify( c );
+   }
 }
 
 void Board::addBonusLifes(unsigned lifes)
 {
-   Bonus_lifes += lifes;
+   if (lifes > 0)
+   {
+      Bonus_lifes += lifes;
 
-   change c = {change::LIFE_BONUS, {Digger.x, Digger.y}};
-   c.infos.value = {lifes, Bonus_lifes};
-   notify( c );
+      change c = {change::LIFE_BONUS, {Digger.x, Digger.y}};
+      c.infos.value = {lifes, Bonus_lifes};
+      notify( c );
+   }
 }
 
 

@@ -3,6 +3,8 @@
 #include "utils.hh"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <string>
 #include <list>
 #include <map>
@@ -62,6 +64,40 @@ public:
 		    ,float dx = 0, float dy = 0, bool centered = true, float opacity = 1) const;
 
    const sf::Font & font() const;
+
+   void load(const std::string & basepath) override;
+};
+
+class SoundResource : public Resource
+{
+private:
+   static const unsigned SHORT_COUNT = 10;
+
+   std::string Dir;
+   std::string File;
+
+   bool Is_long;
+   // --
+   unsigned Short_pos;
+   sf::Sound Short_sounds[SHORT_COUNT];
+   sf::Sound Short_sound;
+   sf::SoundBuffer Short;
+   // --
+   sf::Music Long;
+   // --
+
+   float Pitch;
+   float Volume;
+   
+public:
+   SoundResource(const std::string & dir, const std::string & file);
+   
+   void play();
+   void pause();
+   void stop();
+
+   // uniquement pour Long=false
+   void play_new();
 
    void load(const std::string & basepath) override;
 };

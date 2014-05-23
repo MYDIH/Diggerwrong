@@ -33,6 +33,9 @@ void animation()
    p.add(&BoardView::DeadResource);
    p.add(&BoardView::Score_font);
    p.add(&BoardView::Score_value_font);
+   p.add(&BoardView::Score_sound);
+   p.add(&BoardView::Bonus_sound);
+   p.add(&BoardView::Life_sound);
 
    p.add(&GameController::Big_font);
 
@@ -74,7 +77,7 @@ void animation()
    game.Modules = &modules;
    game.First   = &first;
    
-   game.new_game(15,15,10,2,3,0);
+   game.new_game(15,15,20,2,3,0);
    game.run(window);
 
 //   exit(0);

@@ -1,0 +1,6 @@
+sound=bonus.wav
+
+long=false
+
+pitch=1
+volume=100

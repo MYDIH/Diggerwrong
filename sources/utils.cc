@@ -8,6 +8,9 @@ double inv(double x)
     return -(LINE)/(x+(LINE))+1;
 }
 
+
+
+
 void splitStdString(const std::string &dataToSplit, char delim, std::vector<std::string> & resVect)
 {
     std::stringstream stream(dataToSplit);
