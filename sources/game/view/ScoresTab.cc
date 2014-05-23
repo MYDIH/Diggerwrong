@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-AnimationResource ScoresTab::tabLines("gui", "scores.txt")
+AnimationResource ScoresTab::tabLines("gui", "scores.txt");
 
 ScoresTab::ScoresTab() :
   offset(sf::Vector2f(0, 0)),
