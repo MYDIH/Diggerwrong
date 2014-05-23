@@ -31,6 +31,7 @@ private:
     AnimatedValue offBordY;
     AnimatedValue opacityMenu;
     AnimatedValue opacityTitle;
+    AnimatedValue opacityTab;
     Animation menuCornerTopLeft;
     Animation menuCornerBottomRight;
 

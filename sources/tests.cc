@@ -8,6 +8,7 @@
 #include "EventHandler.hh"
 #include "Button.hh"
 #include "MenuView.hh"
+#include "ScoresTab.hh"
 #include "GameController.hh"
 
 #include <iostream>
@@ -44,6 +45,7 @@ void animation()
    p.add(&Button::corner);
    p.add(&Button::back);
    p.add(&MenuView::title);
+   p.add(&ScoresTab::tabLines);
 
    p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);

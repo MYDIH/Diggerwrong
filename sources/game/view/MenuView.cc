@@ -31,7 +31,7 @@ void MenuView::show(float at)
    offBordX.start(at + 0.4);
    offBordY.start(at + 0.4);
    opacityTitle.start(at + 1.3);
-   tab.show
+   tab.show(at + 1.7);
    play.show(at + 1.3);
    options.show(at + 1.5);
    quit.show(at + 1.7);
@@ -79,7 +79,10 @@ void MenuView::draw(sf::RenderTarget &w, float now)
    menuCornerBottomRight.draw(w, now, 180, sf::Color(255, 255, 255, opacityMenu.value(now)));
    mView.Move(bordX, bordY);
    //--
-   mView.Move()
+   mView.Move(-120, -45);
+   tab.draw(w, now);
+   mView.Move(120, 45);
+   //--
 
    w.SetView(dw);
 }
