@@ -36,8 +36,14 @@ void animation()
    p.add(&BoardView::Score_sound);
    p.add(&BoardView::Bonus_sound);
    p.add(&BoardView::Life_sound);
+   p.add(&BoardView::Fart);
 
    p.add(&GameController::Big_font);
+   p.add(&GameController::Youwin);
+   p.add(&GameController::Tryagain);
+   p.add(&GameController::Levelup);
+   p.add(&GameController::Gameover);
+   p.add(&GameController::Star);
 
    try
    {
@@ -77,7 +83,7 @@ void animation()
    game.Modules = &modules;
    game.First   = &first;
    
-   game.new_game(15,15,20,2,3,0);
+   game.new_game(25,15,20,2,3,0);
    game.run(window);
 
 //   exit(0);

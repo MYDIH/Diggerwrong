@@ -279,6 +279,9 @@ void AnimatedValue::set_value(float v)
    End_value   = v;
 }
 
+void AnimatedValue::swap()
+{ std::swap(Start_value, End_value); }
+
 void AnimatedValue::restart_at_end(float endValue)
 {
    Start_value = End_value;

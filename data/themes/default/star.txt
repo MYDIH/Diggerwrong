@@ -1,0 +1,4 @@
+image=star.png
+frames=1
+loop=false
+fps=1

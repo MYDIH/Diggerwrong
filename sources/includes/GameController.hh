@@ -44,8 +44,18 @@ private:
 
    AnimatedValue Slide;
 
+   AnimatedValue BackX;
+   AnimatedValue BackY;
+
 public:
+   static AnimationResource Star;
+
    static FontResource Big_font;
+
+   static SoundResource Youwin;
+   static SoundResource Tryagain;
+   static SoundResource Levelup;
+   static SoundResource Gameover;
 
    const std::list<module> * Modules;
    const module * First;
@@ -57,6 +67,8 @@ public:
    void new_game(unsigned width, unsigned height, unsigned target
 		 ,unsigned last_rank, unsigned lifes, unsigned score );
 
+
+   void draw_background(sf::RenderTarget & r, float now);
 
    /* Evenements */
    void draw(sf::RenderTarget & r, float now) override;

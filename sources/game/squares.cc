@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <string>
+#include <cfloat>
 
 
 ///////////////////////////////////////////
@@ -70,6 +71,19 @@ void Normal::disappear(float at)
    AnimatedSquareView::disappear(at);
    Fade_out.start(at);
 }
+
+void Normal::show(float at)
+{
+   AnimatedSquareView::show(at);
+   Fade_in.start(-10);
+}
+void Normal::hide(float at)
+{
+   AnimatedSquareView::hide(at);
+   Fade_in.start(FLT_MAX);
+}
+
+
 
 SNormal::SNormal(unsigned val)
 { Value = val; }
@@ -180,6 +194,17 @@ void Bonus::disappear(float at)
 {
    AnimatedSquareView::disappear(at);
    Fade_out.start(at);
+}
+
+void Bonus::show(float at)
+{
+   AnimatedSquareView::show(at);
+   Fade_in.start(-10);
+}
+void Bonus::hide(float at)
+{
+   AnimatedSquareView::hide(at);
+   Fade_in.start(FLT_MAX);
 }
 
 

@@ -3,4 +3,4 @@ sound=life.wav
 long=false
 
 pitch=1
-volume=100
+volume=30

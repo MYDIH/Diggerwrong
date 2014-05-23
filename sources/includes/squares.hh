@@ -50,8 +50,11 @@ public:
    Square * clone() const override;
    
    void draw(sf::RenderTarget & drawer, float now) const override;
-   void appear(float at) override;
+   void appear(float at)    override;
    void disappear(float at) override;
+   void show(float at)      override;
+   void hide(float at)      override;
+
 };
 
 
@@ -101,8 +104,11 @@ public:
    Square * clone() const override;
    
    void draw(sf::RenderTarget & drawer, float now) const override;
-   void appear(float at) override;
+   void appear(float at)    override;
    void disappear(float at) override;
+   void show(float at)      override;
+   void hide(float at)      override;
+
 };
 
 

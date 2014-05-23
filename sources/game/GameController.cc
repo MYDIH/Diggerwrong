@@ -4,7 +4,15 @@
 
 #include <cfloat>
 
+AnimationResource GameController::Star("", "star.txt");
+
 FontResource GameController::Big_font("", "big-font.txt");
+
+SoundResource GameController::Youwin(  "", "youwin.txt");
+SoundResource GameController::Tryagain("", "tryagain.txt");
+SoundResource GameController::Levelup( "", "levelup.txt");
+SoundResource GameController::Gameover("", "gameover.txt");
+
 
 GameController::GameController()
    :Try( {&Try1,&Try2} )
@@ -19,9 +27,14 @@ GameController::GameController()
    
    ,Big_flash(11,1,2)
    ,State(CONTINUE)
-   ,Slide(0,1,0.5, EASE_IN_OUT<7>)
+   ,Slide(0,1,0.35, EASE_IN_OUT<10>)
+
+   ,BackX(0,1,10, EASE_IN_OUT<7>)
+   ,BackY(0,1,14, EASE_IN_OUT<9>)
 {
    Slide.start(-10);
+   BackX.start(0);
+   BackY.start(0);
 }
 
 void GameController::new_game(unsigned width, unsigned height, unsigned target
@@ -55,21 +68,62 @@ int GameController::tick(sf::RenderWindow & w, float now)
    if (State != CONTINUE)
    {
       if (not Waiting and View.second->finished())
+      {
 	 Waiting = true;
+	 switch (State)
+	 {
+	    case GAME_OVER: Gameover.play_new(); break;
+	    case TRY_AGAIN: Tryagain.play_new(); break;
+	    case WON:       Youwin.play_new();   break;
+
+	    default:;
+	 }
+
+      }
 
       else if (Waiting and not Big_flash.running(now))
 	 Big_flash.start(now);
    }
 
 
+   if (not BackX.running(now))
+   {
+      BackX.swap();
+      BackX.start(now);
+   }
+   
+   if (not BackY.running(now))
+   {
+      BackY.swap();
+      BackY.start(now);
+   }
+
    need_refresh();
    return 0;
 }
 
+void GameController::draw_background(sf::RenderTarget & r, float now)
+{
+   const sf::View & orig = r.GetView();
+   sf::View v = orig;
+   r.SetView(v);
 
+   r.Clear(sf::Color(90,90,90));
+
+   // -- AFFICHAGE des étoiles
+   v.Zoom(BackX.value(now) * 0.5 + 0.5);
+   v.Move(BackX.value(now) * 1000 -1000, BackY.value(now) * 1000 -1000);
+
+   r.Draw( Star.frame(0,0) );
+   // --
+
+   r.SetView(orig);
+}
 
 void GameController::draw(sf::RenderTarget & r, float now)
 {
+   draw_background(r,now);
+
    const sf::View & orig = r.GetView();
    sf::View view = orig;
    r.SetView(view);
@@ -147,7 +201,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 	    break;
 
 	 case WON:
-	    Big_font.draw_string(r, "YOU WON !");
+	    Big_font.draw_string(r, "YOU WIN !");
 	    break;
 
 	 default:;
@@ -174,7 +228,8 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
       switch (State)
       {
 	 case GAME_OVER:
-	    std::cout << "\n>> GAME OVER, je ne sait que faire !" << std::endl;
+	    std::cout << "\n>> GAME OVER, je rend la mains." << std::endl;
+	    return 5;
 	    break;
 
 	 case TRY_AGAIN:
@@ -190,7 +245,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    State = CONTINUE;
 	    Big_flash.start(FLT_MAX);
 	    Slide.start(now);
-	    
+
 	    Waiting = false;
 	    break;
 
@@ -214,6 +269,8 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Big_flash.start(FLT_MAX);
 	    Slide.start(now);
 
+	    Levelup.play_new();
+	    
 	    Waiting = false;
 	    break;
 
@@ -246,9 +303,13 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
       {
 	 case GameState::LOST:
 	    if (Lifes >= 1)
+	    {
 	       State = TRY_AGAIN;
+	    }
 	    else
+	    {
 	       State = GAME_OVER;
+	    }
 	    break;
 	    
 	    

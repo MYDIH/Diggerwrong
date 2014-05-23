@@ -42,6 +42,19 @@ AnimatedSquareView::AnimatedSquareView(const AnimatedSquareView & o)
    ,Disappearing(o.Disappearing)
    ,Disappearing_above(o.Disappearing_above)
 {}
+
+void AnimatedSquareView::show(float at)
+{
+   Appeared.start( at );
+   Appeared_above.start( at );
+}
+
+void AnimatedSquareView::hide(float at)
+{
+   Appeared.stop( at );
+   Appeared_above.stop( at );
+}
+
    
 void AnimatedSquareView::appear(float at)
 {
@@ -64,10 +77,7 @@ void AnimatedSquareView::disappear(float at)
 void AnimatedSquareView::draw(sf::RenderTarget & drawer, float now) const
 {
    if (Appearing.running(now))
-   {
-      std::cout << "";
       Appearing.draw(drawer, now);
-   }
 
    else if (Appeared.running(now))
       Appeared.draw(drawer, now);

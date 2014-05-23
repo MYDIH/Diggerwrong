@@ -14,6 +14,9 @@ public:
 
    virtual void tick(float now);
 
+   virtual void show(float at) = 0;
+   virtual void hide(float at) = 0;
+
    virtual void appear(float at)    = 0;
    virtual void disappear(float at) = 0;
 };
@@ -41,6 +44,9 @@ public:
 		      ,const AnimationResource * disappearing_above);
 
    AnimatedSquareView(const AnimatedSquareView &);
+
+   void show(float at) override;
+   void hide(float at) override;
 
    void appear(float at)    override;
    void disappear(float at) override;

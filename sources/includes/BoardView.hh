@@ -45,6 +45,7 @@ public:
    static SoundResource Score_sound;
    static SoundResource Bonus_sound;
    static SoundResource Life_sound;
+   static SoundResource Fart;
 
 
    BoardView();
@@ -52,7 +53,7 @@ public:
 
    bool care(const Board::change&) override;
 
-   void observe(Board * b, float appear_at);
+   void observe(Board * b, float show_at);
    void tick(float now);
 
    bool moving() const;

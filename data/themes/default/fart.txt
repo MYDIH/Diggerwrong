@@ -1,0 +1,6 @@
+sound=fart.wav
+
+long=false
+
+pitch=1
+volume=17

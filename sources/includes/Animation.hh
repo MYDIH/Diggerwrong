@@ -82,6 +82,7 @@ public:
    float end_value()   const;
 
    void set_value(float value);
+   void swap();
    void restart_at_end(float newend);
 
 };

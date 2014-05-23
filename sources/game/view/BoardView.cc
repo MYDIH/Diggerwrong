@@ -15,6 +15,7 @@ FontResource BoardView::Score_value_font("", "score-value-font.txt");
 SoundResource BoardView::Score_sound("", "score-sound.txt");
 SoundResource BoardView::Bonus_sound("", "bonus-sound.txt");
 SoundResource BoardView::Life_sound("", "life-sound.txt");
+SoundResource BoardView::Fart(    "", "fart.txt");
 
 
 BoardView::BoardView()
@@ -48,7 +49,7 @@ void BoardView::delete_squares()
       }
 }
 
-void BoardView::observe(Board * b, float appear_at)
+void BoardView::observe(Board * b, float show_at)
 {
    if (Observed)
       Observed -> unregisterObserver(this);
@@ -79,8 +80,7 @@ void BoardView::observe(Board * b, float appear_at)
 	 if ( dynamic_cast<const SquareView*>(s) ) // le module est compatible avec SquareView
 	 {
 	    Squares[x][y].second = dynamic_cast<SquareView*>(s->clone()); // copie
-	    Squares[x][y].second -> appear(appear_at);
-//	    Squares[x][y].second -> disappear(appear_at + 15); // TEST
+	    Squares[x][y].second -> show(show_at);
 	 }
 	 else
 	    Squares[x][y].second = nullptr;
@@ -162,6 +162,7 @@ void BoardView::tick(float now)
 		 std::cout << "[lost catched]\n";
 		 Explosion.start(now);
 		 Digger.stop(now);
+		 Fart.play_new();
 		 break;
 
 	      case bc::SCORE:
