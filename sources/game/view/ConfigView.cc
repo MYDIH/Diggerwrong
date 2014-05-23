@@ -3,7 +3,7 @@
 #include <iostream>
 
 ConfigView::ConfigView() :
-  cancel(sf::String("Annuler"), false, sf::Vector2f(260, -30)),
+  cancel(sf::String("Annuler"), true, sf::Vector2f(260, -30)),
   offset(sf::Vector2f(0, 0))
 {
   cancel.name = "cancel";
@@ -17,8 +17,9 @@ void ConfigView::show(float at)
   cancel.show(at);
 }
 
-const Button* ConfigView::isInButton(const sf::Vector2f &p)
+Button* ConfigView::isInButton(const sf::Vector2f &p)
 {
+    //std::cout << "\tCV : " << p.x << " - " << offset.y << std::endl;
    if(cancel.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
      return &cancel;
    return NULL;

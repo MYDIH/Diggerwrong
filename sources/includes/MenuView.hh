@@ -8,26 +8,28 @@
 class MenuView
 {
 public:
-  static AnimationResource menuCorner;
-  
-  MenuView();
+    static AnimationResource menuCorner;
+    static FontResource title;
 
-  void draw(sf::RenderTarget &w, float now);
-  
-  void setOffset(const sf::Vector2f &o);
+    MenuView();
 
-  void show(float at);
-  const Button* isInButton(const sf::Vector2f &p);
+    void draw(sf::RenderTarget &w, float now);
 
-  Button play;
-  Button options;
-  Button quit;
+    void setOffset(const sf::Vector2f &o);
+
+    void show(float at);
+    Button* isInButton(const sf::Vector2f &p);
+
+    Button play;
+    Button options;
+    Button quit;
 
 private:
-  sf::Vector2f offset;
-  AnimatedValue offBordX;
-  AnimatedValue offBordY;
-  AnimatedValue opacityMenu;
-  Animation menuCornerTopLeft;
-  Animation menuCornerBottomRight;
+    sf::Vector2f offset;
+    AnimatedValue offBordX;
+    AnimatedValue offBordY;
+    AnimatedValue opacityMenu;
+    AnimatedValue opacityTitle;
+    Animation menuCornerTopLeft;
+    Animation menuCornerBottomRight;
 };

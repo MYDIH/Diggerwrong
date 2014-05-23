@@ -13,7 +13,7 @@ public:
   static const float h;
   static AnimationResource corner;
   static AnimationResource back;
-  
+
   std::string name = "default";
 
   Button(sf::String label = sf::String("Default"), bool isLabelCentered = true, sf::Vector2f off = sf::Vector2f(0, 0));
@@ -37,12 +37,12 @@ private:
   sf::String m_label;
   sf::Vector2f offset;
   bool m_isLabelCentered;
+  bool toggle = true;
   Animation cornerAnim;
   Animation backAnim;
   AnimatedValue opacity;
   AnimatedValue backOpacity;
+  AnimatedValue labelOpacity;
   AnimatedValue cornerX;
   AnimatedValue cornerY;
-
-  void centerLabel(const sf::Vector2f &offView);
 };

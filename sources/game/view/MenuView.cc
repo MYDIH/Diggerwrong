@@ -3,22 +3,24 @@
 #include <iostream>
 
 AnimationResource MenuView::menuCorner("gui","cadre.txt");
+FontResource MenuView::title("","menu-Title.txt");
 
 MenuView::MenuView() :
-   play(sf::String("Play"), false, sf::Vector2f(170, 10)),
-   options(sf::String("Options"), false, sf::Vector2f(170, -50)),
-   quit(sf::String("Quit"), false, sf::Vector2f(170, -110)),
+   play(sf::String("Play"), true, sf::Vector2f(170, 10)),
+   options(sf::String("Options"), true, sf::Vector2f(170, -50)),
+   quit(sf::String("Quit"), true, sf::Vector2f(170, -110)),
    offset(sf::Vector2f(0, 0)),
    offBordX(220, 0, 0.8),
    offBordY(130, 0, 0.8),
    opacityMenu(255, 0, 0.4),
+   opacityTitle(1, 0, 0.4),
    menuCornerTopLeft(&menuCorner),
    menuCornerBottomRight(&menuCorner)
 {
    play.name = "play";
    options.name = "options";
    quit.name = "quit";
-   show(2);
+   show(1);
 }
 
 void MenuView::show(float at)
@@ -27,19 +29,21 @@ void MenuView::show(float at)
    menuCornerTopLeft.start(at + 0.4);
    menuCornerBottomRight.start(at + 0.4);
    offBordX.start(at + 0.4);
-   offBordY.start(at +0.4);
+   offBordY.start(at + 0.4);
+   opacityTitle.start(at + 1.3);
    play.show(at + 1.3);
    options.show(at + 1.5);
    quit.show(at + 1.7);
 }
 
-const Button* MenuView::isInButton(const sf::Vector2f &p)
+Button* MenuView::isInButton(const sf::Vector2f &p)
 {
+    //std::cout << "\tMV : " << p.x << " - " << offset.y << std::endl;
    if(play.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
      return &play;
    else if(options.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
       return &options;
-   else if(quit.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))   
+   else if(quit.contains(sf::Vector2f(p.x - offset.x, p.y - offset.y)))
       return &quit;
    return NULL;
 }
@@ -51,10 +55,10 @@ void MenuView::draw(sf::RenderTarget &w, float now)
 {
    const sf::View & dw = w.GetView();
    sf::View mView(dw);
-    
+
    float bordX =  offBordX.value(now);
    float bordY =  offBordY.value(now);
-    
+
    w.SetView(mView);
 
    mView.Move(offset);
@@ -62,6 +66,8 @@ void MenuView::draw(sf::RenderTarget &w, float now)
    play.draw(w, now);
    options.draw(w, now);
    quit.draw(w, now);
+
+   title.draw_string(w, "Diggewrong", 0, -135, true, opacityTitle.value(now));
 
    //--
    mView.Move(bordX, bordY);
