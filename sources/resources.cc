@@ -72,12 +72,12 @@ void FontResource::load(const std::string & basepath)
 			 ,GET("G")
 			 ,GET("B")
 			 ,GET("A") );
-      
+
       Size = GET("size");
 
       if (not Font.LoadFromFile(basepath+Dir + f.at("font"), Size))
 	 throw basepath+Dir + f.at("font");
-      
+
    }
    catch(const std::out_of_range &oor)
    {
@@ -89,7 +89,6 @@ void FontResource::load(const std::string & basepath)
    }
 
 }
-
 
 sf::Vector2f FontResource::draw_string(sf::RenderTarget & drawer, const std::string & str
 			       ,float dx, float dy, bool centered, float opacity) const
@@ -115,11 +114,11 @@ sf::Vector2f FontResource::draw_string(sf::RenderTarget & drawer, const std::str
       x -= s.GetRect().GetWidth()/2;
       y -= s.GetRect().GetHeight()/2;
    }
-   
+
    s.SetColor(back);
    s.Move(x,y);
    drawer.Draw( s );
-   
+
    s.SetColor(front);
    s.Move(2,2);
    drawer.Draw( s );
@@ -142,7 +141,7 @@ SoundResource::SoundResource(const std::string & dir, const std::string & file)
 //   for (unsigned i = 0; i<SHORT_COUNT; i++)
 //      Short_sounds[i].SetBuffer(Short);
 }
-   
+
 void SoundResource::play()
 {
    if (Is_long)
@@ -189,7 +188,7 @@ void SoundResource::load(const std::string & basepath)
    {
       Pitch  = std::stof( f.at("pitch") );
       Volume = std::stof( f.at("volume") );
-      
+
       if ( f.at("long") == "true" )
       {
 	 Is_long = true;
@@ -217,7 +216,7 @@ void SoundResource::load(const std::string & basepath)
 	 Short_sound.SetBuffer(Short);
 	 Short_sound.SetPitch(Pitch);
 	 Short_sound.SetVolume(Volume);
-	 
+
 
       }
 

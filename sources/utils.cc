@@ -49,3 +49,11 @@ bool parseFile(std::map<std::string, std::string> &result, const std::string &pa
     else
        return false;
 }
+
+void setColorMask(sf::Image &image, const sf::Color &color, const sf::Color &replace)
+{
+    for(unsigned i = 0; i<image.GetWidth(); i++)
+        for(unsigned j = 0; j<image.GetHeight(); j++)
+            if(image.GetPixel(i, j) == color)
+                image.SetPixel(i, j, replace);
+}

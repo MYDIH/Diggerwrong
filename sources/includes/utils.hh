@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 
+#include <SFML/Graphics.hpp>
+
 #define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
 
 const double LINE = 6;
@@ -15,6 +17,7 @@ double inv(double x);
 
 void splitStdString(const std::string &dataToSplit, char delim, std::vector<std::string> & resVect);
 bool parseFile(std::map<std::string, std::string> &result, const std::string &path);
+void setColorMask(sf::Image &image, const sf::Color &color, const sf::Color &replace);
 
 template<typename T>
 std::string typeToString(T x)
