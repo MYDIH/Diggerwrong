@@ -18,6 +18,7 @@ public:
 private:
   MenuView vM;
   ConfigView vC;
+  int screen = 1;
 
   //GameController gControl;
   sf::Vector2f animOffsetMenu;

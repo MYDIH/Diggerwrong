@@ -9,15 +9,14 @@ class ConfigView
 {
 public:
   ConfigView();
-
-  void draw(sf::RenderTarget &w, float now);
   
   void setOffset(const sf::Vector2f &o);
+  void show(float at);
+  const Button* isInButton(const sf::Vector2f &p);
 
-  Button play;
-  Button options;
-  Button quit;
+  void draw(sf::RenderTarget &w, float now);
 
 private:
+  Button cancel;
   sf::Vector2f offset;
 };

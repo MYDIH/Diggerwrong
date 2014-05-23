@@ -32,8 +32,12 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
 {
    if(!slideAnim.running(now))
    {
+      const Button *b;
       sf::Vector2f vMousePos = w.ConvertCoords(e.X, e.Y);
-      const Button *b = vM.isInButton(sf::Vector2f(vMousePos.x - animOffsetMenu.x, vMousePos.y - animOffsetMenu.y));
+      if(screen == 1)
+	 b = vM.isInButton(sf::Vector2f(vMousePos.x - animOffsetMenu.x, vMousePos.y - animOffsetMenu.y));
+      else
+	 b = vC.isInButton(sf::Vector2f(vMousePos.x - animOffsetMenu.x, vMousePos.y - animOffsetMenu.y));
 
       if(b != NULL)
       {
@@ -47,6 +51,16 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
 	       if(slideAnim.start_value() != 0)
 		  slideAnim.restart_at_end(2000);
 	       slideAnim.start(now);
+	       vC.show(now);
+	       screen = 2;
+	    }
+	    else if(b->name == "cancel")
+	    {
+	       if(slideAnim.start_value() != 0)
+		  slideAnim.restart_at_end(2000);
+	       slideAnim.start(now);
+	       vM.show(now);
+	       screen = 1;
 	    }
 	    else if(b->name == "quit")
 	       return -1;
