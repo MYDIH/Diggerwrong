@@ -15,7 +15,7 @@
 void animation()
 {
    const sf::Clock clock;
-   float now = clock.GetElapsedTime();
+//   float now = clock.GetElapsedTime();
 
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
@@ -25,7 +25,7 @@ void animation()
    //EventHandler c;
 //   c.run(window);
 
-   
+
 
    /*ResourcesPool p;
    Normal::init( p );
@@ -80,8 +80,8 @@ void animation()
 	 std::cout << "--> GOCOWS!\n";
 	 }
 
-      
-      
+
+
 
       window.Clear(sf::Color(100,100,100));
 
