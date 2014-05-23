@@ -11,7 +11,7 @@
 
 #define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
 
-const sf::Sprite AnimationResource::Empty;
+sf::Sprite AnimationResource::Empty;
 
 AnimationResource::AnimationResource(const std::string & dir, const std::string & file)
    :Dir(dir + '/')
@@ -62,7 +62,7 @@ AnimationResource::~AnimationResource()
 { dealloc(); }
 
 
-const sf::Drawable & AnimationResource::frame(float elapsed_time, float stopping_since = FLT_MAX) const
+sf::Drawable & AnimationResource::frame(float elapsed_time, float stopping_since = FLT_MAX) const
 {
    const unsigned size = Frames.size();
 
@@ -327,11 +327,21 @@ float Animation::remaining_time(float at) const
       return 0;
 }
 
-void Animation::draw(sf::RenderTarget & drawer, float now) const
+void Animation::draw(sf::RenderTarget & drawer, float now, float rotation, sf::Color alpha) const
 {
    if (Resource != nullptr)
-      drawer.Draw( Resource -> frame(MAX(0, now - Start_at), Stop_after) );
+   {
+      if(rotation != 0 || alpha != sf::Color(255, 255, 255, 255))
+      {
+	 Resource -> frame(MAX(0, now - Start_at), Stop_after).SetRotation(rotation);
+	 Resource -> frame(MAX(0, now - Start_at), Stop_after).SetColor(alpha);
+	 drawer.Draw(Resource -> frame(MAX(0, now - Start_at), Stop_after));
+	 Resource -> frame(MAX(0, now - Start_at), Stop_after).SetRotation(0);
+	 Resource -> frame(MAX(0, now - Start_at), Stop_after).SetColor(sf::Color(255, 255, 255, 255));
+      }
+      else
+	 drawer.Draw(Resource -> frame(MAX(0, now - Start_at), Stop_after));
+   }
 }
-
 
 

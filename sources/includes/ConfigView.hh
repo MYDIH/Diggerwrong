@@ -10,7 +10,7 @@ class ConfigView
 public:
   ConfigView();
 
-  void draw(sf::RenderTarget &w);
+  void draw(sf::RenderTarget &w, float now);
   
   void setOffset(const sf::Vector2f &o);
 

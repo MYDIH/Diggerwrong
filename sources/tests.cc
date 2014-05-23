@@ -15,27 +15,30 @@
 void animation()
 {
    const sf::Clock clock;
-//   float now = clock.GetElapsedTime();
+   float now = clock.GetElapsedTime();
 
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
    GuiController gc;
-   gc.run(window);
    //EventHandler c;
 //   c.run(window);
 
 
 
-   /*ResourcesPool p;
+   ResourcesPool p;
    Normal::init( p );
    Bonus::init( p );
    Bomb::init( p );
    Digged::init( p );
 
-   p.add(&BoardView::DiggerResource);
+   p.add(&MenuView::menuCorner);
+   p.add(&Button::corner);
+   p.add(&Button::back);
+
+   /*p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
-   p.add(&BoardView::DeadResource);
+   p.add(&BoardView::DeadResource);*/
 
    try
    {
@@ -46,9 +49,10 @@ void animation()
       std::cout << "\n!! ERREUR concernant le fichier:\n" << f << "\n\n";
       exit(1);
    }
-
-
-   Board b(8,8,0.5,10, 10);
+   
+   gc.run(window);
+   
+   /*Board b(8,8,0.5,10, 10);
    BoardView bv;
    bv.observe(&b, 1);
 
@@ -66,7 +70,7 @@ void animation()
 //   exit(0);
    while (true)
    {
-     //now = clock.GetElapsedTime();
+     now = clock.GetElapsedTime();
 //      std::cout << "[TICK] " << now << "\n";
 
       if (now > 6 and not shot)
@@ -85,7 +89,7 @@ void animation()
 
       window.Clear(sf::Color(100,100,100));
 
-      m.draw(window);
+      //m.draw(window);
 
       bv.tick(now);
       window.Draw(s);

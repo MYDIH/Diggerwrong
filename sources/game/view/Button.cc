@@ -1,87 +1,100 @@
 #include "Button.hh"
 
-Button::Button() :
-  Shape(Rectangle(0, 0, 100, 50, sf::Color(255, 0, 0), 5, sf::Color(100, 100, 100))),
-  m_label("Default"),
-  m_isAutoSized(true),
-  m_isLabelCentered(true)
-{}
+AnimationResource Button::corner("gui/buttons", "corners.txt");
+AnimationResource Button::back("gui/buttons", "back.txt");
+const float Button::w = 118;
+const float Button::h = 38.7;
 
-Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const GuiResource &res,
-               bool isAutoSized, bool isLabelCentered) :
-  Shape(Rectangle(pos, size, res.forCol, res.bordW, res.bordCol)),
-  m_label(label),
-  m_isAutoSized(isAutoSized),
-  m_isLabelCentered(isLabelCentered)
-{}
-
-Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size, const sf::String &label, const sf::Color &colBackground,
-	       const sf::Color &colBorder, float bordW, bool isAutoSized, bool isLabelCentered) :
-  Shape(Rectangle(pos, size, colBackground, bordW, colBorder)),
-  m_label(label),
-  m_isAutoSized(isAutoSized),
-  m_isLabelCentered(isLabelCentered)
-{}
-
-void Button::draw(sf::RenderTarget &w)
+Button::Button(sf::String label, bool isLabelCentered, sf::Vector2f off) :
+   m_label(label),
+   offset(off),
+   m_isLabelCentered(isLabelCentered),
+   cornerAnim(&corner),
+   backAnim(&back),
+   opacity(255, 0, 0.4),
+   backOpacity(255, 0, 0.4),
+   cornerX(Button::w/2, 7, 0.8),
+   cornerY(Button::h/2, 7, 0.8)
 {
-  w.Draw(*this);
-  if(m_isAutoSized)
-    autoSize();
-  if(m_isLabelCentered)
-    centerLabel();
-  w.Draw(m_label);
+   show(5);
 }
 
-bool Button::isAutoSized() const
-{ return m_isAutoSized; }
+void Button::show(float at)
+{
+   opacity.start(at);
+   cornerX.start(at + 0.4);
+   cornerY.start(at + 0.4);
+}
+
+void Button::onEnter(float at)
+{
+   if(backOpacity.start_value() != 0)
+      backOpacity.restart_at_end(255);
+   backOpacity.start(at);
+}
+
+void Button::onLeave(float at)
+{
+   backOpacity.restart_at_end(0);
+   backOpacity.start(at);
+}
+
+void Button::draw(sf::RenderTarget &w, float now)
+{
+   const sf::View & dw = w.GetView();
+   sf::View mView(dw);
+
+   float cornX =  cornerX.value(now);
+   float cornY =  cornerY.value(now);
+    
+   w.SetView(mView);
+
+   mView.Move(offset);
+   
+   //--
+   mView.Move(cornX, cornY);
+   cornerAnim.draw(w, now, 0, sf::Color(255, 255, 255, opacity.value(now)));
+   mView.Move(-cornX, -cornY);
+   //--
+   mView.Move(-cornX, cornY);
+   cornerAnim.draw(w, now, -90, sf::Color(255, 255, 255, opacity.value(now)));
+   mView.Move(cornX, -cornY);
+   //--
+   mView.Move(-cornX, -cornY);
+   cornerAnim.draw(w, now, 180, sf::Color(255, 255, 255, opacity.value(now)));
+   mView.Move(cornX, cornY);
+   //--
+   mView.Move(cornX, -cornY);
+   cornerAnim.draw(w, now, 90, sf::Color(255, 255, 255, opacity.value(now)));
+   mView.Move(-cornX, cornY);
+   //--
+   mView.Move(-1, -1);
+   backAnim.draw(w, now, 0, sf::Color(255, 255, 255, backOpacity.value(now)));
+   mView.Move(1, 1);
+   //--
+
+   w.SetView(dw);
+}
 
 bool Button::isLabelCentered() const
 { return m_isLabelCentered; }
 
 bool Button::contains(const sf::Vector2f &p) const
-{ return sf::Rect<float>(GetPointPosition(0).x, GetPointPosition(0).y, GetPointPosition(2).x, GetPointPosition(2).y).Contains(p.x, p.y); }
+{ return sf::Rect<float>(-offset.x - Button::w / 2, -offset.y - Button::h / 2, -offset.x + Button::w / 2, -offset.y + Button::h / 2).Contains(p.x, p.y); }
 
 sf::Vector2f Button::getSize() const
-{ return sf::Vector2f(GetPointPosition(2).x - GetPointPosition(0).x, GetPointPosition(2).y - GetPointPosition(0).y); }
+{ return sf::Vector2f(Button::w, Button::h); }
 
 const sf::String& Button::getLabel() const
 { return m_label; }
 
-void Button::setSizePolicy(bool isAuto)
-{ m_isAutoSized = isAuto; }
-
 void Button::setCenteringPolicy(bool isCentered)
 { m_isLabelCentered = isCentered; }
-
-void Button::setSize(const sf::Vector2f &s)
-{
-  sf::Vector2f p0pos = GetPointPosition(0);
-
-  SetPointPosition(1, p0pos.x + s.x, p0pos.y);
-  SetPointPosition(2, p0pos.x + s.x, p0pos.y + s.y);
-  SetPointPosition(3, p0pos.x, p0pos.y + s.y);
-}
 
 void Button::setLabel(const sf::String &l)
 { m_label = l; }
 
-void Button::autoSize()
+void Button::centerLabel(const sf::Vector2f &offView)
 {
-  float w = 10 + m_label.GetRect().Right - m_label.GetRect().Left + 10;
-  float h = 5 + m_label.GetRect().Bottom - m_label.GetRect().Top + 5;
-
-  setSize(sf::Vector2f(w, h));
-}
-
-void Button::centerLabel()
-{
-  sf::Vector2f p0pos = GetPointPosition(0);
-  sf::Vector2f p2pos = GetPointPosition(2);
-
-  float w = p2pos.x - p0pos.x;
-  float h = p2pos.y - p0pos.y;
-
-  if(m_label.GetRect().Bottom < h && m_label.GetRect().Right < w)
-     m_label.SetPosition(this->GetPosition().x + p0pos.x + ((w - m_label.GetRect().Right) / 2), this->GetPosition().y + p0pos.y + ((h - m_label.GetRect().Bottom) / 2));
+   //  if(m_label.GetRect().Right >
 }
