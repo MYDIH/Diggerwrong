@@ -117,12 +117,19 @@ const Board & Board::operator=(const Board &m)
    return *this;
 }
 
+// void Board::check_move() const
+// {
+// }
+void Board::check() const
+{
+}
+
+
 
 void Board::generate( unsigned width, unsigned height, unsigned target
-		      ,double difficulty, const std::list<module> & modules, const module & first )
+		      ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod )
 {
    srand(time(NULL));
-
    
    Digger  = {width/2, height/2};
    Target  = target;
@@ -136,14 +143,12 @@ void Board::generate( unsigned width, unsigned height, unsigned target
    Squares.resize(width);
 
 
-   const double badpower  = (1-difficulty) * 2;
-   const double goodpower = difficulty * 2;
 
-   double total = 0;
-   for (const module & mod : modules)
-   {
-      total += pow(mod.proba, (mod.good)? goodpower : badpower);
-   }
+   // double total = 0;
+   // for (const module & mod : modules)
+   // {
+   //    total += pow(mod.proba, (mod.good)? goodpower : badpower);
+   // }
 
 
    for (auto & column : Squares)
@@ -152,25 +157,30 @@ void Board::generate( unsigned width, unsigned height, unsigned target
 
       for (auto & square : column)
       {
+	 bool found = false;
 	 const double r = rand() / (double) RAND_MAX;
 	 double p = 0;
 
 	 for (const module & mod : modules)
 	 {
-	    p += pow(mod.proba, (mod.good)? goodpower : badpower) / total;
+	    p += mod.bestp + (mod.worstp-mod.bestp) * difficulty;
 
 	    if (r <= p)
 	    {
 	       square = mod.create(difficulty,width,height);
+	       found = true;
 	       break;
 	    }
 	    
 	 }
+
+	 if (not found)
+	    square = defaultmod.create(difficulty,width,height);
       }
       
    }
 
-   Square * tmp = first.create(difficulty,width,height);
+   Square * tmp = firstmod.create(difficulty,width,height);
    replaceSquare(Digger.x, Digger.y, tmp);
    tmp -> release();
 }

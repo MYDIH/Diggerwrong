@@ -6,9 +6,9 @@ AnimationResource MenuView::menuCorner("gui","cadre.txt");
 FontResource MenuView::title("","menu-Title.txt");
 
 MenuView::MenuView() :
-   play(sf::String("Play"), true, sf::Vector2f(170, 10)),
-   options(sf::String("Options"), true, sf::Vector2f(170, -50)),
-   quit(sf::String("Quit"), true, sf::Vector2f(170, -110)),
+   play("Play", sf::Vector2f(170, 10)),
+   options("Options", sf::Vector2f(170, -50)),
+   quit("Quit", sf::Vector2f(170, -110)),
    offset(sf::Vector2f(0, 0)),
    offBordX(220, 0, 0.8),
    offBordY(130, 0, 0.8),

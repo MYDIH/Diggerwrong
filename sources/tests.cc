@@ -22,17 +22,6 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(30);
 
-    std::list<module> modules = { {Normal::init, Normal::create, 0.92, true}
-				 ,{Bonus::init, Bonus::create , 0.01, true}
-				 ,{Bomb::init , Bomb::create  , 0.07, false} };
-
-    module first = {Digged::init, Digged::create, 0};
-
-   GuiController gc(modules, first);
-  // GameController gg;
-   //EventHandler c;
-//   c.run(window);
-
 
 
    ResourcesPool p;
@@ -42,9 +31,12 @@ void animation()
    Digged::init( p );
 
    p.add(&MenuView::menuCorner);
+   p.add(&MenuView::title);
    p.add(&Button::corner);
    p.add(&Button::back);
-   p.add(&MenuView::title);
+   p.add(&Button::labelFont);
+   p.add(&ScoresTab::namesCol);
+   p.add(&ScoresTab::contenuCol);
    p.add(&ScoresTab::tabLines);
 
    p.add(&BoardView::DiggerResource);
@@ -63,7 +55,8 @@ void animation()
    p.add(&GameController::Tryagain);
    p.add(&GameController::Levelup);
    p.add(&GameController::Gameover);
-   p.add(&GameController::Star);
+   p.add(&GameController::Star1);
+   p.add(&GameController::Star2);
 
    p.add(&BoardView::DeadResource);
 
@@ -78,76 +71,26 @@ void animation()
       exit(1);
    }
 
-    //gg.Modules = &modules;
-    //gg.First = &first;
-
-    //gg.new_game(25, 15, 20, 2, 5, 0);
-    //gg.run(window);
-   gc.run(window);
-
-   /*Board b(8,8,0.5,10, 10);
-   BoardView bv;
-   bv.observe(&b, 1);
 
 
+     std::vector<module> modules = {  {Bonus::init, Bonus::create , 0.05   , 0.001 }
+     ,{Bomb::init , Bomb::create  , 0.01   , 0.1   } };
+
+     module firstmod = {Digged::init, Digged::create, 0};
+     module defaultmod ={Normal::init, Normal::create, 0    , 0};
 
 
-   sf::View view(sf::FloatRect(-500,-500,500,500));
-   window.SetView(view);
+     GuiController gc(modules, firstmod, defaultmod);
 
-   sf::Shape s = sf::Shape::Rectangle(0, 0, 10, 10, sf::Color(255, 255, 255));
+     GameController game;
+     game.Modules = &modules;
+     game.First   = &firstmod;
+     game.Default = &defaultmod;
 
-   MenuView m;
-   bool shot = false;
+     game.new_game(20,11,20,2,3,0);
 
+     //game.run(window);
 
-   std::list<module> modules = { {Normal::init, Normal::create, 0.92, true}
-				 ,{Bonus::init, Bonus::create , 0.01, true}
-				 ,{Bomb::init , Bomb::create  , 0.07, false} };
-
-   module first = {Digged::init, Digged::create, 0};
-
-   GameController game;
-   game.Modules = &modules;
-   game.First   = &first;
-
-   game.new_game(25,15,20,2,3,0);
-   game.run(window);
-
-//   exit(0);
-   while (true)
-   {
-     now = clock.GetElapsedTime();
-//      std::cout << "[TICK] " << now << "\n";
-
-      if (now > 6 and not shot)
-      {
-	 b.move(-1,0);
-	 b.move(0,1);
-	 b.move(1,1);
-	 b.move(1,0);
-	 b.move(0,-1);
-	 shot = true;
-	 std::cout << "--> GOCOWS!\n";
-	 }
-
-
-
-
-      window.Clear(sf::Color(100,100,100));
-
-      //m.draw(window);
-
-      bv.tick(now);
-      window.Draw(s);
-      view.Move(200,200);
-      // --
-      bv.draw(window, now);
-      // --
-      view.Move(-200,-200);
-
-      window.Display();
-   }*/
+     gc.run(window);
 
 }
-

@@ -29,6 +29,12 @@ struct point
    unsigned y;
 };
 
+struct int2
+{
+   int d;
+   int y;
+};
+
 
 
 // représente le plateau de jeu (model du MVC) ; voir le rapport de conception pour quelques explications
@@ -107,8 +113,10 @@ private:
 
    void notify(const change&) const;
 
-// temporaire ; la génération aléatoire sera plus complexe
+   // uniquement pour la "compatibilité" avec le mode texte
    Square* newRandomSquare(double difficulty, unsigned longestside);
+
+   bool check_recur(Board * b, std::queue<int2> movements) const;
 
 public:
    Board();
@@ -117,9 +125,10 @@ public:
 
    const Board & operator=(const Board &m);
 
+   void check() const;
    
    void generate( unsigned width, unsigned height, unsigned target
-		  ,double difficulty, const std::list<module> & modules, const module & first );
+		  ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod );
 
    ~Board();
 

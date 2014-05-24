@@ -90,7 +90,7 @@ SNormal::SNormal(unsigned val)
 
 SNormal::SNormal(double difficulty, unsigned longestside)
 {
-   const double r = pow(rand() / (double) RAND_MAX, 1.5);
+   const double r = pow(rand() / (double) RAND_MAX, 1.4);
 
    const double max = longestside * 0.3 * difficulty + longestside * 0.2;
 
@@ -231,7 +231,7 @@ SBonus::SBonus(double difficulty, unsigned longestside)
       const double r = rand() / (double) RAND_MAX;
 
       Lifes = 0;
-      Score = (100 * r + 10);
+      Score = (200 * r + 42);
    }
 }
 

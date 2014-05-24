@@ -8,11 +8,12 @@
 #include "squares.hh"
 
 #include <list>
+#include <vector>
 
 class GuiController : public EventHandler
 {
 public:
-    GuiController(std::list<module> &modules, module &first);
+   GuiController(std::vector<module> &modules, module &firstmod, module &defaultmod);
 
     void draw(sf::RenderTarget & r, float now) override;
     int tick(sf::RenderWindow & w, float now) override;

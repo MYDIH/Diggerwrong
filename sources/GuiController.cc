@@ -2,13 +2,14 @@
 
 #include <iostream>
 
-GuiController::GuiController(std::list<module> &modules, module &first) :
+GuiController::GuiController(std::vector<module> &modules, module &firstmod, module &defaultmod) :
     animOffsetMenu(0, 0),
     animOffsetConfig(-2000, 0),
     slideAnim(2000, 0, 0.8)
 {
     gControl.Modules = &modules;
-    gControl.First = &first;
+    gControl.First   = &firstmod;
+    gControl.Default = &defaultmod;
 
     gControl.new_game(25, 15, 20, 2, 5, 0);
 }

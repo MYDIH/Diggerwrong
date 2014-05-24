@@ -16,8 +16,8 @@ struct module
 {
    void (*init)(ResourcesPool & pool);
    Square * (*create)(double difficulty, unsigned width, unsigned height);
-   double proba;
-   bool   good;
+   double bestp;
+   double worstp;
 };
 
 

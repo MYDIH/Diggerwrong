@@ -4,7 +4,8 @@
 
 #include <cfloat>
 
-AnimationResource GameController::Star("", "star.txt");
+AnimationResource GameController::Star1("", "star1.txt");
+AnimationResource GameController::Star2("", "star2.txt");
 
 FontResource GameController::Big_font("", "big-font.txt");
 
@@ -29,12 +30,16 @@ GameController::GameController()
    ,State(CONTINUE)
    ,Slide(0,1,0.35, EASE_IN_OUT<10>)
 
-   ,BackX(0,1,10, EASE_IN_OUT<7>)
-   ,BackY(0,1,14, EASE_IN_OUT<9>)
+   ,Back1(0,1,7, EASE_IN_OUT<16>)
+   ,Back2(0,1,32, EASE_IN_OUT<10>)
+
+   ,Modules(nullptr)
+   ,First(nullptr)
+   ,Default(nullptr)
 {
    Slide.start(-10);
-   BackX.start(0);
-   BackY.start(0);
+   Back1.start(0);
+   Back2.start(0);
 }
 
 void GameController::new_game(unsigned width, unsigned height, unsigned target
@@ -54,7 +59,7 @@ void GameController::new_game(unsigned width, unsigned height, unsigned target
    State = CONTINUE;
 
    Level.generate( Width,Height,Target
-		   ,inv(Rank), *Modules, *First );
+		   ,inv(Rank), *Modules, *First, *Default );
    
    *(Try.second) = Level;
    View.second->observe( Try.second, 0 );
@@ -86,55 +91,109 @@ int GameController::tick(sf::RenderWindow & w, float now)
    }
 
 
-   if (not BackX.running(now))
+   if (not Back1.running(now))
    {
-      BackX.swap();
-      BackX.start(now);
+      Back1.swap();
+      Back1.start(now);
    }
    
-   if (not BackY.running(now))
+   if (not Back2.running(now))
    {
-      BackY.swap();
-      BackY.start(now);
+      Back2.swap();
+      Back2.start(now);
    }
 
    need_refresh();
    return 0;
 }
 
-void GameController::draw_background(sf::RenderTarget & r, float now)
+void GameController::draw_stars(sf::RenderTarget & r, float now
+				,float dx, float dy
+				,float var1, float var2)
 {
    const sf::View & orig = r.GetView();
-   sf::View v = orig;
+
+   sf::View offset = orig;
+   offset.Move(dx, dy);
+
+   sf::View v      = offset;
+
    r.SetView(v);
 
-   r.Clear(sf::Color(90,90,90));
+   {
+      // -- AFFICHAGE des étoiles
+      offset.Zoom(var2 * 0.7 + 0.3);
+      
+      v = offset;
+      v.Move(var1*800-400, var2*800-400);
+      r.Draw( Star1.frame(0,0) );
 
-   // -- AFFICHAGE des étoiles
-   v.Zoom(BackX.value(now) * 0.5 + 0.5);
-   v.Move(BackX.value(now) * 1000 -1000, BackY.value(now) * 1000 -1000);
+      v = offset;
+      v.Move(var2*500-250, -(var1*500-250));
+      r.Draw( Star2.frame(0,0) );
 
-   r.Draw( Star.frame(0,0) );
-   // --
+      v = offset;
+      v.Move(- (var1*1000-500), var2*1000-500);
+      r.Draw( Star1.frame(0,0) );
+
+      // --
+      offset.Zoom(var1 * 0.6 + 0.4);
+      // --
+
+      v = offset;
+      v.Move(- (var1*1200-600), - (var2*1200-600));
+      r.Draw( Star2.frame(0,0) );
+
+      v = offset;
+      v.Move(var1*1200-600, var2*1200-600);
+      r.Draw( Star1.frame(0,0) );
+
+      // --
+      //offset.Zoom(var2 * 0.5 + 0.5);
+      // --
+      
+      v = offset;
+      v.Move(var2*300-150, - (var1*300-150));
+      r.Draw( Star2.frame(0,0) );
+
+      v = offset;
+      v.Move(-(var2*500-250), -(var1*500-250));
+      r.Draw( Star1.frame(0,0) );
+
+      // --
+   }
 
    r.SetView(orig);
 }
 
+const unsigned color = 70;
 void GameController::draw(sf::RenderTarget & r, float now)
 {
-   draw_background(r,now);
-
    const sf::View & orig = r.GetView();
    sf::View view = orig;
    r.SetView(view);
 
-   const float out = r.GetWidth();
+   const float width = r.GetWidth();
+   const float height = r.GetHeight();
+
+   r.Clear(sf::Color(color,color,color));
+
+   const float b1 = Back1.value(now);
+   const float b2 = Back2.value(now); 
+draw_stars(r,now,  0, 0, b1, b2);
+   draw_stars(r,now,   width/2,  height/2, b1, b2);
+   draw_stars(r,now,   width/2, -height/2, b2, b1);
+   draw_stars(r,now,  -width/2,  height/2, b1, b2);
+   draw_stars(r,now,  -width/2, -height/2, b2, b1);
+
+   r.Draw( sf::Shape::Rectangle(-width, -height, width, height
+				   ,sf::Color(color,color,color,220)) );
 
    // -- AFFICHAGE plateau en cours
    {
       sf::View v = view;
       r.SetView(v);
-      v.Move(-Slide.value(now) * out, 0);
+      v.Move(-Slide.value(now) * width, 0);
       //const float z = (1-Slide.value(now));
       //v.Zoom(z*z*z * 0.5 + 0.5);
 
@@ -152,7 +211,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
       // -- AFFICHAGE plateau précédent
       sf::View v = view;
       r.SetView(v);
-      v.Move((1-Slide.value(now)) * out, 0);
+      v.Move((1-Slide.value(now)) * width, 0);
       //const float z = Slide.value(now);
       //v.Zoom(z*z*z * 0.5 + 0.5);
 
@@ -257,7 +316,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Lifes += Try.second->getBonusLifes();
 
 	    Level.generate( Width,Height,Target
-			    ,inv(Rank), *Modules, *First );
+			    ,inv(Rank), *Modules, *First, *Default );
 
 	    std::swap(Try.first,Try.second);
 	    std::swap(View.first,View.second);

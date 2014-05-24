@@ -3,7 +3,7 @@
 #include <iostream>
 
 ConfigView::ConfigView() :
-  cancel(sf::String("Annuler"), true, sf::Vector2f(260, -30)),
+  cancel("Annuler", sf::Vector2f(260, -30)),
   offset(sf::Vector2f(0, 0))
 {
   cancel.name = "cancel";

@@ -1,15 +1,26 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <list>
+#include <map>
+#include <string>
 
-#include "Button.hh"
 #include "Animation.hh"
+#include "resources.hh"
+#include "utils.hh"
+
+struct Score
+{
+    std::string name;
+    int scoreInt;
+};
 
 class ScoresTab
 {
 public:
     static AnimationResource tabLines;
+    static FontResource namesCol;
+    static FontResource contenuCol;
 
     ScoresTab();
 
@@ -23,7 +34,8 @@ private:
     sf::Vector2f offset;
     Animation lines;
     AnimatedValue opacity;
+    AnimatedValue opacityNamesCol;
+    AnimatedValue opacityContent;
 
-    std::vector<sf::String> names;
-    std::vector<sf::String> scores;
+    std::list<Score> scoreList;
 };
