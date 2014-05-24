@@ -52,6 +52,18 @@ bool parseFile(std::map<std::string, std::string> &result, const std::string &pa
        return false;
 }
 
+bool writeFile(const std::map<std::string, std::string> &content, const std::string &path)
+{
+   std::ofstream f;
+
+   f.open(path);//, ios_base::);
+   if (not f.is_open())
+      return false;
+
+   for (const auto & e : content)
+      f << e.first << '=' << e.second << "\n";
+}
+
 void setColorMask(sf::Image &image, const sf::Color &color, const sf::Color &replace)
 {
     for(unsigned i = 0; i<image.GetWidth(); i++)

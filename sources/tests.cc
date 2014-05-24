@@ -1,3 +1,4 @@
+#include "utils.hh"
 #include "tests.hh"
 #include "Animation.hh"
 #include "Board.hh"
@@ -11,6 +12,7 @@
 #include "ScoresTab.hh"
 #include "GameController.hh"
 
+#include <map>
 #include <ctime>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -18,8 +20,12 @@
 
 void animation()
 {
-   const sf::Clock clock;
-//   float now = clock.GetElapsedTime();
+   std::map<std::string,std::string> test;
+   test["robert"]="3435";
+   test["jean"]="400";
+   test["jack"]="393939";
+   writeFile(test, "KIKOO.txt");
+
 
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(40);
