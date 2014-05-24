@@ -2,3 +2,4 @@ image=appearing.png
 frames=21
 loop=false
 fps=60
+colorR=false

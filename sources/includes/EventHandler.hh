@@ -19,9 +19,10 @@ public:
 
   int run(sf::RenderWindow & w);
   int call(sf::RenderWindow & w, sf::Event & t, float now);
+  sf::View& getHandlerView();
   void need_refresh();
-      
-      
+
+
   /* Evenements */
   virtual void draw(sf::RenderTarget & r, float now);
   virtual int tick(sf::RenderWindow & w, float now);

@@ -7,7 +7,7 @@
 #include "resources.hh"
 #include "EventHandler.hh"
 #include "Button.hh"
-#include "MenuView.hh"
+#include "GuiViews.hh"
 #include "ScoresTab.hh"
 #include "GameController.hh"
 
@@ -30,8 +30,8 @@ void animation()
    Bomb::init( p );
    Digged::init( p );
 
-   p.add(&MenuView::menuCorner);
-   p.add(&MenuView::title);
+   p.add(&GuiViews::viewCorner);
+   p.add(&GuiViews::title);
    p.add(&Button::corner);
    p.add(&Button::back);
    p.add(&Button::labelFont);
@@ -80,13 +80,13 @@ void animation()
      module defaultmod ={Normal::init, Normal::create, 0,0};
 
 
-     GuiController gc(modules, firstmod, defaultmod);
+     GuiController gc(window, modules, firstmod, defaultmod);
 
      GameController game;
      game.Modules = &modules;
      game.First   = &firstmod;
      game.Default = &defaultmod;
-   
+
      game.new_game(20,11,20,10
 		   ,1,3,0);
 

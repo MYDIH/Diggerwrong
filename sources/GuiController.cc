@@ -2,21 +2,39 @@
 
 #include <iostream>
 
-GuiController::GuiController(std::vector<module> &modules, module &firstmod, module &defaultmod) :
+GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
+    width(r.GetWidth()),
+    height(r.GetHeight()),
+    inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, 100))),
+    inBetweenSprite(*inBetween, sf::Vector2f(-width/2, -height/2)),
     animOffsetMenu(0, 0),
-    animOffsetConfig(-2000, 0),
-    slideAnim(2000, 0, 0.8)
+    animOffsetConfig(-(width / 2 + vM.getSize().x), 0),
+    slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
 {
     gControl.Modules = &modules;
     gControl.First   = &firstmod;
     gControl.Default = &defaultmod;
 
-    gControl.new_game(20, 11, 20, 42
-		      ,0, 2, 0);
+    gControl.new_game(20, 11, 20, 42, 0, 2, 0);
+    vM.show(0.5);
+}
+
+GuiController::~GuiController()
+{
+    delete inBetween;
+}
+
+void GuiController::launchGame(sf::RenderWindow & w)
+{
+    gControl.run(w);
+    lGame = false;
+    reappear = true;
 }
 
 void GuiController::draw(sf::RenderTarget & r, float now)
 {
+    gControl.draw(r, now);
+    r.Draw(inBetweenSprite);
     vM.setOffset(animOffsetMenu);
     vC.setOffset(animOffsetConfig);
     vM.draw(r, now);
@@ -28,8 +46,24 @@ int GuiController::tick(sf::RenderWindow & w, float now)
     if(slideAnim.running(now) || slideAnim.remaining_time(now) < 1)
     {
         animOffsetMenu = sf::Vector2f(slideAnim.value(now), 0);
-        animOffsetConfig = sf::Vector2f(-2000 + slideAnim.value(now), 0);
+        animOffsetConfig = sf::Vector2f(-(width / 2 + vM.getSize().x) + slideAnim.value(now), 0);
     }
+
+    if(lGame && vM.appearedOrHidden(now))
+        launchGame(w);
+
+    if(reappear)
+    {
+        if(disableOldTickEvent >= 1)
+        {
+            vM.show(now);
+            reappear = false;
+            disableOldTickEvent = 0;
+        }
+        else
+            disableOldTickEvent++;
+    }
+
     need_refresh();
 
     return 0;
@@ -75,19 +109,22 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
             if(e.Button == sf::Mouse::Button::Left)
             {
                 if(b->name == "play")
-                    //std::cout << "Game Launched" << std::endl;
-                    gControl.run(w);
+                {
+                    gControl.new_game(20, 11, 20, 42, 0, 2, 0);
+                    vM.hide(now);
+                    lGame = true;
+                }
                 else if(b->name == "options")
                 {
                     if(slideAnim.start_value() != 0)
-                        slideAnim.restart_at_end(2000);
+                        slideAnim.swap();
                     slideAnim.start(now);
                     vC.show(now);
                     screen = 2;
                 }
                 else if(b->name == "cancel")
                 {
-                    slideAnim.restart_at_end(0);
+                    slideAnim.swap();
                     slideAnim.start(now);
                     vM.show(now);
                     screen = 1;
@@ -97,5 +134,29 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
             }
         }
     }
+    return 0;
+}
+
+int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
+{
+    // éviter l'auto-resize chelou
+    getHandlerView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
+
+    if(slideAnim.end_value() == width / 2 + vM.getSize().x)
+    {
+        width = w.GetWidth();
+        slideAnim.set_end_value(width / 2 + vM.getSize().x);
+    }
+
+    width = w.GetWidth();
+    height = w.GetHeight();
+    animOffsetConfig = sf::Vector2f(-(width / 2 + vM.getSize().x), 0);
+
+    delete inBetween;
+    inBetween = new sf::Image(w.GetWidth(), w.GetHeight(), sf::Color(0, 0, 0, 180));
+    inBetweenSprite.SetImage(*inBetween);
+    inBetweenSprite.SetPosition(-width/2, -height/2);
+
+    need_refresh();
     return 0;
 }

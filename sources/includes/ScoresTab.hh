@@ -25,6 +25,7 @@ public:
     ScoresTab();
 
     void show(float at);
+    void hide(float at);
 
     void setOffset(const sf::Vector2f &o);
 

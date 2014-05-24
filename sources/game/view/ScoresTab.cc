@@ -7,14 +7,16 @@ FontResource ScoresTab::namesCol("", "namesColFont.txt");
 FontResource ScoresTab::contenuCol("", "contenuColFont.txt");
 
 bool operator<(const Score &a, const Score &b)
-{ return a.scoreInt < b.scoreInt; }
+{
+    return a.scoreInt < b.scoreInt;
+}
 
 ScoresTab::ScoresTab() :
-  offset(sf::Vector2f(0, 0)),
-  lines(&tabLines),
-  opacity(255, 0, 0.4),
-  opacityNamesCol(1, 0, 0.4),
-  opacityContent(1, 0, 0.4)
+    offset(sf::Vector2f(0, 0)),
+    lines(&tabLines),
+    opacity(255, 0, 0.4),
+    opacityNamesCol(1, 0, 0.4),
+    opacityContent(1, 0, 0.4)
 {
     std::map<std::string, std::string> parseRes;
     std::map<std::string, std::string>::iterator it;
@@ -32,14 +34,37 @@ ScoresTab::ScoresTab() :
 
 void ScoresTab::show(float at)
 {
+    if(opacity.end_value() != 255)
+        opacity.swap();
+    if(opacityNamesCol.end_value() != 1)
+        opacityNamesCol.swap();
+    if(opacityContent.end_value() != 1)
+        opacityContent.swap();
     opacity.start(at);
     lines.start(at + 0.3);
     opacityNamesCol.start(at + 0.7);
     opacityContent.start(at + 0.9);
 }
 
+void ScoresTab::hide(float at)
+{
+    if(opacity.value(at) == 255)
+    {
+        opacity.swap();
+        if(opacityNamesCol.end_value() == 1)
+            opacityNamesCol.swap();
+        if(opacityContent.end_value() == 1)
+            opacityContent.swap();
+        opacity.start(at);
+        opacityNamesCol.start(at);
+        opacityContent.start(at);
+    }
+}
+
 void ScoresTab::setOffset(const sf::Vector2f &o)
-{ offset = o; }
+{
+    offset = o;
+}
 
 void ScoresTab::draw(sf::RenderTarget &w, float now)
 {

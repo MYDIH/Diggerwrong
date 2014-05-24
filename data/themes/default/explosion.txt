@@ -6,3 +6,4 @@ _frames=30
 
 fps=30
 loop=false
+colorR=false

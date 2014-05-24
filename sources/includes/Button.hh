@@ -2,6 +2,7 @@
 
 #include "resources.hh"
 #include "Animation.hh"
+#include "utils.hh"
 
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -32,6 +33,7 @@ public:
 
   void onEnter(float at);
   void show(float at);
+  void hide(float at);
   void onLeave(float at);
 
 private:

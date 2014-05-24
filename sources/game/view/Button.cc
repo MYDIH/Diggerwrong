@@ -7,8 +7,8 @@ const float Button::w = 118;
 const float Button::h = 38.7;
 
 Button::Button(const std::string &label, sf::Vector2f off) :
-    offset(off),
     m_label(label),
+    offset(off),
     cornerAnim(&corner),
     backAnim(&back),
     opacity(255, 0, 0.4),
@@ -20,10 +20,27 @@ Button::Button(const std::string &label, sf::Vector2f off) :
 
 void Button::show(float at)
 {
+    if(opacity.end_value() != 255)
+        opacity.swap();
+    if(labelOpacity.end_value() != 1)
+            labelOpacity.swap();
     opacity.start(at);
     cornerX.start(at + 0.4);
     cornerY.start(at + 0.4);
     labelOpacity.start(at + 1.2);
+}
+
+void Button::hide(float at)
+{
+    if(opacity.value(at) == 255)
+    {
+        opacity.swap();
+        if(labelOpacity.end_value() == 1)
+            labelOpacity.swap();
+        opacity.start(at);
+        labelOpacity.start(at);
+        onLeave(at);
+    }
 }
 
 void Button::onEnter(float at)
@@ -33,7 +50,7 @@ void Button::onEnter(float at)
         if(toggle)
         {
             if(backOpacity.start_value() != 0) // Si ce n'est pas la première fois qu'on anime
-                backOpacity.restart_at_end(1);
+                backOpacity.swap();
             backOpacity.start(at);
             toggle = false;
         }
@@ -46,7 +63,7 @@ void Button::onLeave(float at)
     {
         if(!toggle)
         {
-            backOpacity.restart_at_end(0);
+            backOpacity.swap();
             backOpacity.start(at);
             toggle = true;
         }
@@ -64,7 +81,6 @@ void Button::draw(sf::RenderTarget &w, float now)
     w.SetView(mView);
 
     mView.Move(offset);
-    labelFont.draw_string(w, m_label, 0, 0, true, 1/*labelOpacity.value(now)*/);
 
     //--
     mView.Move(cornX, cornY);
@@ -87,6 +103,8 @@ void Button::draw(sf::RenderTarget &w, float now)
     backAnim.draw(w, now, 0, sf::Color(255, 255, 255, backOpacity.value(now)));
     mView.Move(1, 1);
     //--
+
+    labelFont.draw_string(w, m_label, 0, 0, true, labelOpacity.value(now));
 
     w.SetView(dw);
 }
