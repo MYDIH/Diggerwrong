@@ -240,10 +240,18 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
 
 
    // on se décale en haut à gauche
-   view.Move( width/2    - SQUARE_WIDTH/2
-   	      ,height/2  - SQUARE_HEIGHT/2 );
+   view.Move( width/2
+   	      ,height/2);
+   
+   const float pg = Observed -> progress();
+   drawer.Draw( sf::Shape::Rectangle(-2, -22, width*(1-pg)-2, -7
+				     ,sf::Color( 170*pg, 200*(1-pg), 100,140 )) );
+   drawer.Draw( sf::Shape::Rectangle(0, -20, width*(1-pg), -5
+				     ,sf::Color( 255*pg, 255*(1-pg), 70,190 )) );
 
 
+   view.Move( - SQUARE_WIDTH/2
+   	      ,- SQUARE_HEIGHT/2 );
    draw_squares(drawer,now,false);
 
 

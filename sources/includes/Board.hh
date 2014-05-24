@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SFML/System.hpp>
 #include "Square.hh"
 #include "Chrono.hh"
 #include "utils.hh"
@@ -98,7 +99,7 @@ private:
    unsigned Reached;
 
    unsigned Score;
-   unsigned Timelimit;
+   float Timelimit;
 
    unsigned Bonus_score;
    unsigned Bonus_lifes;
@@ -106,7 +107,10 @@ private:
 
    GameState State;
 
-   Chrono levelChrono;
+   sf::Clock Clock;
+   float Before_pause;
+   bool Paused;
+   //Chrono levelChrono;
 
    void copySquares(const Board &m);
    void releaseSquares();
@@ -116,7 +120,7 @@ private:
    // uniquement pour la "compatibilité" avec le mode texte
    Square* newRandomSquare(double difficulty, unsigned longestside);
 
-   bool check_recur(Board * b, std::queue<int2> movements) const;
+   bool check_recur(Board b, int dx, int dy, bool play);
 
 public:
    Board();
@@ -125,16 +129,22 @@ public:
 
    const Board & operator=(const Board &m);
 
-   void check() const;
-   
-   void generate( unsigned width, unsigned height, unsigned target
+   bool check(bool play);
+   void generate( unsigned width, unsigned height, unsigned target, float timeLimit
 		  ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod );
 
    ~Board();
 
+   void start();
+   void pause();
+
+   bool tick();
+   float elapsed() const;
+   float progress() const;
+
    GameState move(int dx, int dy);
 
-// interface pour Square
+   // interface pour Square
    void addScore(unsigned score);
    void addBonusScore(unsigned score);
    void addBonusLifes(unsigned lifes);
@@ -143,7 +153,8 @@ public:
 	      ,int dx = 0, int dy = 0, int distance = -1);
    void replaceSquare(int x, int y, Square * newone);
 
-// accesseurs
+
+   // accesseurs
    unsigned getTarget()  const;
    unsigned getReached() const;
    unsigned getRemainingDigs() const;

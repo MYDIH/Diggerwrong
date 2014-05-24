@@ -10,9 +10,8 @@
 #include <SFML/Graphics.hpp>
 
 #define MAX(a,b) ( ((a)>(b)) ? (a) : (b) )
+#define MIN(a,b) ( ((a)<(b)) ? (a) : (b) )
 
-const double LINE = 6;
-// doit être > 0 ; plus c'est grand plus la fonction est linéaire
 double inv(double x);
 
 void splitStdString(const std::string &dataToSplit, char delim, std::vector<std::string> & resVect);

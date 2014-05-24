@@ -34,7 +34,18 @@ const Board::change * Board::Observer::front() const
 }
 
 Board::Board()
-{}
+   :Digger{0,0}
+   ,Target(0)
+   ,Reached(0)
+   ,Score(0)
+   ,Timelimit(0)
+   ,Bonus_score(0)
+   ,Bonus_lifes(0)
+   ,Bonus_time(0)
+   ,State(CONTINUE)
+   ,Before_pause(0)
+   ,Paused(true)
+   {}
 
 Board::Board(unsigned width, unsigned height, double difficulty
              ,unsigned target, unsigned timeLimit)
@@ -53,7 +64,6 @@ Board::Board(unsigned width, unsigned height, double difficulty
    ,Bonus_time(0)
 
    ,State(CONTINUE)
-   ,levelChrono(timeLimit)
 {
    const unsigned longestside = (width > height) ? width : height;
 
@@ -105,11 +115,17 @@ const Board & Board::operator=(const Board &m)
    Reached = m.Reached;
 
    Score = m.Score;
+   Timelimit = m.Timelimit;
 
    Bonus_score = m.Bonus_score;
    Bonus_lifes = m.Bonus_lifes;
+   Bonus_time = m.Bonus_time;
 
    State = m.State;
+
+   Clock = m.Clock;
+   Before_pause = m.Before_pause;
+   Paused = m.Paused;
 
    releaseSquares();
    copySquares(m);
@@ -117,32 +133,90 @@ const Board & Board::operator=(const Board &m)
    return *this;
 }
 
-// void Board::check_move() const
-// {
-// }
-void Board::check() const
+bool Board::check_recur(Board b, int dx, int dy, bool play)
 {
+   switch (b.move(dx,dy))
+   {
+      case WON:
+	 if (play)
+	    move(dx,dy);
+
+	 return true;
+	 
+      case LOST:
+	 return false;
+
+      default:;
+   }
+
+   int x=0,y=0;
+   if ( check_recur(b, -1, -1,false) )
+   {x=-1; y=-1;}
+   else if ( check_recur(b, -1, 0,false) )
+   {x=-1; y=0;}
+   else if ( check_recur(b, -1, 1,false) )
+   {x=-1; y=1;}
+   else if ( check_recur(b, 0, -1,false) )
+   {x=0; y=-1;}
+		      // 0 , 0
+   else if ( check_recur(b, 0,  1,false) )
+   {x=0; y=1;}
+   else if ( check_recur(b, 1, -1,false) )
+   {x=1; y=-1;}
+   else if ( check_recur(b, 1,  0,false) )
+   {x=1; y=0;}
+   else if ( check_recur(b, 1,  1,false) )
+   {x=1; y=1;}
+
+   if (play and not (x==0 and y==0))
+   {
+      move(dx,dy);
+      check_recur(b, x, y, true);
+   }
+
+   return not (x==0 and y==0);
+}
+
+bool Board::check(bool play)
+{
+   return ( check_recur(*this, -1, -1,play)
+	    or check_recur(*this, -1, 0,play)
+	    or check_recur(*this, -1, 1,play)
+	    or check_recur(*this, 0, -1,play)
+	    // 0 , 0
+	    or check_recur(*this, 0,  1,play)
+	    or check_recur(*this, 1, -1,play)
+	    or check_recur(*this, 1,  0,play)
+	    or check_recur(*this, 1,  1,play) );
 }
 
 
 
-void Board::generate( unsigned width, unsigned height, unsigned target
+void Board::generate( unsigned width, unsigned height, unsigned target, float timelimit
 		      ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod )
 {
+   releaseSquares();
    srand(time(NULL));
    
+  
    Digger  = {width/2, height/2};
    Target  = target;
    Reached = 0;
    Score   = 0;
+   Timelimit = timelimit;
    Bonus_score = 0;
    Bonus_lifes = 0;
+   Bonus_time  = 0;
 
-   State = CONTINUE;
+   State  = CONTINUE;
+   Before_pause = 0;
+   Paused = true;
 
    Squares.resize(width);
 
 
+   do
+   {
 
    // double total = 0;
    // for (const module & mod : modules)
@@ -164,6 +238,7 @@ void Board::generate( unsigned width, unsigned height, unsigned target
 	 for (const module & mod : modules)
 	 {
 	    p += mod.bestp + (mod.worstp-mod.bestp) * difficulty;
+	    std::cout << "\n:: proba: " << mod.bestp + (mod.worstp-mod.bestp) * difficulty << std::endl;
 
 	    if (r <= p)
 	    {
@@ -183,6 +258,8 @@ void Board::generate( unsigned width, unsigned height, unsigned target
    Square * tmp = firstmod.create(difficulty,width,height);
    replaceSquare(Digger.x, Digger.y, tmp);
    tmp -> release();
+
+   } while( not check(false) );
 }
 
 
@@ -193,6 +270,47 @@ Board::~Board()
    notify( {change::DESTRUCT} );
    releaseSquares();
 }
+
+void Board::start()
+{
+   Paused = false;
+   Clock.Reset();
+}
+void Board::pause()
+{
+   if (not Paused)
+   {
+      Before_pause += Clock.GetElapsedTime();
+      Paused = true;
+   }
+}
+
+bool Board::tick()
+{
+   if (State != CONTINUE)
+      return false;
+
+   else if ( ((Paused)? 0 : Clock.GetElapsedTime()) + Before_pause > Timelimit )
+   {
+      State = LOST;
+      notify( {change::LOST, {Digger.x,Digger.y}} );
+      return true;
+   }
+   else
+      return false;
+}
+
+float Board::elapsed() const
+{
+   return ((Paused)? 0 : Clock.GetElapsedTime()) + Before_pause;
+}
+float Board::progress() const
+{
+   //std::cout << "[--] " << elapsed() << " / " << Timelimit << " = " << elapsed()/Timelimit << std::endl;
+   return MIN( elapsed() / Timelimit,  1);
+}
+
+
 
 GameState Board::move(int dx, int dy)
 {
@@ -222,7 +340,7 @@ GameState Board::move(int dx, int dy)
    }
 
 
-   std::cout << "-----> Board::move  READCHED=" << Reached << "\tTARGET=" << Target << std::endl;
+//   std::cout << "-----> Board::move  READCHED=" << Reached << "\tTARGET=" << Target << std::endl;
    return State;
 }
 

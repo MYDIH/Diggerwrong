@@ -4,13 +4,13 @@
 Chrono::Chrono()
 {
     setDelay(60);
-    start();
+    //start();
 }
 
 Chrono::Chrono(unsigned delay)
 {
     setDelay(delay);
-    start();
+    //start();
 }
 
 Chrono::Chrono(const Chrono &other) :
@@ -36,7 +36,7 @@ bool Chrono::setDelay(unsigned newDelay)
 
 void Chrono::start()
 {
-    if(!isPaused)
+   if(!isPaused)
     {
         firstTime = std::chrono::system_clock::now();
         workingTime = firstTime;
@@ -55,7 +55,7 @@ bool Chrono::update()
     intFLS = timeSeconds.count();
 
     if(!isPaused)
-        m_workingDelay -= intFLS;
+       m_workingDelay -= intFLS;
 
     if(m_workingDelay < 1)
         return false;

@@ -56,8 +56,8 @@ test:		unit
 check-syntax:
 	-$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES}
 
-run: debug
-	cd $(buildir)/debug && ./$(bin) -G
+run: release
+	cd $(buildir)/release && ./$(bin) -G
 
 # compilation + génération des fichiers de dépendance
 $(cache)/%.o:		%.cc

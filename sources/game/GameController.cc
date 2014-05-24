@@ -26,9 +26,9 @@ GameController::GameController()
    ,Lifes(0)
    ,Score(0)
    
-   ,Big_flash(11,1,2)
+   ,Big_flash(26,1,6)
    ,State(CONTINUE)
-   ,Slide(0,1,0.35, EASE_IN_OUT<10>)
+   ,Slide(0,1,0.37, EASE_IN_OUT<10>)
 
    ,Back1(0,1,7, EASE_IN_OUT<16>)
    ,Back2(0,1,32, EASE_IN_OUT<10>)
@@ -42,27 +42,32 @@ GameController::GameController()
    Back2.start(0);
 }
 
-void GameController::new_game(unsigned width, unsigned height, unsigned target
+void GameController::new_game(unsigned width, unsigned height, unsigned target, float timelimit
 			      ,unsigned last_rank, unsigned lifes, unsigned score )
 			      
 {
    Width  = width;
    Height = height;
    Target = target;
+   Timelimit = timelimit;
 
    Rank   = last_rank;
    Lifes  = lifes;
    Score  = score;
 
    Waiting = false;
+   How_to  = false;
+   How_to_mode = false;
    Big_flash.start(FLT_MAX);
    State = CONTINUE;
 
-   Level.generate( Width,Height,Target
+   Level.generate( Width,Height,Target,Timelimit
 		   ,inv(Rank), *Modules, *First, *Default );
    
    *(Try.second) = Level;
    View.second->observe( Try.second, 0 );
+
+   Try.second -> start();
 }
 
 
@@ -70,10 +75,24 @@ int GameController::tick(sf::RenderWindow & w, float now)
 {
    View.second->tick(now);
 
+   if ( (Try.second->tick()) )
+   {
+      if (Lifes >= 1)
+      {
+	 State = TRY_AGAIN;
+      }
+      else
+      {
+	 State = GAME_OVER;
+      }
+   }
+
+
    if (State != CONTINUE)
    {
       if (not Waiting and View.second->finished())
       {
+	 Try.second -> pause();
 	 Waiting = true;
 	 switch (State)
 	 {
@@ -84,10 +103,25 @@ int GameController::tick(sf::RenderWindow & w, float now)
 	    default:;
 	 }
 
+	 Big_flash.start(now);
       }
 
       else if (Waiting and not Big_flash.running(now))
+      {
 	 Big_flash.start(now);
+	 if (not How_to and State == GAME_OVER)
+	 {
+	    How_to = true;
+	    How_to_mode = true;
+	    *(Try.second) = Level;
+	    View.second -> observe(Try.second, now);
+	    //Try.second -> start();
+	    Try.second -> check(true);
+	 }
+      }
+
+      else if (How_to and View.second->finished())
+	 How_to = false;
    }
 
 
@@ -181,10 +215,10 @@ void GameController::draw(sf::RenderTarget & r, float now)
    const float b1 = Back1.value(now);
    const float b2 = Back2.value(now); 
 draw_stars(r,now,  0, 0, b1, b2);
-   draw_stars(r,now,   width/2,  height/2, b1, b2);
-   draw_stars(r,now,   width/2, -height/2, b2, b1);
-   draw_stars(r,now,  -width/2,  height/2, b1, b2);
-   draw_stars(r,now,  -width/2, -height/2, b2, b1);
+   draw_stars(r,now,   width/1.6,  height/1.6, b1, b2);
+   draw_stars(r,now,   width/1.6, -height/1.6, b2, b1);
+   draw_stars(r,now,  -width/1.6,  height/1.6, b1, b2);
+   draw_stars(r,now,  -width/1.6, -height/1.6, b2, b1);
 
    r.Draw( sf::Shape::Rectangle(-width, -height, width, height
 				   ,sf::Color(color,color,color,220)) );
@@ -252,9 +286,9 @@ draw_stars(r,now,  0, 0, b1, b2);
       switch (State)
       {
 	 case GAME_OVER:
-	    Big_font.draw_string(r, "GAME OVER !");
-	    break;
-
+	       Big_font.draw_string(r, "GAME OVER !");
+	       break;
+	       
 	 case TRY_AGAIN:
 	    Big_font.draw_string(r, "TRY AGAIN !");
 	    break;
@@ -267,6 +301,9 @@ draw_stars(r,now,  0, 0, b1, b2);
 				 
       }
    // --
+
+   if (How_to_mode)
+      Big_font.draw_string(r, "how to",0, Big_font.font().GetGlyph('0').Rectangle.GetHeight(),true,0.80);
 
    
 
@@ -288,7 +325,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
       {
 	 case GAME_OVER:
 	    std::cout << "\n>> GAME OVER, je rend la mains." << std::endl;
-	    return 5;
+	    //return 5;
 	    break;
 
 	 case TRY_AGAIN:
@@ -305,6 +342,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Big_flash.start(FLT_MAX);
 	    Slide.start(now);
 
+	    Try.second -> start();
 	    Waiting = false;
 	    break;
 
@@ -315,7 +353,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Score += Try.second->getBonusScore();
 	    Lifes += Try.second->getBonusLifes();
 
-	    Level.generate( Width,Height,Target
+	    Level.generate( Width,Height,Target,Timelimit
 			    ,inv(Rank), *Modules, *First, *Default );
 
 	    std::swap(Try.first,Try.second);
@@ -329,7 +367,8 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Slide.start(now);
 
 	    Levelup.play_new();
-	    
+
+	    Try.second -> start();	    
 	    Waiting = false;
 	    break;
 

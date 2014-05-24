@@ -25,6 +25,7 @@ private:
    unsigned Width;
    unsigned Height;
    unsigned Target;
+   float Timelimit;
    
    unsigned Rank;
    unsigned Lifes;
@@ -32,6 +33,8 @@ private:
 
 
    bool Waiting;
+   bool How_to;
+   bool How_to_mode;
    AnimatedValue Big_flash;
    enum
    {
@@ -66,7 +69,7 @@ public:
 
    point board_coords(float x, float y);
 
-   void new_game(unsigned width, unsigned height, unsigned target
+   void new_game(unsigned width, unsigned height, unsigned target, float timelimit
 		 ,unsigned last_rank, unsigned lifes, unsigned score );
 
 
