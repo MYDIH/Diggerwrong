@@ -2,6 +2,7 @@
 
 AnimationResource Button::corner("gui/buttons", "corners.txt");
 AnimationResource Button::back("gui/buttons", "back.txt");
+AnimationResource Button::foreg("gui/buttons", "foreg.txt");
 FontResource Button::labelFont("", "labelFont.txt");
 const float Button::w = 118;
 const float Button::h = 38.7;
@@ -11,8 +12,9 @@ Button::Button(const std::string &label, sf::Vector2f off) :
     offset(off),
     cornerAnim(&corner),
     backAnim(&back),
+    foregAnim(&foreg),
     opacity(255, 0, 0.4),
-    backOpacity(255, 0, 0.4),
+    inOpacity(255, 0, 0.4),
     labelOpacity(1, 0, 0.4),
     cornerX(Button::w/2, 7, 0.8),
     cornerY(Button::h/2, 7, 0.8)
@@ -45,13 +47,13 @@ void Button::hide(float at)
 
 void Button::onEnter(float at)
 {
-    if(!backOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
+    if(!inOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
     {
         if(toggle)
         {
-            if(backOpacity.start_value() != 0) // Si ce n'est pas la première fois qu'on anime
-                backOpacity.swap();
-            backOpacity.start(at);
+            if(inOpacity.start_value() != 0) // Si ce n'est pas la première fois qu'on anime
+                inOpacity.swap();
+            inOpacity.start(at);
             toggle = false;
         }
     }
@@ -59,12 +61,12 @@ void Button::onEnter(float at)
 
 void Button::onLeave(float at)
 {
-    if(!backOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
+    if(!inOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
     {
         if(!toggle)
         {
-            backOpacity.swap();
-            backOpacity.start(at);
+            inOpacity.swap();
+            inOpacity.start(at);
             toggle = true;
         }
     }
@@ -100,7 +102,11 @@ void Button::draw(sf::RenderTarget &w, float now)
     mView.Move(-cornX, cornY);
     //--
     mView.Move(-1, -1);
-    backAnim.draw(w, now, 0, sf::Color(255, 255, 255, backOpacity.value(now)));
+    backAnim.draw(w, now, 0, sf::Color(255, 255, 255, inOpacity.value(now)));
+    mView.Move(1, 1);
+    //--
+    mView.Move(-1, -1);
+    foregAnim.draw(w, now, 0, sf::Color(255, 255, 255, inOpacity.value(now)));
     mView.Move(1, 1);
     //--
 

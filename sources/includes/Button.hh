@@ -14,6 +14,7 @@ public:
   static const float h;
   static AnimationResource corner;
   static AnimationResource back;
+  static AnimationResource foreg;
   static FontResource labelFont;
 
   std::string name = "default";
@@ -43,8 +44,9 @@ private:
   bool toggle = true;
   Animation cornerAnim;
   Animation backAnim;
+  Animation foregAnim;
   AnimatedValue opacity;
-  AnimatedValue backOpacity;
+  AnimatedValue inOpacity;
   AnimatedValue labelOpacity;
   AnimatedValue cornerX;
   AnimatedValue cornerY;
