@@ -2,23 +2,21 @@
 
 AnimationResource Button::corner("gui/buttons", "corners.txt");
 AnimationResource Button::back("gui/buttons", "back.txt");
+FontResource Button::labelFont("", "labelFont.txt");
 const float Button::w = 118;
 const float Button::h = 38.7;
 
-Button::Button(sf::String label, bool isLabelCentered, sf::Vector2f off) :
-    m_label(label),
+Button::Button(const std::string &label, sf::Vector2f off) :
     offset(off),
-    m_isLabelCentered(isLabelCentered),
+    m_label(label),
     cornerAnim(&corner),
     backAnim(&back),
     opacity(255, 0, 0.4),
     backOpacity(255, 0, 0.4),
-    labelOpacity(255, 0, 0.4),
+    labelOpacity(1, 0, 0.4),
     cornerX(Button::w/2, 7, 0.8),
     cornerY(Button::h/2, 7, 0.8)
-{
-    m_label.SetColor(sf::Color(180, 180, 180));
-}
+{}
 
 void Button::show(float at)
 {
@@ -30,12 +28,12 @@ void Button::show(float at)
 
 void Button::onEnter(float at)
 {
-    if(!backOpacity.running(at) && labelOpacity.value(at) == 255) // Si l'animation est terminée et si le menu est affiché
+    if(!backOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
     {
         if(toggle)
         {
             if(backOpacity.start_value() != 0) // Si ce n'est pas la première fois qu'on anime
-                backOpacity.restart_at_end(255);
+                backOpacity.restart_at_end(1);
             backOpacity.start(at);
             toggle = false;
         }
@@ -44,7 +42,7 @@ void Button::onEnter(float at)
 
 void Button::onLeave(float at)
 {
-    if(!backOpacity.running(at) && labelOpacity.value(at) == 255) // Si l'animation est terminée et si le menu est affiché
+    if(!backOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
     {
         if(!toggle)
         {
@@ -66,7 +64,7 @@ void Button::draw(sf::RenderTarget &w, float now)
     w.SetView(mView);
 
     mView.Move(offset);
-    m_label.SetColor(sf::Color(m_label.GetColor().r, m_label.GetColor().g, m_label.GetColor().b, labelOpacity.value(now)));
+    labelFont.draw_string(w, m_label, 0, 0, true, 1/*labelOpacity.value(now)*/);
 
     //--
     mView.Move(cornX, cornY);
@@ -89,21 +87,8 @@ void Button::draw(sf::RenderTarget &w, float now)
     backAnim.draw(w, now, 0, sf::Color(255, 255, 255, backOpacity.value(now)));
     mView.Move(1, 1);
     //--
-    if(m_isLabelCentered)
-    {
-        mView.Move(m_label.GetRect().Right / 2, m_label.GetRect().Bottom / 2);
-        w.Draw(m_label);
-        mView.Move(-(m_label.GetRect().Right / 2), -(m_label.GetRect().Bottom / 2));
-    }
-    else
-        w.Draw(m_label);
 
     w.SetView(dw);
-}
-
-bool Button::isLabelCentered() const
-{
-    return m_isLabelCentered;
 }
 
 bool Button::contains(const sf::Vector2f &p) const
@@ -116,17 +101,12 @@ sf::Vector2f Button::getSize() const
     return sf::Vector2f(Button::w, Button::h);
 }
 
-const sf::String& Button::getLabel() const
+const std::string & Button::getLabel() const
 {
     return m_label;
 }
 
-void Button::setCenteringPolicy(bool isCentered)
-{
-    m_isLabelCentered = isCentered;
-}
-
-void Button::setLabel(const sf::String &l)
+void Button::setLabel(const std::string &l)
 {
     m_label = l;
 }

@@ -8,6 +8,7 @@
 #include "EventHandler.hh"
 #include "Button.hh"
 #include "MenuView.hh"
+#include "ScoresTab.hh"
 #include "GameController.hh"
 
 #include <iostream>
@@ -30,9 +31,13 @@ void animation()
    Digged::init( p );
 
    p.add(&MenuView::menuCorner);
+   p.add(&MenuView::title);
    p.add(&Button::corner);
    p.add(&Button::back);
-   p.add(&MenuView::title);
+   p.add(&Button::labelFont);
+   p.add(&ScoresTab::namesCol);
+   p.add(&ScoresTab::contenuCol);
+   p.add(&ScoresTab::tabLines);
 
    p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
@@ -85,8 +90,9 @@ void animation()
      game.new_game(20,11,20,10
 		   ,1,3,0);
 
+
      //game.run(window);
 
      gc.run(window);
-     
+
 }

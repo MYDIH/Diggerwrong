@@ -105,7 +105,7 @@ public:
 
    float remaining_time(float at) const;
 
-  void draw(sf::RenderTarget & drawer, float now, float rotation = 0, sf::Color alpha = sf::Color(255, 255, 255, 255)) const;
+  void draw(sf::RenderTarget & drawer, float now, float rotation = 0, const sf::Color &alpha = sf::Color(255, 255, 255, 255), const sf::Vector2f &scale = sf::Vector2f(0, 0)) const;
 };
 
 

@@ -345,17 +345,19 @@ float Animation::remaining_time(float at) const
         return 0;
 }
 
-void Animation::draw(sf::RenderTarget & drawer, float now, float rotation, sf::Color alpha) const
+void Animation::draw(sf::RenderTarget & drawer, float now, float rotation, const sf::Color &alpha, const sf::Vector2f &scale) const
 {
     if (Resource != nullptr)
     {
-        if(rotation != 0 || alpha != sf::Color(255, 255, 255, 255))
+        if(rotation != 0 || alpha != sf::Color(255, 255, 255, 255) || scale.x != 1 || scale.y != 1)
         {
             Resource -> frame(MAX(0, now - Start_at), Stop_after).SetRotation(rotation);
             Resource -> frame(MAX(0, now - Start_at), Stop_after).SetColor(alpha);
+            Resource -> frame(MAX(0, now - Start_at), Stop_after).SetScale(scale);
             drawer.Draw(Resource -> frame(MAX(0, now - Start_at), Stop_after));
             Resource -> frame(MAX(0, now - Start_at), Stop_after).SetRotation(0);
             Resource -> frame(MAX(0, now - Start_at), Stop_after).SetColor(sf::Color(255, 255, 255, 255));
+            Resource -> frame(MAX(0, now - Start_at), Stop_after).SetScale(sf::Vector2f(1, 1));
         }
         else
             drawer.Draw(Resource -> frame(MAX(0, now - Start_at), Stop_after));
