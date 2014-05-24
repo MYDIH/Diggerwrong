@@ -1,4 +1,4 @@
-image=dead.png
+image=foreg.png
 frames=1
 loop=false
 fps=1

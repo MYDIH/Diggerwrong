@@ -156,6 +156,8 @@ void AnimationResource::load_image(sf::Image & image, const std::string & file, 
         throw file;
 
     image.SetSmooth(false);
+    if(isColorReplace)
+        setColorMask(image, replacedColor, withColor);
 
     int spriteX = 1;
     const int frameWidth = image.GetWidth() / frames;
@@ -187,6 +189,13 @@ void AnimationResource::load(const std::string & basepath)
     {
         Fps = std::stof(f.at("fps"));
         Loop = (f.at("loop") == "true") ? true : false;
+        isColorReplace = f.at("colorR") == "true" ? true : false;
+
+        if(isColorReplace)
+        {
+            replacedColor = sf::Color(std::stoi(f.at("_R")), std::stoi(f.at("_G")), std::stoi(f.at("_B")), std::stoi(f.at("_A")));
+            withColor = sf::Color(std::stoi(f.at("R")), std::stoi(f.at("G")), std::stoi(f.at("B")), std::stoi(f.at("A")));
+        }
 
         load_image(Image, base + f.at("image"), std::stoi(f.at("frames")));
 
@@ -273,9 +282,20 @@ float AnimatedValue::start_value() const
 {
     return Start_value;
 }
+
 float AnimatedValue::end_value()   const
 {
     return End_value;
+}
+
+void AnimatedValue::set_start_value(float startValue)
+{
+    Start_value = startValue;
+}
+
+void AnimatedValue::set_end_value(float endValue)
+{
+    End_value = endValue;
 }
 
 void AnimatedValue::set_value(float v)

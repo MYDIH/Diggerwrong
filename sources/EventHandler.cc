@@ -79,6 +79,11 @@ int EventHandler::call(sf::RenderWindow & w, sf::Event & e, float now)
    }
 }
 
+sf::View& EventHandler::getHandlerView()
+{
+    return View;
+}
+
 void EventHandler::need_refresh()
 {
    Need_refresh = true;

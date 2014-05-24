@@ -4,20 +4,19 @@
 
 #include "Button.hh"
 #include "Animation.hh"
+#include "GuiViews.hh"
 
-class ConfigView
+class ConfigView : public GuiViews
 {
 public:
   ConfigView();
 
-  void setOffset(const sf::Vector2f &o);
-  void show(float at);
-  Button* isInButton(const sf::Vector2f &p);
+  void show(float at) override;
+  void hide(float at) override;
 
-  void draw(sf::RenderTarget &w, float now);
+  Button* isInButton(const sf::Vector2f &p) override;
+
+  void draw(sf::RenderTarget &w, float now) override;
 
   Button cancel;
-
-private:
-  sf::Vector2f offset;
 };

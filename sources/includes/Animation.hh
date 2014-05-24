@@ -1,6 +1,7 @@
 #pragma once
 
 #include "resources.hh"
+#include "utils.hh"
 
 #include <SFML/Graphics.hpp>
 
@@ -28,6 +29,8 @@ class AnimationResource : public Resource
 {
 private:
    static sf::Sprite Empty;
+   sf::Color replacedColor;
+   sf::Color withColor;
    sf::Image Image;
    sf::Image Image2;
    std::vector<sf::Drawable *> Frames;
@@ -35,6 +38,7 @@ private:
    std::string File;
    float Fps;
    bool Loop;
+   bool isColorReplace;
 
    void load_image(sf::Image & image, const std::string & file, unsigned frames);
 
@@ -82,6 +86,8 @@ public:
    float end_value()   const;
 
    void set_value(float value);
+   void set_start_value(float startValue);
+   void set_end_value(float endValue);
    void swap();
    void restart_at_end(float newend);
 
