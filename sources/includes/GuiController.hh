@@ -16,7 +16,7 @@ public:
     GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod);
     ~GuiController();
 
-    void launchGame(sf::RenderWindow & w);
+    void launchGame(sf::RenderWindow & w, float now);
 
     void draw(sf::RenderTarget & r, float now) override;
     int tick(sf::RenderWindow & w, float now) override;

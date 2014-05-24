@@ -5,19 +5,13 @@
 GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
     width(r.GetWidth()),
     height(r.GetHeight()),
+    gControl(modules,firstmod,defaultmod),
     inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, 100))),
     inBetweenSprite(*inBetween, sf::Vector2f(-width/2, -height/2)),
     animOffsetMenu(0, 0),
     animOffsetConfig(-(width / 2 + vM.getSize().x), 0),
     slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
 {
-    gControl.Modules = &modules;
-    gControl.First   = &firstmod;
-    gControl.Default = &defaultmod;
-
-    gControl.new_game(17, 10, 25, 42
-		      ,0, 2, 0);
-
     vM.show(0.5);
 }
 
@@ -26,8 +20,9 @@ GuiController::~GuiController()
     delete inBetween;
 }
 
-void GuiController::launchGame(sf::RenderWindow & w)
+void GuiController::launchGame(sf::RenderWindow & w, float now)
 {
+    gControl.start(now);
     gControl.run(w);
     lGame = false;
     reappear = true;
@@ -36,7 +31,7 @@ void GuiController::launchGame(sf::RenderWindow & w)
 void GuiController::draw(sf::RenderTarget & r, float now)
 {
     gControl.draw(r, now);
-    r.Draw(inBetweenSprite);
+    //r.Draw(inBetweenSprite);
     vM.setOffset(animOffsetMenu);
     vC.setOffset(animOffsetConfig);
     vM.draw(r, now);
@@ -45,6 +40,8 @@ void GuiController::draw(sf::RenderTarget & r, float now)
 
 int GuiController::tick(sf::RenderWindow & w, float now)
 {
+    gControl.tick(w,now);
+
     if(slideAnim.running(now) || slideAnim.remaining_time(now) < 1)
     {
         animOffsetMenu = sf::Vector2f(slideAnim.value(now), 0);
@@ -52,7 +49,7 @@ int GuiController::tick(sf::RenderWindow & w, float now)
     }
 
     if(lGame && vM.appearedOrHidden(now))
-        launchGame(w);
+        launchGame(w,now);
 
     if(reappear)
     {
@@ -112,7 +109,6 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
             {
                 if(b->name == "play")
                 {
-                    gControl.new_game(20, 11, 20, 42, 0, 2, 0);
                     vM.hide(now);
                     lGame = true;
                 }
@@ -142,7 +138,8 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
 int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
 {
     // éviter l'auto-resize chelou
-    getHandlerView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
+    //getHandlerView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
+    EventHandler::resized(w,e,now);
 
     if(slideAnim.end_value() == width / 2 + vM.getSize().x)
     {

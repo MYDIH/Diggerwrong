@@ -12,7 +12,7 @@
 class GameController : public EventHandler
 {
 private:
-   Board     Level;
+   Board Level;
 
    Board Try1;
    Board Try2;
@@ -33,10 +33,13 @@ private:
 
    std::string Player_name;
 
+   AnimatedValue Backgrounded;
+
    bool Waiting;
    bool How_to;
    bool How_to_mode;
    AnimatedValue Big_flash;
+   AnimatedValue Cursor;
    enum
    {
       GAME_OVER
@@ -51,6 +54,10 @@ private:
    AnimatedValue Back1;
    AnimatedValue Back2;
 
+   const std::vector<module> & Modules;
+   const module & First;
+   const module & Default;
+
 public:
    static AnimationResource Star1;
    static AnimationResource Star2;
@@ -62,18 +69,20 @@ public:
    static SoundResource Levelup;
    static SoundResource Gameover;
 
-   const std::vector<module> * Modules;
-   const module * First;
-   const module * Default;
 
 
 
-   GameController();
+   GameController( const std::vector<module> & modules
+		   ,const module & firstmod
+		   ,const module & defaultmod );
 
    point board_coords(float x, float y);
 
-   void new_game(unsigned width, unsigned height, unsigned target, float timelimit
-		 ,unsigned last_rank, unsigned lifes, unsigned score );
+   void start(float at);
+   void stop(float at);
+
+   void new_game(unsigned width = 17, unsigned height = 10, unsigned target = 25, float timelimit = 24
+		 ,unsigned last_rank = 0, unsigned lifes = 2, unsigned score = 0 );
 
 
    void draw_stars(sf::RenderTarget & r, float now
@@ -88,5 +97,5 @@ public:
    int text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now) override;
 
    //int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now) override;
-   //int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now) override; // debug
+   int key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now) override; // debug
 };
