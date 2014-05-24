@@ -11,8 +11,10 @@
 #include "ScoresTab.hh"
 #include "GameController.hh"
 
+#include <ctime>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
 
 void animation()
 {
@@ -22,7 +24,8 @@ void animation()
    sf::RenderWindow window(sf::VideoMode(1000,1000,32), "test animations");
    window.SetFramerateLimit(40);
 
-
+   srand(time(NULL));
+   
 
    ResourcesPool p;
    Normal::init( p );
@@ -73,25 +76,15 @@ void animation()
 
 
 
-   std::vector<module> modules = {  {Bonus::init, Bonus::create , 0.2    , 0.0009  }
-				    ,{Bomb::init, Bomb::create   ,0.005  , 0.21   } };
+   std::vector<module> modules = {  {Bonus::init, Bonus::create , 0.3    , 0.002  }
+				    ,{Bomb::init, Bomb::create   ,0.005  , 0.44   } };
 
-     module firstmod = {Digged::init, Digged::create, 0,0};
-     module defaultmod ={Normal::init, Normal::create, 0,0};
+     module firstmod   = {Digged::init, Digged::create, 0,0};
+     module defaultmod = {Normal::init, Normal::create, 0,0};
 
 
      GuiController gc(modules, firstmod, defaultmod);
 
-     GameController game;
-     game.Modules = &modules;
-     game.First   = &firstmod;
-     game.Default = &defaultmod;
-   
-     game.new_game(20,11,20,10
-		   ,1,3,0);
-
-
-     //game.run(window);
 
      gc.run(window);
 

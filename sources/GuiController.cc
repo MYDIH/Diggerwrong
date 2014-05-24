@@ -11,7 +11,7 @@ GuiController::GuiController(std::vector<module> &modules, module &firstmod, mod
     gControl.First   = &firstmod;
     gControl.Default = &defaultmod;
 
-    gControl.new_game(20, 11, 20, 42
+    gControl.new_game(17, 10, 25, 42
 		      ,0, 2, 0);
 }
 

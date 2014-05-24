@@ -26,6 +26,15 @@ Lancer les tests unitaires :
 Merci.
 
 
+-- bons paramètres pour la génération
+bonus: 0.3   -> 0.002
+bomb : 0.005 -> 0.44
+LINE : 3
+
+beaucoup de temps et target élevé c plus rigolo
+42 secondes et 25 coups c pas mal
+
+taille pas mal : 10*17
 
 -- crédits :
 

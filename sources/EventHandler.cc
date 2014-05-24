@@ -52,18 +52,27 @@ int EventHandler::call(sf::RenderWindow & w, sf::Event & e, float now)
    {
       case sf::Event::Closed:
 	 return closed(w,now);
+
       case sf::Event::MouseButtonPressed:
 	 return mouse_button_pressed(w, e.MouseButton,now);
+
       case sf::Event::MouseButtonReleased:
 	 return mouse_button_released(w, e.MouseButton,now);
+
       case sf::Event::KeyPressed:
 	 return key_pressed(w, e.Key, now);
+
       case sf::Event::KeyReleased:
 	 return key_released(w, e.Key, now);
+
       case sf::Event::Resized:
 	 return resized(w, e.Size, now);
+
       case sf::Event::MouseMoved:
 	 return mouse_moved(w, e.MouseMove, now);
+
+      case sf::Event::TextEntered:
+	 return text_entered(w, e.Text, now);
 
       default:
 	 return 0;
@@ -112,6 +121,11 @@ int EventHandler::mouse_moved(sf::RenderWindow & w, sf::Event::MouseMoveEvent & 
 int EventHandler::closed(sf::RenderWindow & w, float now)
 {
    return 1;
+}
+
+int EventHandler::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now)
+{
+   return 0;
 }
 
 int EventHandler::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)

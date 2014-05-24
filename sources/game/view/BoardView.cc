@@ -230,7 +230,7 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    drawer.SetView(view);
 
 
-   const float width = Squares.size()*SQUARE_WIDTH;
+   const float width  = Squares.size()*SQUARE_WIDTH;
    const float height = Squares[0].size()*SQUARE_HEIGHT;
 
 
@@ -244,9 +244,9 @@ void BoardView::draw(sf::RenderTarget & drawer, float now) const
    	      ,height/2);
    
    const float pg = Observed -> progress();
-   drawer.Draw( sf::Shape::Rectangle(-2, -22, width*(1-pg)-2, -7
+   drawer.Draw( sf::Shape::Rectangle(-2, -2 -BAR, -2 + width*(1-pg), -2 -5
 				     ,sf::Color( 170*pg, 200*(1-pg), 100,140 )) );
-   drawer.Draw( sf::Shape::Rectangle(0, -20, width*(1-pg), -5
+   drawer.Draw( sf::Shape::Rectangle(0, -BAR, width*(1-pg), -5
 				     ,sf::Color( 255*pg, 255*(1-pg), 70,190 )) );
 
 
@@ -336,4 +336,13 @@ void BoardView::draw_squares(sf::RenderTarget & drawer, float now, bool above) c
    }
 
    drawer.SetView(orig);
+}
+
+float BoardView::get_width()  const
+{
+   return Squares.size()*SQUARE_WIDTH;
+}
+float BoardView::get_height() const
+{
+   return Squares[0].size()*SQUARE_HEIGHT;
 }

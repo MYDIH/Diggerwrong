@@ -60,5 +60,8 @@ public:
    bool finished() const;
 
    void draw(sf::RenderTarget & drawer, float now) const;
+
+   float get_width()  const;
+   float get_height() const;
 };
 

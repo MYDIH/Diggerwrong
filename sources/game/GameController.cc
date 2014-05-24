@@ -22,9 +22,14 @@ GameController::GameController()
    ,Width(0)
    ,Height(0)
    ,Target(0)
+   ,Timelimit(0)
    ,Rank(0)
    ,Lifes(0)
    ,Score(0)
+
+   ,Waiting(false)
+   ,How_to(false)
+   ,How_to_mode(false)
    
    ,Big_flash(26,1,6)
    ,State(CONTINUE)
@@ -63,6 +68,8 @@ void GameController::new_game(unsigned width, unsigned height, unsigned target, 
 
    Level.generate( Width,Height,Target,Timelimit
 		   ,inv(Rank), *Modules, *First, *Default );
+
+   std::cout << "rank: " << Rank << "  inv: " << inv(Rank) << std::endl;
    
    *(Try.second) = Level;
    View.second->observe( Try.second, 0 );
@@ -116,7 +123,7 @@ int GameController::tick(sf::RenderWindow & w, float now)
 	    *(Try.second) = Level;
 	    View.second -> observe(Try.second, now);
 	    //Try.second -> start();
-	    Try.second -> check(true);
+	    Try.second -> resolve();
 	 }
       }
 
@@ -212,16 +219,19 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
    r.Clear(sf::Color(color,color,color));
 
+
    const float b1 = Back1.value(now);
    const float b2 = Back2.value(now); 
-draw_stars(r,now,  0, 0, b1, b2);
+   draw_stars(r,now,  0, 0, b1, b2);
    draw_stars(r,now,   width/1.6,  height/1.6, b1, b2);
    draw_stars(r,now,   width/1.6, -height/1.6, b2, b1);
    draw_stars(r,now,  -width/1.6,  height/1.6, b1, b2);
    draw_stars(r,now,  -width/1.6, -height/1.6, b2, b1);
 
+
    r.Draw( sf::Shape::Rectangle(-width, -height, width, height
-				   ,sf::Color(color,color,color,220)) );
+				,sf::Color(color,color,color,220)) );
+
 
    // -- AFFICHAGE plateau en cours
    {
@@ -257,10 +267,11 @@ draw_stars(r,now,  0, 0, b1, b2);
 
 
 
+   const float hw = View.second -> get_width()  /2;
+   const float hh = View.second -> get_height() /2;
+
    // -- AFFICHAGE scores
    {
-      const float hw = (Try.second -> getWidth() * SQUARE_WIDTH)/2;
-      const float hh = (Try.second -> getHeight()* SQUARE_HEIGHT)/2;
       view.Move(hw,-hh);
 
       const std::string gvalues = ( std::to_string(Rank)
@@ -303,7 +314,22 @@ draw_stars(r,now,  0, 0, b1, b2);
    // --
 
    if (How_to_mode)
-      Big_font.draw_string(r, "how to",0, Big_font.font().GetGlyph('0').Rectangle.GetHeight(),true,0.80);
+      Big_font.draw_string(r, "how to"
+			   ,0, Big_font.font().GetGlyph('0').Rectangle.GetHeight(),true,0.80);
+
+
+   // AFFICHAGE tu nom du joueur
+   if (Waiting and State == GAME_OVER)
+   {
+      const int lfonth = BoardView::Score_font.font().GetGlyph('0').Rectangle.GetHeight();
+      const int fonth  = BoardView::Score_value_font.font().GetGlyph('0').Rectangle.GetHeight();
+
+      const sf::Vector2f size = BoardView::Score_font.draw_string(r, "Quel est ton nom ?  "
+								  ,-hw, -hh -lfonth -BAR -10, false,0.9);
+
+      BoardView::Score_value_font.draw_string(r, Player_name + "_"
+					       ,-hw +size.x, -hh -fonth -BAR -10, false, 1);
+   }
 
    
 
@@ -422,10 +448,26 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
    return 0;
 }
 
-int GameController::key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now)
+
+int GameController::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now)
 {
+   if (Waiting and State == GAME_OVER)
+   {
+      if (e.Unicode == '\b' and Player_name.size() > 0)
+	 Player_name.pop_back();
+
+      else if (e.Unicode == '\n')
+	 return 1;
+
+      else if (e.Unicode < 128)
+	 Player_name += static_cast<char>(e.Unicode);
+   }
+
+
+
    return 0;
 }
+
 
 point GameController::board_coords(float x, float y)
 {

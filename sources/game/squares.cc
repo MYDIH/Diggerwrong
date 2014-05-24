@@ -90,7 +90,8 @@ SNormal::SNormal(unsigned val)
 
 SNormal::SNormal(double difficulty, unsigned longestside)
 {
-   const double r = pow(rand() / (double) RAND_MAX, 1.4);
+   const double r = pow(rand() / (double) RAND_MAX, 1.38);
+   // pow pour concentrer les tirages vers le haut
 
    const double max = longestside * 0.3 * difficulty + longestside * 0.2;
 
@@ -217,7 +218,7 @@ SBonus::SBonus(unsigned val, unsigned life, unsigned score) : SNormal(val)
 SBonus::SBonus(double difficulty, unsigned longestside)
    : SNormal(difficulty, longestside)
 {
-   const double plife  = (1.1 - difficulty) * 0.3;
+   const double plife  = 1/3.0;
 
    const double r = rand() / (double) RAND_MAX;
 

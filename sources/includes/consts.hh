@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+const float BAR = 20;
 
 const unsigned DECALAGE_CONSOLE = 35; // Distance entre Statu et Explications
 

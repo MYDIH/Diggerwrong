@@ -3,11 +3,11 @@
 #include <iostream>
 #include <stdexcept>
 
-const double LINE = 0.9;
+const double LINE = 3;
 // doit être > 0 ; plus c'est grand plus la fonction est linéaire
 double inv(double x)
 {
-    return -(LINE)/(x+(LINE))+1;
+   return -( LINE/(x+LINE) ) + 1;
 }
 
 

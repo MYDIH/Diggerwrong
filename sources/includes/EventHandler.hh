@@ -32,5 +32,6 @@ public:
   virtual int mouse_moved(sf::RenderWindow & w, sf::Event::MouseMoveEvent & e, float now);
   virtual int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now);
   virtual int closed(sf::RenderWindow & w, float now);
+   virtual int text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now);
 };
 
