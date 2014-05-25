@@ -3,44 +3,15 @@
 -- projet M2103 ; IUT Informatique de Bordeaux
 -- Nicolas Gomez & Timothée Jourde
 
-Merci de jeter un coup d'oeil au rapport
-de conception (dans "documentation") pour
-mieux comprendre le code.
-
-Le jeu est en dévellopement,
-des fonctionalités seront ajoutés
-par la suite même au niveau du
-code existant.
-
-Compiler :
-  $ make
-  $ make debug
-
-L'éxecutable est "Builds/*/diggewrong" .
-Passez lui les paramètres --unicode --color
-(ou -uc) pour une sortie plus lisible.
+Executer :
+  $ make run
 
 Lancer les tests unitaires :
   $ make test
 
+Créer une archive pour distribuer le jeu :
+  $ make pack
+
+Vous pouvez passer le paramètre --help à l'éxecutable.
 Merci.
-
-
--- bons paramètres pour la génération
-bonus: 0.3   -> 0.002
-bomb : 0.005 -> 0.44
-LINE : 3
-
-beaucoup de temps et target élevé c plus rigolo
-42 secondes et 25 coups c pas mal
-
-taille pas mal : 10*17
-
--- crédits :
-
-http://opengameart.org/content/rectangle-gems-etc-16px
-
-http://opengameart.org/content/more-explosions
-
-https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th
 

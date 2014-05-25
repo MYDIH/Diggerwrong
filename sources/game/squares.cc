@@ -31,6 +31,17 @@ void Normal::init(ResourcesPool & pool)
 Square * Normal::create(double difficulty, unsigned width, unsigned height)
 { return new Normal(difficulty, (width > height)? width : height); }
 
+
+// pour la compatibilité avec les TU
+Normal::Normal(unsigned value)
+   :SNormal(value)
+   ,AnimatedSquareView(&appearing,nullptr
+		       ,&appeared,nullptr
+		       ,&disappearing,nullptr)
+   ,Fade_in(1,0,0.3)
+   ,Fade_out(0,1,0.2)
+{}
+
 Normal::Normal(double d, unsigned l)
    :SNormal(d,l)
    ,AnimatedSquareView(&appearing,nullptr

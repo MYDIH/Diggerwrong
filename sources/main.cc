@@ -54,13 +54,13 @@ int main(int argc, char ** argv)
 
    if (o.count("help") or fail)
    {
-      std::cout << "\n-- diggewrong revision " << REV << "\n-- un clone du jeu Puru Puru Digger\n-- Timothée Jourde & Nicolas Gomez\n\n"
+      std::cout << "\n-- diggewrong rev." << REV << "\n-- un clone du jeu Puru Puru Digger\n-- Timothée Jourde & Nicolas Gomez\n\n"
 		<< options << std::endl;
       return EXIT_SUCCESS;
    }
    else if (o.count("text"))
    {
-      const bool color = o.count("color");
+      const bool color   = o.count("color");
       const bool unicode = o.count("unicode");
 
       int charset;
@@ -93,4 +93,24 @@ int main(int argc, char ** argv)
 }
 
 
+
+/* NOTES
+  -- bons paramètres pour la génération
+  bonus: 0.3   -> 0.002
+  bomb : 0.005 -> 0.44
+  LINE : 3
+
+  beaucoup de temps et target élevé c plus rigolo
+  42 secondes et 25 coups c pas mal
+
+  taille pas mal : 10*17
+
+  -- crédits :
+
+  http://opengameart.org/content/rectangle-gems-etc-16px
+
+  http://opengameart.org/content/more-explosions
+
+  https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th
+*/
 

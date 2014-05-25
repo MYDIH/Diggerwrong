@@ -4,6 +4,7 @@
 
 #include "Board.hh"
 #include "Square.hh"
+#include "squares.hh"
 
 
 void fill_board_normal(Board & b, unsigned value)
@@ -49,7 +50,7 @@ BOOST_AUTO_TEST_CASE(Board_move_with_Normal_squares)
    Square *n3 = new Normal(3);
    Square *n4 = new Normal(4);
 
-   Board b(5,8, 0.77, 100);
+   Board b(5,8, 0.77, 100, 60);
 
    fill_board_normal(b,1);
 
@@ -115,7 +116,7 @@ BOOST_AUTO_TEST_CASE(Board_reach_target)
 {
    // On vérifie que la cible (nombre de déplacements requis pour gagner) est atteinte au bon moment.
 
-   Board b(811,477, 0, 350); // cible: 350
+   Board b(811,477, 0, 350, 60); // cible: 350
    fill_board_normal(b, 11); // valeur des cases: 11
 
    // 11 * 31 = 341
@@ -135,26 +136,26 @@ BOOST_AUTO_TEST_CASE(tiny_Board_move_out_of_range)
 {
    // On vérifie que le joueur sort bien du plateau et perd.
 
-    Board b(1, 1, 1, 100);
-    fill_board_normal(b, 1);
+   Board b(1, 1, 1, 100, 60);
+   fill_board_normal(b, 1);
 
-    BOOST_CHECK(b.move(+1, 0) == LOST);
-
-
-    Board b2(3, 3, 0.66, 100);
-    fill_board_normal(b2, 1);
-
-    BOOST_CHECK(b2.move(0, -1) == CONTINUE);
-    BOOST_CHECK(b2.move(0, -1) == LOST);
+   BOOST_CHECK(b.move(+1, 0) == LOST);
 
 
-    Board b3(8, 11, 0.66, 100);
-    fill_board_normal(b3, 1);
+   Board b2(3, 3, 0.66, 100, 60);
+   fill_board_normal(b2, 1);
 
-    BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
-    BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
-    BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
-    BOOST_CHECK(b3.move(+1, 0) == LOST);
+   BOOST_CHECK(b2.move(0, -1) == CONTINUE);
+   BOOST_CHECK(b2.move(0, -1) == LOST);
+
+
+   Board b3(8, 11, 0.66, 100, 60);
+   fill_board_normal(b3, 1);
+
+   BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
+   BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
+   BOOST_CHECK(b3.move(+1, 0) == CONTINUE);
+   BOOST_CHECK(b3.move(+1, 0) == LOST);
 }
 
 
@@ -162,12 +163,12 @@ BOOST_AUTO_TEST_CASE(big_Board_move_out_of_range)
 {
    // On vérifie que le joueur sort bien du plateau et perd.
 
-    Board b(500, 888, 0.66, 1000);
-    fill_board_normal(b, 1);
+   Board b(500, 888, 0.66, 1000, 60);
+   fill_board_normal(b, 1);
 
-    for (unsigned x = 1; x <= 249; x++)
-       BOOST_CHECK(b.move(+1, 0) == CONTINUE);
+   for (unsigned x = 1; x <= 249; x++)
+      BOOST_CHECK(b.move(+1, 0) == CONTINUE);
 
-    BOOST_CHECK(b.move(+1, 0) == LOST);
+   BOOST_CHECK(b.move(+1, 0) == LOST);
 }
 

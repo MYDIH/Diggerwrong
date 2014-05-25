@@ -44,6 +44,7 @@ public:
    static void init(ResourcesPool & pool);
    static Square * create(double difficulty, unsigned width, unsigned height);
 
+   Normal(unsigned);
    Normal(double, unsigned);
 
    Normal(const Normal &);

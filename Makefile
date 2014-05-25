@@ -11,7 +11,7 @@ LDLIBS =  -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lboost_progr
 buildir = Builds
 cache   = $(buildir)/.cache
 bin     = diggewrong
-
+rev     = $(shell git rev-list --count HEAD || echo '?')
 
 # pour utiliser le globbing
 SHELL    = /bin/bash -O extglob -O globstar -c
@@ -29,6 +29,8 @@ debug   = $(src_release:%.cc=$(cache)/%.debug.o)
 release:	$(buildir)/release/$(bin)
 debug:		$(buildir)/debug/$(bin)
 unit:		$(buildir)/unit/testsuite
+pack:		$(buildir)/$(bin).tar.bz2
+packsrc:	$(buildir)/$(bin)-src.tar.bz2
 
 
 $(buildir)/release/$(bin):	$(release)
@@ -46,6 +48,24 @@ $(buildir)/unit/testsuite:		$(unit)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) -lboost_unit_test_framework -o $@ $^
 	-ln -s ../../data/themes $(@D)
 
+$(buildir)/$(bin).tar.bz2: $(buildir)/release/$(bin)
+	mkdir -p $(@D)
+	-rm -r                       /tmp/$(bin).makebuild/$(bin)/
+	mkdir -p                     /tmp/$(bin).makebuild/$(bin)/
+	cp $(buildir)/release/$(bin) /tmp/$(bin).makebuild/$(bin)/
+	cp -r data/themes            /tmp/$(bin).makebuild/$(bin)/
+	cd /tmp/$(bin).makebuild/ && tar -caf $(bin).tar.bz2 $(bin)
+	cp /tmp/$(bin).makebuild/$(bin).tar.bz2 $@
+
+$(buildir)/$(bin)-src.tar.bz2:
+	mkdir -p $(@D)
+	-rm -r                   /tmp/$(bin).makebuild/$(bin)-src/
+	mkdir -p                 /tmp/$(bin).makebuild/$(bin)-src/data/themes
+	cp -r !($(buildir)|data) /tmp/$(bin).makebuild/$(bin)-src/
+	cp -r data/themes        /tmp/$(bin).makebuild/$(bin)-src/data/themes
+	cd /tmp/$(bin).makebuild/ && tar -caf $(bin)-src.tar.bz2 $(bin)-src
+	cp /tmp/$(bin).makebuild/$(bin)-src.tar.bz2 $@
+
 
 clean:
 	-rm -r $(buildir)
@@ -57,16 +77,18 @@ check-syntax:
 	-$(CXX) $(CXXFLAGS) -fsyntax-only  ${CHK_SOURCES}
 
 run: release
-	cd $(buildir)/release && ./$(bin) -G
+	cd $(buildir)/release && ./$(bin)
+
+
 
 # compilation + génération des fichiers de dépendance
 $(cache)/%.o:		%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -D REV=$(shell git rev-list --count HEAD) -O3 -MMD -MF $(cache)/$*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -D REV=\"$(rev)\" -O3 -MMD -MF $(cache)/$*.d -c -o $@ $<
 
 $(cache)/%.debug.o :	%.cc
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -D REV=$(shell git rev-list --count HEAD) -g -MMD -MF $(cache)/$*.d -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -D REV=\"$(rev)\" -g -MMD -MF $(cache)/$*.d -c -o $@ $<
 
 
 
