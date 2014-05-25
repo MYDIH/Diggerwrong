@@ -10,14 +10,14 @@ Plutôt que de recopier les objectifs de ce projet nous vous invitons à consult
 
 /Une partie de ce rapport est issue du rapport "préliminaire" de conception. L'annexe 1 en est directement issue et ne reflête donc pas l'état final du produit./
 
-Bonne lecture !
+Boone lecture !
 
-* Solution retenu
+* Architecture
 ** Modularité
 
 La conception est axée sur l'extensibilité et la simplicité. Le jeu de référence repose sur une grille
 composé de "cases" de différentes natures (bombes, bonus, normales...). L'ajout de fonctionnalités se résume
-donc avant tout à l'ajout de nouveaux types de cases. La conception est donc centrée sur les classes =Square=
+donc avant tout à l'ajout de nouveaux types de cases avec de nouveaux comportements. La conception est donc centrée sur les classes =Square=
 et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement en implémentant de nouvelles
 classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
 nouvelles cases.
@@ -25,7 +25,6 @@ nouvelles cases.
 Le diagramme de classes en /annexe 1/ issue du rapport de conception présente essentiellement ceci. Le produit finale est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
 
 Le fonctionnement de cette architecture sera présenté au fil de ce document.
-
 
 ** Schéma MVC/Observateur
 Pour simplifier l'écriture du programme, nous avons choisit de suivre un schéma Model-Vue-Controler & Observable-Observervateur.
@@ -39,7 +38,7 @@ De même, dans une moindre mesure, pour le menu.
 # ^^
 
 *** Menu
-blabla
+# pour toi
 
 *** Jeu
 Cette section présente les principales classes de la partie Model, Vue et Controller du jeu.
@@ -72,14 +71,11 @@ La classe =EventHandler= permet de simplifier et de factoriser la gestion des é
 # je pense que tu peut ajouter des trucs ici
 Nous avons ici 2 controlleurs : =GuiController= contrôle le menu d'acceuil, les options... et passe la main à =GameController= pour le jeu. =GameController= gère une partie de jeu complète (instanciation des plateaux, transitions...) et contôle =BoardView= pour afficher les plateaux.
 
-
 * Quelques algorithmes
 ** Résolveur & "How-to"
 /Voir en annexe 2./
-
 Cet algorithme bien que simple permet de montrer différents aspects intérresants de notre architecture.
-
-
+# j'ai mis la description de l'algo dans les src...
 
 * Résumé des fonctionalités
 En plus de toutes les fonctionalités obligatoires et supplémentaires, nous avons ajoutés les fonctionalités bonus suivantes :
@@ -88,9 +84,19 @@ En plus de toutes les fonctionalités obligatoires et supplémentaires, nous avo
 - nombre indéfini de niveau
 - changement de charte graphique (themes)
 
-
 * Conclusion
+Nous avons pris beaucoup de plaisir à réaliser ce projet et y avons
+apporter un grand soin.
+
+Avec son architecture modulaire extensible et un rendu graphique
+étincellant, nous sommes convaincue de la qualité de notre produit
+final.
+
+Bonne partie de =diggewrong= !
+
 * Remerciments à...
+- [[http://www.sfml-dev.org/index-fr.php][la SFML]]
+- [[http://www.boost.org/][BOOST]]
 - [[http://opengameart.org/content/rectangle-gems-etc-16px][qubodup]]        :: sprites des cases
 - [[http://opengameart.org/content/more-explosions][StumpyStrust]]   :: animation de l'explosion
 - [[https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th][musiikkisirkus]] :: remix de l'hymne de l'UE (fond sonore)

@@ -11,7 +11,7 @@ LDLIBS =  -lsfml-audio-1.6 -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1
 buildir = Builds
 cache   = $(buildir)/.cache
 bin     = diggewrong
-rev     = $(shell git rev-list --count HEAD || echo inconnue)
+rev     = $(shell git rev-list --count HEAD || echo '?')
 
 # pour utiliser le globbing
 SHELL    = /bin/bash -O extglob -O globstar -c
