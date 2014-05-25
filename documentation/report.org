@@ -1,0 +1,81 @@
+#+TITLE: diggewrong
+#+AUTHOR: Nicolas Gomez, Timothée Jourde
+#+LANGUAGE: fr
+
+* Introduction
+L'objectif du projet de M2103 est de dévelloper une implémentation du jeu =Puru Puru Digger= .
+Ce rapport présente notre réalisation : =diggewrong= .
+
+Plutôt que de recopier les objectifs de ce projet nous vous invitons à consulter [[https://sites.google.com/site/projetap2iut/Puru-Puru-Digger][le sujet]] et à jouer à la [[http://www.bigfishgames.fr/jeux-en-ligne/8638/puru-puru-digger/][version originale]].
+
+/Une partie de ce rapport est issue du rapport "préliminaire" de conception. L'annexe 1 en est directement issue et ne reflête donc pas l'état final du produit./
+
+* Solution retenu
+** Modularité
+
+La conception est axée sur l'extensibilité et la simplicité. Le jeu de référence repose sur une grille
+composé de "cases" de différentes natures (bombes, bonus, normales...). L'ajout de fonctionnalités se résume
+donc avant tout à l'ajout de nouveaux types de cases. La conception est donc centrée sur les classes =Square=
+et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement en implémentant de nouvelles
+classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
+nouvelles cases.
+
+Le diagramme de classes en /annexe 1/ issue du rapport de conception présente essentiellement ceci. Le produit finale est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
+
+Le fonctionnement de cette architecture sera présenté au fil de ce document.
+
+
+** Schéma MVC/Observateur
+Pour simplifier l'écriture du programme, nous avons choisit de suivre un schéma Model-Vue-Controler & Observable-Observervateur.
+Cela à permis de cloisonner des entités distinctes : le jeu en tant que tel, et sa représentation visuelle (ainsi que la gestion des évenements).
+
+La vue est assez pénible à dévelloper avec de nombreuses contraintes dont notemment un fonctionnement non-bloquant pour ne pas gêler l'interface, une gestion fine du temps pour les animations...
+Il étais donc important de ne pas polluer le code métier avec ces contraintes, et inversement. Cela à également permis d'ajouter très facilement les fonctionalités de vérification de faisabilité de niveau et de "How-to".
+
+# j'ai surtout parlé du jeu ici, je sait pas trop quoi dire pour le menu, peut être juste :
+
+De même, dans une moindre mesure, pour le menu.
+
+*** Menu
+blabla
+
+*** Jeu
+Cette section présente les principales classes de la partie Model, Vue et Controller.
+
+**** Model : =Board= et =Square=
+La classe =Board= représente le plateau : une matrice d'instances de =Square= (les cases). La méthode =Board::move()= permet de
+déplacer le joueur dans une direction (gauche, droite, haut, bas, et diagonales). La longueur de ce déplacement,
+ainsi que ses conséquences (gain de score, modifications du plateau...), dépendent des cases rencontrés ;
+c'est pourquoi =Board= ne prend pas directement en charge le déplacement mais fournit simplement une interface
+permettant de réaliser certaines actions sur le plateau (remplacement d'une case, ajout de score/bonus, déplacement...).
+Il s'agit de la principale classe du Model. 
+
+Pour lancer un déplacement, =Board::move()= appel alors simplement la méthode =Square::dig()= de la première case dans le sens du déplacement, cette méthode a alors accès à l'interface décrite plus haut ; elle peut alors notamment poursuivre le déplacement en appelant récursivement =Square::dig()= sur une autre case (à travers la méthode =Board::digAt()= permettant d'enregistrer le déplacement). La valeur de retour de la première méthode =dig()= appelé détermine si le joueur perd ou non.
+
+La classe =Square= fournit une interface pour =Square::dig()= (ainsi qu'une méthode de clonage et un compteur de références pour faciliter
+l'allocation/destruction).
+
+=SquareView= fournit une interface simple pour l'affichage d'une case.
+
+Il est ainsi facile d'ajouter un nouveau type de case avec une grande liberté dans l'action de celle-ci tant sur le jeu que sur le rendu graphique : il suffit d'une nouvelle classe héritant de =Square= et de =SquareView=, surchargeant les méthode adéquates.
+
+
+**** Vue : =BoardView= et =Board::Observer=
+
+
+**** Controller : =GameController=
+La classe =EventHandler= permet de simplifier et de factoriser la gestion des évènements ; elle implémente notamment une boucle principale ( méthode =EventHandler::run()= ) traitant les évènements et appelant les méthodes (virtuelles) correspondantes. Cela permet de définir plusieurs contrôleurs ( chacun héritant de =EventHandler= ), pouvant se "passer la main" entre eux.
+
+# je pense que tu peut ajouter des trucs ici
+Nous avons ici 2 controlleurs : =GuiController= contrôle le menu d'acceuil, les options... et passe la main à =GameController= pour le jeu. =GameController= gère une partie de jeu complète (instanciation des plateaux, transitions...) et contôle =BoardView= pour afficher les plateaux.
+
+
+* Quelques algorithmes
+** =Board::move()=
+
+* Présentation du produit
+** Menu
+** Jeu
+** Résumé des fonctionalités
+
+* Conclusion
