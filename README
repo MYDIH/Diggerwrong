@@ -12,4 +12,6 @@ Lancer les tests unitaires :
 Créer une archive pour distribuer le jeu :
   $ make pack
 
+Vous pouvez passer le paramètre --help à l'éxecutable.
 Merci.
+
