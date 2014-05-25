@@ -5,6 +5,7 @@
 #include "Animation.hh"
 #include "MenuView.hh"
 #include "ConfigView.hh"
+#include "SwitchButton.hh"
 #include "squares.hh"
 #include "consts.hh"
 
@@ -15,9 +16,10 @@ class GuiController : public EventHandler
 {
 public:
     GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod);
-    ~GuiController();
 
-    void launchGame(sf::RenderWindow & w);
+    int launchGame(sf::RenderWindow & w, float now);
+
+    void reloadResources(const std::string &basePath);
 
     void draw(sf::RenderTarget & r, float now) override;
     int tick(sf::RenderWindow & w, float now) override;
@@ -28,7 +30,6 @@ public:
 private:
     MenuView vM;
     ConfigView vC;
-    bool animInBetweenLaunched = false;
     bool lGame = false;
     bool reappear = false;
     int screen = 1;
@@ -37,10 +38,7 @@ private:
     int height;
 
     GameController gControl;
-    sf::Image *inBetween;
-    sf::Sprite inBetweenSprite;
     sf::Vector2f animOffsetMenu;
     sf::Vector2f animOffsetConfig;
     AnimatedValue slideAnim;
-    AnimatedValue opacityInBetweenAnim;
 };

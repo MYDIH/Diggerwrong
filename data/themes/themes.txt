@@ -1,0 +1,5 @@
+1=Default
+2=Exemple1
+3=Exemple2
+4=Exemple3
+5=Exemple4

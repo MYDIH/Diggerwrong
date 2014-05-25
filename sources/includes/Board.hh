@@ -78,10 +78,11 @@ public:
    class Observer
    {
    private:
-      std::queue<Board::change> Changes;
+      std::deque<Board::change> Changes;
    protected:
       void pop();
       const Board::change * front() const;
+      void clear();
    public:
       void push(const Board::change&);
       virtual bool care(const Board::change&);

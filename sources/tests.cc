@@ -38,6 +38,8 @@ void animation()
     p.add(&Button::back);
     p.add(&Button::foreg);
     p.add(&Button::labelFont);
+    p.add(&SwitchButton::arrowsFont);
+    p.add(&SwitchButton::labelsFont);
     p.add(&ScoresTab::namesCol);
     p.add(&ScoresTab::contenuCol);
     p.add(&ScoresTab::tabLines);

@@ -12,17 +12,21 @@
 #include <cmath>
 
 
+
+void Board::Observer::clear()
+{ Changes.clear(); }
+
 void Board::Observer::push(const Board::change& c)
 {
    if ( care(c) )
-      Changes.push(c);
+      Changes.push_back(c);
 }
 bool Board::Observer::care(const Board::change& c)
 { return true; }
 void Board::Observer::pop()
 {
    if (Changes.size() > 0)
-      Changes.pop();
+      Changes.pop_front();
 }
 const Board::change * Board::Observer::front() const
 {

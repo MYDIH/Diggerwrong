@@ -5,41 +5,28 @@
 GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
     width(r.GetWidth()),
     height(r.GetHeight()),
-    inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, OPACITY_IN_BETWEEN))),
-    inBetweenSprite(*inBetween, sf::Vector2f(-width/2, -height/2)),
+    gControl(modules,firstmod,defaultmod),
     animOffsetMenu(0, 0),
     animOffsetConfig(-(width / 2 + vM.getSize().x), 0),
-    slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>),
-    opacityInBetweenAnim(OPACITY_IN_BETWEEN, 0, 0.4)
+    slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
 {
-    gControl.Modules = &modules;
-    gControl.First   = &firstmod;
-    gControl.Default = &defaultmod;
-
-    gControl.new_game(20, 11, 20, 42, 0, 2, 0);
-
-    opacityInBetweenAnim.start(-1);
     vM.show(0.5);
 }
 
-GuiController::~GuiController()
-{ delete inBetween; }
-
-void GuiController::launchGame(sf::RenderWindow & w)
+int GuiController::launchGame(sf::RenderWindow & w, float now)
 {
-    gControl.run(w);
+    gControl.start(now);
+    if(gControl.run(w) == 1)
+        return -1;
+
+    lGame = false;
     reappear = true;
+    return 0;
 }
 
 void GuiController::draw(sf::RenderTarget & r, float now)
 {
-    delete inBetween;
-    inBetween = new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, opacityInBetweenAnim.value(now)));
-    inBetweenSprite.SetImage(*inBetween);
-    inBetweenSprite.SetPosition(-width/2, -height/2);
-
     gControl.draw(r, now);
-    r.Draw(inBetweenSprite);
     vM.setOffset(animOffsetMenu);
     vC.setOffset(animOffsetConfig);
     vM.draw(r, now);
@@ -48,6 +35,8 @@ void GuiController::draw(sf::RenderTarget & r, float now)
 
 int GuiController::tick(sf::RenderWindow & w, float now)
 {
+    gControl.tick(w,now);
+
     if(slideAnim.running(now) || slideAnim.remaining_time(now) < 1)
     {
         animOffsetMenu = sf::Vector2f(slideAnim.value(now), 0);
@@ -56,30 +45,17 @@ int GuiController::tick(sf::RenderWindow & w, float now)
 
     if(lGame && vM.appearedOrHidden(now))
     {
-        if(!animInBetweenLaunched)
-        {
-            if(opacityInBetweenAnim.start_value() != OPACITY_IN_BETWEEN)
-                opacityInBetweenAnim.swap();
-            opacityInBetweenAnim.start(now);
-            animInBetweenLaunched = true;
-        }
-        if(!opacityInBetweenAnim.running(now))
-        {
-            launchGame(w);
-            lGame = false;
-        }
+        if(launchGame(w,now) != 0)
+            return -1;
     }
 
     if(reappear)
     {
         if(disableOldTickEvent >= 1)
         {
-            if(opacityInBetweenAnim.start_value() != 0)
-                opacityInBetweenAnim.swap();
-            opacityInBetweenAnim.start(now);
+            gControl.stop(now);
             vM.show(now + 0.4);
             reappear = false;
-            animInBetweenLaunched = false;
             disableOldTickEvent = 0;
         }
         else
@@ -119,12 +95,21 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
     if(!slideAnim.running(now))
     {
         const Button *b;
+        ArrowType t = NONE;
         sf::Vector2f vMousePos = w.ConvertCoords(e.X, e.Y);
-        //std::cout << vMousePos.x  << " - " << animOffsetMenu.x << std::endl;
         if(screen == 1)
-            b = vM.isInButton(sf::Vector2f(vMousePos.x, vMousePos.y));
+            b = vM.isInButton(vMousePos);
         else
-            b = vC.isInButton(sf::Vector2f(vMousePos.x, vMousePos.y));
+        {
+            b = vC.isInButton(vMousePos);
+            t = vC.themesSelect.contains(vMousePos);
+            if(t != NONE)
+            {
+                const std::string &s = vC.themesSelect.onClick(now, t);
+
+                reloadResources("themes/" + s);
+            }
+        }
 
         if(b != NULL)
         {
@@ -132,7 +117,6 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
             {
                 if(b->name == "play")
                 {
-                    gControl.new_game(20, 11, 20, 42, 0, 2, 0);
                     vM.hide(now);
                     lGame = true;
                 }
@@ -162,7 +146,7 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
 int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
 {
     // éviter l'auto-resize chelou
-    getHandlerView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
+    EventHandler::resized(w,e,now);
 
     if(slideAnim.end_value() == width / 2 + vM.getSize().x)
     {
@@ -174,11 +158,59 @@ int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float
     height = w.GetHeight();
     animOffsetConfig = sf::Vector2f(-(width / 2 + vM.getSize().x), 0);
 
-    delete inBetween;
-    inBetween = new sf::Image(w.GetWidth(), w.GetHeight(), sf::Color(0, 0, 0, OPACITY_IN_BETWEEN));
-    inBetweenSprite.SetImage(*inBetween);
-    inBetweenSprite.SetPosition(-width/2, -height/2);
-
     need_refresh();
     return 0;
+}
+
+void GuiController::reloadResources(const std::string &basePath)
+{
+    ResourcesPool p;
+    Normal::init( p );
+    Bonus::init( p );
+    Bomb::init( p );
+    Digged::init( p );
+
+    p.add(&GuiViews::viewCorner);
+    p.add(&GuiViews::title);
+    p.add(&Button::corner);
+    p.add(&Button::back);
+    p.add(&Button::foreg);
+    p.add(&Button::labelFont);
+    p.add(&SwitchButton::arrowsFont);
+    p.add(&SwitchButton::labelsFont);
+    p.add(&ScoresTab::namesCol);
+    p.add(&ScoresTab::contenuCol);
+    p.add(&ScoresTab::tabLines);
+
+    p.add(&BoardView::DiggerResource);
+    p.add(&BoardView::ExplosionResource);
+
+    p.add(&BoardView::DeadResource);
+    p.add(&BoardView::Score_font);
+    p.add(&BoardView::Score_value_font);
+    p.add(&BoardView::Score_sound);
+    p.add(&BoardView::Bonus_sound);
+    p.add(&BoardView::Life_sound);
+    p.add(&BoardView::Fart);
+
+    p.add(&GameController::Big_font);
+    p.add(&GameController::Youwin);
+    p.add(&GameController::Tryagain);
+    p.add(&GameController::Levelup);
+    p.add(&GameController::Gameover);
+    p.add(&GameController::Star1);
+    p.add(&GameController::Star2);
+
+    p.add(&BoardView::DeadResource);
+
+
+    try
+    {
+        p.load(basePath);
+    }
+    catch (const std::string & f)
+    {
+        std::cout << "\n!! ERREUR concernant le fichier:\n" << f << "\n\n";
+        reloadResources("themes/default");
+    }
 }

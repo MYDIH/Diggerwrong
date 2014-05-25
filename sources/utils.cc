@@ -10,9 +10,6 @@ double inv(double x)
    return -( LINE/(x+LINE) ) + 1;
 }
 
-
-
-
 void splitStdString(const std::string &dataToSplit, char delim, std::vector<std::string> & resVect)
 {
     std::stringstream stream(dataToSplit);
@@ -39,7 +36,7 @@ bool parseFile(std::map<std::string, std::string> &result, const std::string &pa
        while(f.good())
        {
 	  std::getline(f, tmp);
-	  std::cout << tmp << std::endl;
+	  //std::cout << tmp << std::endl;
 	  splitStdString(tmp, '=', tmpVect);
 	  if(tmpVect.size() == 2)
 	     result.insert(std::pair<std::string, std::string>(tmpVect[0], tmpVect[1]));

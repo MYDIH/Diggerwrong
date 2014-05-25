@@ -14,8 +14,10 @@ SoundResource GameController::Tryagain("", "tryagain.txt");
 SoundResource GameController::Levelup( "", "levelup.txt");
 SoundResource GameController::Gameover("", "gameover.txt");
 
+GameController::GameController( const std::vector<module> & modules
+		   ,const module & firstmod
+		   ,const module & defaultmod )
 
-GameController::GameController()
    :Try( {&Try1,&Try2} )
    ,View( {&View1,&View2} )
 
@@ -27,29 +29,34 @@ GameController::GameController()
    ,Lifes(0)
    ,Score(0)
 
+   ,Backgrounded(0,1,0.3, EASE_IN_OUT<15>)
+
    ,Waiting(false)
    ,How_to(false)
    ,How_to_mode(false)
-   
+
    ,Big_flash(26,1,6)
+   ,Cursor(1,0,0.5)
    ,State(CONTINUE)
    ,Slide(0,1,0.37, EASE_IN_OUT<10>)
 
    ,Back1(0,1,7, EASE_IN_OUT<16>)
    ,Back2(0,1,32, EASE_IN_OUT<10>)
 
-   ,Modules(nullptr)
-   ,First(nullptr)
-   ,Default(nullptr)
+   ,Modules(modules)
+   ,First(firstmod)
+   ,Default(defaultmod)
 {
    Slide.start(-10);
    Back1.start(0);
    Back2.start(0);
+
+   new_game();
 }
 
 void GameController::new_game(unsigned width, unsigned height, unsigned target, float timelimit
 			      ,unsigned last_rank, unsigned lifes, unsigned score )
-			      
+
 {
    Width  = width;
    Height = height;
@@ -67,16 +74,30 @@ void GameController::new_game(unsigned width, unsigned height, unsigned target, 
    State = CONTINUE;
 
    Level.generate( Width,Height,Target,Timelimit
-		   ,inv(Rank), *Modules, *First, *Default );
+		   ,inv(Rank), Modules, First, Default );
 
    std::cout << "rank: " << Rank << "  inv: " << inv(Rank) << std::endl;
-   
+
    *(Try.second) = Level;
    View.second->observe( Try.second, 0 );
+}
+
+void GameController::start(float at)
+{
+   Backgrounded.set_start_value(1);
+   Backgrounded.set_end_value(0);
+   Backgrounded.start(at);
 
    Try.second -> start();
 }
+void GameController::stop(float at)
+{
+   Backgrounded.set_start_value(0);
+   Backgrounded.set_end_value(1);
+   Backgrounded.start(at);
 
+   Try.second -> pause();
+}
 
 int GameController::tick(sf::RenderWindow & w, float now)
 {
@@ -129,6 +150,10 @@ int GameController::tick(sf::RenderWindow & w, float now)
 
       else if (How_to and View.second->finished())
 	 How_to = false;
+
+
+      if (Waiting and State == GAME_OVER and not Cursor.running(now))
+	 Cursor.start(now);
    }
 
 
@@ -137,7 +162,7 @@ int GameController::tick(sf::RenderWindow & w, float now)
       Back1.swap();
       Back1.start(now);
    }
-   
+
    if (not Back2.running(now))
    {
       Back2.swap();
@@ -164,7 +189,7 @@ void GameController::draw_stars(sf::RenderTarget & r, float now
    {
       // -- AFFICHAGE des étoiles
       offset.Zoom(var2 * 0.7 + 0.3);
-      
+
       v = offset;
       v.Move(var1*800-400, var2*800-400);
       r.Draw( Star1.frame(0,0) );
@@ -192,7 +217,7 @@ void GameController::draw_stars(sf::RenderTarget & r, float now
       // --
       //offset.Zoom(var2 * 0.5 + 0.5);
       // --
-      
+
       v = offset;
       v.Move(var2*300-150, - (var1*300-150));
       r.Draw( Star2.frame(0,0) );
@@ -217,11 +242,14 @@ void GameController::draw(sf::RenderTarget & r, float now)
    const float width = r.GetWidth();
    const float height = r.GetHeight();
 
+   if (Backgrounded.value(now))
+      view.Zoom((1-Backgrounded.value(now)) * 0.3 + 0.7);
+
    r.Clear(sf::Color(color,color,color));
 
 
    const float b1 = Back1.value(now);
-   const float b2 = Back2.value(now); 
+   const float b2 = Back2.value(now);
    draw_stars(r,now,  0, 0, b1, b2);
    draw_stars(r,now,   width/1.6,  height/1.6, b1, b2);
    draw_stars(r,now,   width/1.6, -height/1.6, b2, b1);
@@ -230,7 +258,8 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
 
    r.Draw( sf::Shape::Rectangle(-width, -height, width, height
-				,sf::Color(color,color,color,220)) );
+				,sf::Color(color,color,color
+					   ,220 * (1-Backgrounded.value(now)) )) );
 
 
    // -- AFFICHAGE plateau en cours
@@ -280,7 +309,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
       const sf::Vector2f gsize = BoardView::Score_value_font.draw_string(r, gvalues, 0,0,false);
 
-      BoardView::Score_font.draw_string(r,("niveau\n"
+      BoardView::Score_font.draw_string(r,("niveaux\n"
 				"score totale\n"
 				"vies\n"), gsize.x+10,0,false);
 
@@ -299,7 +328,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 	 case GAME_OVER:
 	       Big_font.draw_string(r, "GAME OVER !");
 	       break;
-	       
+
 	 case TRY_AGAIN:
 	    Big_font.draw_string(r, "TRY AGAIN !");
 	    break;
@@ -309,7 +338,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 	    break;
 
 	 default:;
-				 
+
       }
    // --
 
@@ -324,14 +353,20 @@ void GameController::draw(sf::RenderTarget & r, float now)
       const int lfonth = BoardView::Score_font.font().GetGlyph('0').Rectangle.GetHeight();
       const int fonth  = BoardView::Score_value_font.font().GetGlyph('0').Rectangle.GetHeight();
 
-      const sf::Vector2f size = BoardView::Score_font.draw_string(r, "Quel est ton nom ?  "
+      const sf::Vector2f size = BoardView::Score_font.draw_string(r, "quel est ton nom ?  "
 								  ,-hw, -hh -lfonth -BAR -10, false,0.9);
 
-      BoardView::Score_value_font.draw_string(r, Player_name + "_"
+      const std::string cursor = (Cursor.value(now)>0.5)? "<" : "";
+
+      BoardView::Score_value_font.draw_string(r, ">" + Player_name + cursor
 					       ,-hw +size.x, -hh -fonth -BAR -10, false, 1);
    }
 
-   
+
+   if (Backgrounded.value(now))
+      r.Draw( sf::Shape::Rectangle(-width, -height, width, height
+				   ,sf::Color(30,30,30
+					      ,240 * Backgrounded.value(now) )) );
 
 
 
@@ -341,7 +376,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
 int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now)
 {
-   if (Slide.running(now))
+   if (Slide.running(now) or Backgrounded.value(now))
       return 0;
 
 
@@ -357,7 +392,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	 case TRY_AGAIN:
 	    std::cout << "\n>> go TRY AGAIN" << std::endl;
 	    Lifes--;
-	    
+
 	    std::swap(Try.first,Try.second);
 	    std::swap(View.first,View.second);
 
@@ -380,7 +415,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    Lifes += Try.second->getBonusLifes();
 
 	    Level.generate( Width,Height,Target,Timelimit
-			    ,inv(Rank), *Modules, *First, *Default );
+			    ,inv(Rank), Modules, First, Default );
 
 	    std::swap(Try.first,Try.second);
 	    std::swap(View.first,View.second);
@@ -394,7 +429,7 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 
 	    Levelup.play_new();
 
-	    Try.second -> start();	    
+	    Try.second -> start();
 	    Waiting = false;
 	    break;
 
@@ -407,15 +442,15 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 
 
 
-   
+
    const sf::Vector2f click = w.ConvertCoords(e.X, e.Y);
    const point square = board_coords(click.x, click.y);
-   
+
    const point digger = Try.second->getDigger();
-   
+
    const int dx = -(digger.x - square.x);
    const int dy = -(digger.y - square.y);
-   
+
    std::cout << "\nclick at: " << square.x << "," << square.y << " | " << dx << "," << dy <<  "  (" << now << ")";
    std::cout.flush();
 
@@ -435,12 +470,12 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	       State = GAME_OVER;
 	    }
 	    break;
-	    
-	    
+
+
 	 case GameState::WON:
 	    State = WON;
 	    break;
-	    
+
 	 default:;
       }
    }
@@ -451,15 +486,16 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 
 int GameController::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now)
 {
+   if (Slide.running(now) or Backgrounded.value(now))
+      return 0;
+
+
    if (Waiting and State == GAME_OVER)
    {
       if (e.Unicode == '\b' and Player_name.size() > 0)
 	 Player_name.pop_back();
 
-      else if (e.Unicode == '\n')
-	 return 1;
-
-      else if (e.Unicode < 128)
+      else if (e.Unicode >= 32 and e.Unicode <= 126)
 	 Player_name += static_cast<char>(e.Unicode);
    }
 
@@ -468,11 +504,46 @@ int GameController::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, f
    return 0;
 }
 
+int GameController::key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now)
+{
+   if (Slide.running(now) or Backgrounded.value(now))
+      return 0;
+
+
+   if ( Waiting and State == GAME_OVER )
+   {
+      if (e.Code == sf::Key::Code::Return)
+      {
+	 // enregistrement score... blabla
+	 std::map<std::string,std::string> f;
+	 parseFile(f, "highScores.txt");
+
+	 f[Player_name] = std::to_string(Score);
+
+	 writeFile(f, "highScores.txt");
+
+
+	 new_game(Width,Height,Target,Timelimit
+		  ,0,2,0);
+
+	 stop(now);
+	 return 1;
+      }
+   }
+   else if (e.Code == sf::Key::Code::Space
+	    or e.Code == sf::Key::Code::Pause)
+   {
+      stop(now);
+      return 1;
+   }
+
+   return 0;
+}
 
 point GameController::board_coords(float x, float y)
 {
    point p;
-   
+
    p.x = - (-(Width*SQUARE_WIDTH)/2   - x);
    p.y = - (-(Height*SQUARE_HEIGHT)/2 - y);
 

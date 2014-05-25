@@ -3,7 +3,8 @@
 #include <iostream>
 
 ConfigView::ConfigView() :
-    cancel("Retour", sf::Vector2f(0, -60))
+    cancel("Retour", sf::Vector2f(0, -60)),
+    themesSelect(sf::Vector2f(0, 30))
 {
     cancel.name = "cancel";
 }
@@ -19,6 +20,7 @@ void ConfigView::show(float at)
     offBordY.start(at + 0.4);
     opacityTitle.start(at + 1.3);
     cancel.show(at + 1.3);
+    themesSelect.show(at + 1.3);
 }
 
 void ConfigView::hide(float at)
@@ -51,6 +53,7 @@ void ConfigView::draw(sf::RenderTarget &w, float now)
     mView.Move(offset);
 
     cancel.draw(w, now);
+    themesSelect.draw(w, now);
 
     //--
     mView.Move(-bordX, bordY);

@@ -54,6 +54,7 @@ void BoardView::observe(Board * b, float show_at)
    if (Observed)
       Observed -> unregisterObserver(this);
 
+   clear();
    delete_squares();
 
 
