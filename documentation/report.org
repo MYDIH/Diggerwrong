@@ -10,6 +10,8 @@ Plutôt que de recopier les objectifs de ce projet nous vous invitons à consult
 
 /Une partie de ce rapport est issue du rapport "préliminaire" de conception. L'annexe 1 en est directement issue et ne reflête donc pas l'état final du produit./
 
+Bonne lecture !
+
 * Solution retenu
 ** Modularité
 
@@ -61,17 +63,19 @@ Il est ainsi facile d'ajouter un nouveau type de case avec une grande liberté d
 
 
 **** Vue : =BoardView= et =Board::Observer=
+La classe =BoardView= observe une instance de =Board= et en affiche une représentation. =Board= luis notify chaque changement ( =Board::notify()= ). Ceci implémenté par une file de changements ( =Board::change= ).
 
+=BoardView= ne fait qu'utiliser l'interface =SquareView= de chaque case du plateau. Chaque case se dessines elle même.
 
 **** Controller : =GameController=
-La classe =EventHandler= permet de simplifier et de factoriser la gestion des évènements ; elle implémente notamment une boucle principale ( méthode =EventHandler::run()= ) traitant les évènements et appelant les méthodes (virtuelles) correspondantes. Cela permet de définir plusieurs contrôleurs ( chacun héritant de =EventHandler= ), pouvant se "passer la main" entre eux.
+La classe =EventHandler= permet de simplifier et de factoriser la gestion des évènements ; elle implémente une boucle principale ( méthode =EventHandler::run()= ) traitant les évènements et appelant les méthodes (virtuelles) correspondantes. Cela permet de définir plusieurs contrôleurs ( chacun héritant de =EventHandler= ), pouvant se "passer la main" entre eux.
 
 # je pense que tu peut ajouter des trucs ici
 Nous avons ici 2 controlleurs : =GuiController= contrôle le menu d'acceuil, les options... et passe la main à =GameController= pour le jeu. =GameController= gère une partie de jeu complète (instanciation des plateaux, transitions...) et contôle =BoardView= pour afficher les plateaux.
 
 
 * Quelques algorithmes
-** =Board::move()=
+
 
 * Présentation du produit
 ** Menu
