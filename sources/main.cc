@@ -10,42 +10,55 @@
 
 namespace po = boost::program_options;
 
-int guiMain() // temporaire...
+int guiMain(const std::string & themes, const std::string & hightscores)
 {
+   // tests
    animation();
+   return 0;
+   //
+
+
+
 
    return EXIT_SUCCESS;
 }
+
 
 
 int main(int argc, char ** argv)
 {
    po::options_description options("Options");
    options.add_options()
-      ("help,h"   , "afficher l'aide")
-      ("gui,G"    , "lancer le jeu en mode graphique")
-      ("text,T"   , "[activé par défaut] lancer le jeu en mode texte (pour tester)")
+      ("help,h"   , "afficher cette l'aide")
+      ("gui,G"    , "[activé par défaut] lancer le jeu en mode graphique")
+      ("scores,s" , po::value<std::string>() , "chemin vers le fichier des meilleurs scores (\"hightscores.txt\" dans le repertoire courant par defaut)")
+      ("themes,t" , po::value<std::string>() , "chemin vers le repertoire des themes (\"themes\" dans le repertoire courant par defaut)")
+      ("text,T"   , "lancer le jeu en mode texte (pour tester)")
       ("color,c"  , "utiliser des couleurs ANSI en mode texte (plus lisible)")
       ("unicode,u", "utiliser des caractères Unicode en mode texte (plus lisible)")
       ;
 
 
+   bool fail = false;
    po::variables_map o;
-   
-   po::store(po::parse_command_line(argc, argv, options), o);
-   po::notify(o); 
 
-   if (o.count("help"))
+   try
    {
-      std::cout << "\n-- diggewrong rev." << REV << "\n-- un clone du jeu Puru Puru Digger\n-- Timothée Jourde & Nicolas Gomez\n\n"
+      po::store(po::parse_command_line(argc, argv, options), o);
+      //po::notify(o); 
+   }
+   catch(const po::error &e)
+   {
+      fail = true;
+   }
+
+   if (o.count("help") or fail)
+   {
+      std::cout << "\n-- diggewrong revision " << REV << "\n-- un clone du jeu Puru Puru Digger\n-- Timothée Jourde & Nicolas Gomez\n\n"
 		<< options << std::endl;
       return EXIT_SUCCESS;
    }
-   else if (o.count("gui"))
-   {
-      return guiMain();
-   }
-   else
+   else if (o.count("text"))
    {
       const bool color = o.count("color");
       const bool unicode = o.count("unicode");
@@ -62,6 +75,20 @@ int main(int argc, char ** argv)
 	 charset = 3;
 
       return textMain(charset);
+   }
+   else
+   {
+      const std::string themes = (o.count("themes") and not o["themes"].as<std::string>().empty()) ?
+	 o["themes"].as<std::string>()
+	 :
+	 "themes" ;
+
+      const std::string hightscores = (o.count("scores") and not o["scores"].as<std::string>().empty()) ?
+	 o["scores"].as<std::string>()
+	 :
+	 "hightscores.txt" ;
+
+      return guiMain(themes, hightscores);
    }
 }
 

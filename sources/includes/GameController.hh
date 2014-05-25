@@ -81,7 +81,7 @@ public:
    void start(float at);
    void stop(float at);
 
-   void new_game(unsigned width = 17, unsigned height = 10, unsigned target = 25, float timelimit = 24
+   void new_game(unsigned width = 17, unsigned height = 10, unsigned target = 25, float timelimit = 42
 		 ,unsigned last_rank = 0, unsigned lifes = 2, unsigned score = 0 );
 
 

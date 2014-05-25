@@ -309,7 +309,7 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
       const sf::Vector2f gsize = BoardView::Score_value_font.draw_string(r, gvalues, 0,0,false);
 
-      BoardView::Score_font.draw_string(r,("niveau\n"
+      BoardView::Score_font.draw_string(r,("niveaux\n"
 				"score totale\n"
 				"vies\n"), gsize.x+10,0,false);
 
@@ -486,6 +486,10 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 
 int GameController::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now)
 {
+   if (Slide.running(now) or Backgrounded.value(now))
+      return 0;
+
+
    if (Waiting and State == GAME_OVER)
    {
       if (e.Unicode == '\b' and Player_name.size() > 0)
@@ -502,6 +506,10 @@ int GameController::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, f
 
 int GameController::key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now)
 {
+   if (Slide.running(now) or Backgrounded.value(now))
+      return 0;
+
+
    if ( Waiting and State == GAME_OVER )
    {
       if (e.Code == sf::Key::Code::Return)
