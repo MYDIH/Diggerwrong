@@ -1,0 +1,6 @@
+sound=odetojoy.ogg
+
+long=true
+
+pitch=0.5
+volume=35

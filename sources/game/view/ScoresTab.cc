@@ -1,14 +1,12 @@
 #include "ScoresTab.hh"
 
-#include <iostream>
-
 AnimationResource ScoresTab::tabLines("gui", "scores.txt");
 FontResource ScoresTab::namesCol("", "namesColFont.txt");
 FontResource ScoresTab::contenuCol("", "contenuColFont.txt");
 
 bool operator<(const Score &a, const Score &b)
 {
-    return a.scoreInt < b.scoreInt;
+    return b.scoreInt < a.scoreInt;
 }
 
 ScoresTab::ScoresTab() :
@@ -18,22 +16,12 @@ ScoresTab::ScoresTab() :
     opacityNamesCol(1, 0, 0.4),
     opacityContent(1, 0, 0.4)
 {
-    std::map<std::string, std::string> parseRes;
-    std::map<std::string, std::string>::iterator it;
-    Score tmpScore;
-    parseFile(parseRes, "highScores.txt");
-    for(it = parseRes.begin(); it!=parseRes.end(); ++it)
-    {
-        std::cout << it->first << std::endl;
-        tmpScore.name = it->first;
-        tmpScore.scoreInt = stoi(it->second);
-        scoreList.push_back(tmpScore);
-    }
-    scoreList.sort();
 }
 
 void ScoresTab::show(float at)
 {
+    parseHighScoresFile();
+
     if(opacity.end_value() != 255)
         opacity.swap();
     if(opacityNamesCol.end_value() != 1)
@@ -66,9 +54,29 @@ void ScoresTab::setOffset(const sf::Vector2f &o)
     offset = o;
 }
 
+void ScoresTab::parseHighScoresFile()
+{
+    std::map<std::string, std::string> parseRes;
+    Score tmpScore;
+
+    scoreList.clear();
+
+    parseFile(parseRes, "highScores.txt");
+
+    for(const auto &s : parseRes)
+    {
+        tmpScore.name = s.first;
+        tmpScore.scoreInt = stoi(s.second);
+        scoreList.push_back(tmpScore);
+    }
+
+    scoreList.sort();
+}
+
 void ScoresTab::draw(sf::RenderTarget &w, float now)
 {
     std::list<Score>::iterator it;
+    int off = 0;
     int i = 0;
 
     const sf::View & dw = w.GetView();
@@ -81,11 +89,16 @@ void ScoresTab::draw(sf::RenderTarget &w, float now)
     namesCol.draw_string(w, "Noms", -65, -90, true, opacityNamesCol.value(now));
     namesCol.draw_string(w, "Score", 55, -90, true, opacityNamesCol.value(now));
 
-    for(Score ss : scoreList)
+    it = scoreList.begin();
+
+    while(it != scoreList.end() && i < 5)
     {
-        contenuCol.draw_string(w, ss.name, -10 -65, 110 + i - 30, true, opacityContent.value(now));
-        contenuCol.draw_string(w, std::to_string(ss.scoreInt), -10 + 65, 110 + i - 30, true, opacityContent.value(now));
-        i -= 30;
+        contenuCol.draw_string(w, it->name, -10 -65, -110 - off + 70, true, opacityContent.value(now));
+        contenuCol.draw_string(w, std::to_string(it->scoreInt), -10 + 65, -110 - off + 70, true, opacityContent.value(now));
+        off -= 30;
+
+        ++it;
+        i++;
     }
 
     w.SetView(dw);

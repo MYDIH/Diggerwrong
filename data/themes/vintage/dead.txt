@@ -1,0 +1,5 @@
+image=dead.png
+frames=1
+loop=false
+fps=1
+colorR=false

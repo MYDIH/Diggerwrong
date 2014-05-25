@@ -2,36 +2,34 @@
 
 #include <iostream>
 
-GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
+SoundResource GuiController::Music("", "music.txt");
+
+GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod, ResourcesPool & pool) :
+    Pool(pool),
     width(r.GetWidth()),
     height(r.GetHeight()),
     gControl(modules,firstmod,defaultmod),
-    inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, 100))),
-    inBetweenSprite(*inBetween, sf::Vector2f(-width/2, -height/2)),
     animOffsetMenu(0, 0),
     animOffsetConfig(-(width / 2 + vM.getSize().x), 0),
     slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
 {
     vM.show(0.5);
+    Music.play();
 }
 
-GuiController::~GuiController()
+int GuiController::launchGame(sf::RenderWindow & w, float now)
 {
-    delete inBetween;
-}
-
-void GuiController::launchGame(sf::RenderWindow & w, float now)
-{
-    gControl.start(now);
-    gControl.run(w);
     lGame = false;
     reappear = true;
+
+    gControl.start(now);
+
+    return gControl.run(w);
 }
 
 void GuiController::draw(sf::RenderTarget & r, float now)
 {
     gControl.draw(r, now);
-    //r.Draw(inBetweenSprite);
     vM.setOffset(animOffsetMenu);
     vC.setOffset(animOffsetConfig);
     vM.draw(r, now);
@@ -49,13 +47,19 @@ int GuiController::tick(sf::RenderWindow & w, float now)
     }
 
     if(lGame && vM.appearedOrHidden(now))
-        launchGame(w,now);
+    {
+        if(launchGame(w,now) == 1)
+            return -1;
+
+	EventHandler::auto_resize(w);
+    }
 
     if(reappear)
     {
         if(disableOldTickEvent >= 1)
         {
-            vM.show(now);
+            gControl.stop(now);
+            vM.show(now + 0.4);
             reappear = false;
             disableOldTickEvent = 0;
         }
@@ -96,12 +100,21 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
     if(!slideAnim.running(now))
     {
         const Button *b;
+        ArrowType t = NONE;
         sf::Vector2f vMousePos = w.ConvertCoords(e.X, e.Y);
-        //std::cout << vMousePos.x  << " - " << animOffsetMenu.x << std::endl;
         if(screen == 1)
-            b = vM.isInButton(sf::Vector2f(vMousePos.x, vMousePos.y));
+            b = vM.isInButton(vMousePos);
         else
-            b = vC.isInButton(sf::Vector2f(vMousePos.x, vMousePos.y));
+        {
+            b = vC.isInButton(vMousePos);
+            t = vC.themesSelect.contains(vMousePos);
+            if(t != NONE)
+            {
+                const std::string &s = vC.themesSelect.onClick(now, t);
+
+                reloadResources("themes/" + s);
+            }
+        }
 
         if(b != NULL)
         {
@@ -138,7 +151,6 @@ int GuiController::mouse_button_released(sf::RenderWindow &w, sf::Event::MouseBu
 int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
 {
     // éviter l'auto-resize chelou
-    //getHandlerView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
     EventHandler::resized(w,e,now);
 
     if(slideAnim.end_value() == width / 2 + vM.getSize().x)
@@ -151,11 +163,16 @@ int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float
     height = w.GetHeight();
     animOffsetConfig = sf::Vector2f(-(width / 2 + vM.getSize().x), 0);
 
-    delete inBetween;
-    inBetween = new sf::Image(w.GetWidth(), w.GetHeight(), sf::Color(0, 0, 0, 180));
-    inBetweenSprite.SetImage(*inBetween);
-    inBetweenSprite.SetPosition(-width/2, -height/2);
-
     need_refresh();
     return 0;
+}
+
+void GuiController::reloadResources(const std::string &basePath)
+{
+    Music.stop();
+
+    Pool.load(basePath);
+
+    Music.play();
+
 }

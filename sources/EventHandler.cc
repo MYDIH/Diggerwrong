@@ -17,6 +17,7 @@ EventHandler::~EventHandler()
 
 #define MAY_INTERRUPT( x ) if ( (up = (x)) ) goto interrupt
 
+
 int EventHandler::run(sf::RenderWindow & w)
 {
    const sf::View & orig  = w.GetView();
@@ -140,12 +141,15 @@ int EventHandler::text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, flo
    return 0;
 }
 
-int EventHandler::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
+void EventHandler::auto_resize(sf::RenderWindow & w)
 {
    // éviter l'auto-resize chelou
    w.GetDefaultView().SetHalfSize(w.GetWidth()/2.f, w.GetHeight()/2.f);
-
    need_refresh();
+}
+int EventHandler::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now)
+{
+   auto_resize(w);
    return 0;
 }
 

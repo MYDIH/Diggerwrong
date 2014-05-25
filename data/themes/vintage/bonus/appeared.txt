@@ -1,0 +1,5 @@
+image=appeared.png
+frames=15
+loop=true
+fps=25
+colorR=false

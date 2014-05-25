@@ -15,7 +15,14 @@ void ResourcesPool::load(const std::string & basepath)
    const std::string bp = basepath + '/';
    for (Resource* r : Pool)
    {
-      r -> load(bp);
+      try
+      {
+	 r -> load(bp);
+      }
+      catch (const std::string &e )
+      {
+	 std::cout << "\n_______________\nERREUR concernant le fichier resource:\n" << e << "\n" << std::endl;
+      }
    }
 }
 

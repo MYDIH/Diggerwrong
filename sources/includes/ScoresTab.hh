@@ -29,6 +29,8 @@ public:
 
     void setOffset(const sf::Vector2f &o);
 
+    void parseHighScoresFile();
+
     void draw(sf::RenderTarget &w, float now);
 
 private:

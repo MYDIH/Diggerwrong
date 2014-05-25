@@ -17,3 +17,4 @@ const std::string CHARS[][8] = {{" ☠ ", "☾", "☽", " ☉ ", "+", "+", "|", 
 
 const float SQUARE_HEIGHT = 44;
 const float SQUARE_WIDTH  = SQUARE_HEIGHT;
+const int OPACITY_IN_BETWEEN = 220;

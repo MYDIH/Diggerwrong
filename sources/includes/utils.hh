@@ -18,6 +18,7 @@ void splitStdString(const std::string &dataToSplit, char delim, std::vector<std:
 bool parseFile(std::map<std::string, std::string> &result, const std::string &path);
 bool writeFile(const std::map<std::string, std::string> &content, const std::string &path);
 void setColorMask(sf::Image &image, const sf::Color &color, const sf::Color &replace);
+void loadResources(const std::string &basePath);
 
 template<typename T>
 std::string typeToString(T x)

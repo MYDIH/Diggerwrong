@@ -1,0 +1,5 @@
+image=appearing.png
+frames=9
+loop=false
+fps=30
+colorR=false
