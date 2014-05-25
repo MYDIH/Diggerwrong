@@ -5,34 +5,39 @@
 GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
     width(r.GetWidth()),
     height(r.GetHeight()),
-    inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, 100))),
+    inBetween(new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, OPACITY_IN_BETWEEN))),
     inBetweenSprite(*inBetween, sf::Vector2f(-width/2, -height/2)),
     animOffsetMenu(0, 0),
     animOffsetConfig(-(width / 2 + vM.getSize().x), 0),
-    slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
+    slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>),
+    opacityInBetweenAnim(OPACITY_IN_BETWEEN, 0, 0.4)
 {
     gControl.Modules = &modules;
     gControl.First   = &firstmod;
     gControl.Default = &defaultmod;
 
     gControl.new_game(20, 11, 20, 42, 0, 2, 0);
+
+    opacityInBetweenAnim.start(-1);
     vM.show(0.5);
 }
 
 GuiController::~GuiController()
-{
-    delete inBetween;
-}
+{ delete inBetween; }
 
 void GuiController::launchGame(sf::RenderWindow & w)
 {
     gControl.run(w);
-    lGame = false;
     reappear = true;
 }
 
 void GuiController::draw(sf::RenderTarget & r, float now)
 {
+    delete inBetween;
+    inBetween = new sf::Image(r.GetWidth(), r.GetHeight(), sf::Color(0, 0, 0, opacityInBetweenAnim.value(now)));
+    inBetweenSprite.SetImage(*inBetween);
+    inBetweenSprite.SetPosition(-width/2, -height/2);
+
     gControl.draw(r, now);
     r.Draw(inBetweenSprite);
     vM.setOffset(animOffsetMenu);
@@ -50,14 +55,31 @@ int GuiController::tick(sf::RenderWindow & w, float now)
     }
 
     if(lGame && vM.appearedOrHidden(now))
-        launchGame(w);
+    {
+        if(!animInBetweenLaunched)
+        {
+            if(opacityInBetweenAnim.start_value() != OPACITY_IN_BETWEEN)
+                opacityInBetweenAnim.swap();
+            opacityInBetweenAnim.start(now);
+            animInBetweenLaunched = true;
+        }
+        if(!opacityInBetweenAnim.running(now))
+        {
+            launchGame(w);
+            lGame = false;
+        }
+    }
 
     if(reappear)
     {
         if(disableOldTickEvent >= 1)
         {
-            vM.show(now);
+            if(opacityInBetweenAnim.start_value() != 0)
+                opacityInBetweenAnim.swap();
+            opacityInBetweenAnim.start(now);
+            vM.show(now + 0.4);
             reappear = false;
+            animInBetweenLaunched = false;
             disableOldTickEvent = 0;
         }
         else
@@ -153,7 +175,7 @@ int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float
     animOffsetConfig = sf::Vector2f(-(width / 2 + vM.getSize().x), 0);
 
     delete inBetween;
-    inBetween = new sf::Image(w.GetWidth(), w.GetHeight(), sf::Color(0, 0, 0, 180));
+    inBetween = new sf::Image(w.GetWidth(), w.GetHeight(), sf::Color(0, 0, 0, OPACITY_IN_BETWEEN));
     inBetweenSprite.SetImage(*inBetween);
     inBetweenSprite.SetPosition(-width/2, -height/2);
 

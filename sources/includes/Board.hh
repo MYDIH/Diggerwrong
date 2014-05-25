@@ -120,7 +120,7 @@ private:
    // uniquement pour la "compatibilité" avec le mode texte
    Square* newRandomSquare(double difficulty, unsigned longestside);
 
-   bool check_recur(Board b, int dx, int dy, bool play);
+   bool check_recur(Board b, int dx, int dy, std::deque<std::pair<int,int>> * record = nullptr) const;
 
 public:
    Board();
@@ -129,7 +129,8 @@ public:
 
    const Board & operator=(const Board &m);
 
-   bool check(bool play);
+   void resolve();
+   bool check(std::deque<std::pair<int,int>> * record = nullptr) const;
    void generate( unsigned width, unsigned height, unsigned target, float timeLimit
 		  ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod );
 

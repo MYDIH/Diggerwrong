@@ -6,6 +6,7 @@
 #include "MenuView.hh"
 #include "ConfigView.hh"
 #include "squares.hh"
+#include "consts.hh"
 
 #include <list>
 #include <vector>
@@ -27,6 +28,7 @@ public:
 private:
     MenuView vM;
     ConfigView vC;
+    bool animInBetweenLaunched = false;
     bool lGame = false;
     bool reappear = false;
     int screen = 1;
@@ -40,4 +42,5 @@ private:
     sf::Vector2f animOffsetMenu;
     sf::Vector2f animOffsetConfig;
     AnimatedValue slideAnim;
+    AnimatedValue opacityInBetweenAnim;
 };

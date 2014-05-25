@@ -9,7 +9,6 @@
 #include <sstream>
 #include <iostream> // debug
 #include <cstdlib>
-#include <ctime>
 #include <cmath>
 
 
@@ -133,14 +132,13 @@ const Board & Board::operator=(const Board &m)
    return *this;
 }
 
-bool Board::check_recur(Board b, int dx, int dy, bool play)
+bool Board::check_recur(Board b, int dx, int dy, std::deque<std::pair<int,int>> * record) const
 {
    switch (b.move(dx,dy))
    {
       case WON:
-	 if (play)
-	    move(dx,dy);
-
+	 if (record)
+	    record -> push_front({dx,dy});
 	 return true;
 	 
       case LOST:
@@ -149,55 +147,51 @@ bool Board::check_recur(Board b, int dx, int dy, bool play)
       default:;
    }
 
-   int x=0,y=0;
-   if ( check_recur(b, -1, -1,false) )
-   {x=-1; y=-1;}
-   else if ( check_recur(b, -1, 0,false) )
-   {x=-1; y=0;}
-   else if ( check_recur(b, -1, 1,false) )
-   {x=-1; y=1;}
-   else if ( check_recur(b, 0, -1,false) )
-   {x=0; y=-1;}
-		      // 0 , 0
-   else if ( check_recur(b, 0,  1,false) )
-   {x=0; y=1;}
-   else if ( check_recur(b, 1, -1,false) )
-   {x=1; y=-1;}
-   else if ( check_recur(b, 1,  0,false) )
-   {x=1; y=0;}
-   else if ( check_recur(b, 1,  1,false) )
-   {x=1; y=1;}
 
-   if (play and not (x==0 and y==0))
-   {
-      move(dx,dy);
-      check_recur(b, x, y, true);
-   }
+   const bool win ( check_recur(b, -1, -1,record)
+		    or check_recur(b, -1, 0,record)
+		    or check_recur(b, -1, 1,record)
+		    or check_recur(b, 0, -1,record)
+		    // 0 , 0
+		    or check_recur(b, 0,  1,record)
+		    or check_recur(b, 1, -1,record)
+		    or check_recur(b, 1,  0,record)
+		    or check_recur(b, 1,  1,record) );
 
-   return not (x==0 and y==0);
+   if (win and record)
+      record -> push_front({dx,dy});
+      
+   return win;
 }
 
-bool Board::check(bool play)
+bool Board::check(std::deque<std::pair<int,int>> * record) const
 {
-   return ( check_recur(*this, -1, -1,play)
-	    or check_recur(*this, -1, 0,play)
-	    or check_recur(*this, -1, 1,play)
-	    or check_recur(*this, 0, -1,play)
+   return ( check_recur(*this, -1, -1,record)
+	    or check_recur(*this, -1, 0,record)
+	    or check_recur(*this, -1, 1,record)
+	    or check_recur(*this, 0, -1,record)
 	    // 0 , 0
-	    or check_recur(*this, 0,  1,play)
-	    or check_recur(*this, 1, -1,play)
-	    or check_recur(*this, 1,  0,play)
-	    or check_recur(*this, 1,  1,play) );
+	    or check_recur(*this, 0,  1,record)
+	    or check_recur(*this, 1, -1,record)
+	    or check_recur(*this, 1,  0,record)
+	    or check_recur(*this, 1,  1,record) );
 }
 
+void Board::resolve()
+{
+   std::deque<std::pair<int,int>> record;
+   check(&record);
+
+   for (const auto & m : record)
+      move(m.first, m.second);
+ 
+}
 
 
 void Board::generate( unsigned width, unsigned height, unsigned target, float timelimit
 		      ,double difficulty, const std::vector<module> & modules, const module & firstmod, const module & defaultmod )
 {
    releaseSquares();
-   srand(time(NULL));
-   
   
    Digger  = {width/2, height/2};
    Target  = target;
@@ -214,15 +208,16 @@ void Board::generate( unsigned width, unsigned height, unsigned target, float ti
 
    Squares.resize(width);
 
-
+   unsigned n = 0;
    do
    {
+      n++;
 
-   // double total = 0;
-   // for (const module & mod : modules)
-   // {
-   //    total += pow(mod.proba, (mod.good)? goodpower : badpower);
-   // }
+      // double total = 0;
+      // for (const module & mod : modules)
+      // {
+      //    total += 
+      // }
 
 
    for (auto & column : Squares)
@@ -259,7 +254,9 @@ void Board::generate( unsigned width, unsigned height, unsigned target, float ti
    replaceSquare(Digger.x, Digger.y, tmp);
    tmp -> release();
 
-   } while( not check(false) );
+   } while( not check() );
+   
+   std::cout << "\n____________________\n*** GENERATED *** within  " << n << "  attemps\n" << "difficulty  " << difficulty << "\n\n";
 }
 
 

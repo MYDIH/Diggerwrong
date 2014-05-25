@@ -2,4 +2,15 @@ image=cadre.png
 frames=9
 loop=false
 fps=30
-colorR=false
+
+colorR=true
+
+_R=255
+_G=255
+_B=255
+_A=255
+
+R=100
+G=161
+B=3
+A=255

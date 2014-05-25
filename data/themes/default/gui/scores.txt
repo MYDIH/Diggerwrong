@@ -3,7 +3,7 @@ frames=11
 loop=false
 fps=30
 
-colorR=true
+colorR=false
 
 _R=255
 _G=255

@@ -31,6 +31,7 @@ private:
    unsigned Lifes;
    unsigned Score;
 
+   std::string Player_name;
 
    bool Waiting;
    bool How_to;
@@ -65,6 +66,8 @@ public:
    const module * First;
    const module * Default;
 
+
+
    GameController();
 
    point board_coords(float x, float y);
@@ -81,6 +84,9 @@ public:
    void draw(sf::RenderTarget & r, float now) override;
    int tick(sf::RenderWindow & w, float now)  override;
    int mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now) override;
+
+   int text_entered(sf::RenderWindow & w, sf::Event::TextEvent e, float now) override;
+
    //int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now) override;
-   int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now) override; // debug
+   //int key_released(sf::RenderWindow & w, sf::Event::KeyEvent & e, float now) override; // debug
 };
