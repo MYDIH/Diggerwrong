@@ -170,7 +170,6 @@ void SoundResource::play_new()
 {
    if (not Is_long)
    {
-      std::cout << "{playnew}" << std::endl;
       Short_sounds[Short_pos].Play();
       Short_pos = (Short_pos+1) % SHORT_COUNT;
    }

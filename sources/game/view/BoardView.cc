@@ -138,7 +138,6 @@ void BoardView::tick(float now)
    while ( (c = front()) and not DiggerX.running(now) and not DiggerY.running(now) )
       // si il y a un changement à traité et qu'aucun mouvement n'est en cours
    {
-//      std::cout << "> a change\n";
 
       if ( c -> type == bc::MOVE )
       {
@@ -150,17 +149,14 @@ void BoardView::tick(float now)
 
 	 Reached = c -> infos.value.total;
 
-	 std::cout << "[move catched] REACHED=" << Reached << "\tmyTARGET=" << Target << std::endl;
       }
       else switch ( c -> type )
 	   {
 	      case bc::REPLACE: 
-		 std::cout << "[replace catched]\n";
 		 replace(c -> location.x, c -> location.y, c -> infos.square, now);
 		 break;
 
 	      case bc::LOST:
-		 std::cout << "[lost catched]\n";
 		 Explosion.start(now);
 		 Digger.stop(now);
 		 Fart.play_new();
@@ -188,23 +184,15 @@ void BoardView::tick(float now)
       pop();
    }
 
-//   std::cout << "changes finito\n";
-//   std::cout << "H: " << Squares.size() << "  W: " << Squares[0].size() << "\n";
-
 
 
    for (auto & col : Squares)
       for (auto & pair : col)
       {
-//	 std::cout << "-- loop\n";
-	 
-//	 std::cout << "first: " << pair.first << "   second:" << pair.second << "\n";
-
 	 if (pair.first)  pair.first  -> tick(now);
 	 if (pair.second) pair.second -> tick(now);
       }
 
-//   std::cout << "tick finito\n";
 }
 
 void BoardView::replace(unsigned x, unsigned y, Square * newone, float now)
@@ -329,8 +317,6 @@ void BoardView::draw_squares(sf::RenderTarget & drawer, float now, bool above) c
 	 }
 
 	 view.Move(0, -SQUARE_HEIGHT);
-//	 std::cout << "draw X: " << x << "    Y: " << y << "\n";
-//		   << "view X: " << view.X();
       }
       
       view.Move(-SQUARE_WIDTH, Squares[0].size()*SQUARE_HEIGHT);

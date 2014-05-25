@@ -76,7 +76,6 @@ void GameController::new_game(unsigned width, unsigned height, unsigned target, 
    Level.generate( Width,Height,Target,Timelimit
 		   ,inv(Rank), Modules, First, Default );
    
-   std::cout << "rank: " << Rank << "  inv: " << inv(Rank) << std::endl;
    
    *(Try.second) = Level;
    View.second->observe( Try.second, 0 );
@@ -385,12 +384,10 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
       switch (State)
       {
 	 case GAME_OVER:
-	    std::cout << "\n>> GAME OVER, je rend la mains." << std::endl;
-	    //return 5;
+
 	    break;
 
 	 case TRY_AGAIN:
-	    std::cout << "\n>> go TRY AGAIN" << std::endl;
 	    Lifes--;
 	    
 	    std::swap(Try.first,Try.second);
@@ -408,7 +405,6 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
 	    break;
 
 	 case WON:
-	    std::cout << "\n>> go NEXT" << std::endl;
 	    Rank++;
 	    Score += Try.second->getScore();
 	    Score += Try.second->getBonusScore();
@@ -451,13 +447,9 @@ int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::Mouse
    const int dx = -(digger.x - square.x);
    const int dy = -(digger.y - square.y);
    
-   std::cout << "\nclick at: " << square.x << "," << square.y << " | " << dx << "," << dy <<  "  (" << now << ")";
-   std::cout.flush();
 
    if ( dx >= -1 and dx <= 1 and dy >= -1 and dy <= 1 )
    {
-      std::cout << "     [valid]";
-      std::cout.flush();
       switch ( Try.second->move(dx,dy) )
       {
 	 case GameState::LOST:
