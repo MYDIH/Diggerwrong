@@ -32,17 +32,17 @@ Pour simplifier l'écriture du programme, nous avons choisit de suivre un schém
 Cela à permis de cloisonner des entités distinctes : le jeu en tant que tel, et sa représentation visuelle (ainsi que la gestion des évenements).
 
 La vue est assez pénible à dévelloper avec de nombreuses contraintes dont notemment un fonctionnement non-bloquant pour ne pas gêler l'interface, une gestion fine du temps pour les animations...
-Il étais donc important de ne pas polluer le code métier avec ces contraintes, et inversement. Cela à également permis d'ajouter très facilement les fonctionalités de vérification de faisabilité de niveau et de "How-to".
+Il étais donc important de ne pas polluer le code métier avec ces contraintes, et inversement. Cela à également permis d'ajouter très facilement les fonctionalités de résolveur et de "How-to".
 
 # j'ai surtout parlé du jeu ici, je sait pas trop quoi dire pour le menu, peut être juste :
-
 De même, dans une moindre mesure, pour le menu.
+# ^^
 
 *** Menu
 blabla
 
 *** Jeu
-Cette section présente les principales classes de la partie Model, Vue et Controller.
+Cette section présente les principales classes de la partie Model, Vue et Controller du jeu.
 
 **** Model : =Board= et =Square=
 La classe =Board= représente le plateau : une matrice d'instances de =Square= (les cases). La méthode =Board::move()= permet de
@@ -57,15 +57,14 @@ Pour lancer un déplacement, =Board::move()= appel alors simplement la méthode 
 La classe =Square= fournit une interface pour =Square::dig()= (ainsi qu'une méthode de clonage et un compteur de références pour faciliter
 l'allocation/destruction).
 
-=SquareView= fournit une interface simple pour l'affichage d'une case.
-
-Il est ainsi facile d'ajouter un nouveau type de case avec une grande liberté dans l'action de celle-ci tant sur le jeu que sur le rendu graphique : il suffit d'une nouvelle classe héritant de =Square= et de =SquareView=, surchargeant les méthode adéquates.
 
 
 **** Vue : =BoardView= et =Board::Observer=
 La classe =BoardView= observe une instance de =Board= et en affiche une représentation. =Board= luis notify chaque changement ( =Board::notify()= ). Ceci implémenté par une file de changements ( =Board::change= ).
 
-=BoardView= ne fait qu'utiliser l'interface =SquareView= de chaque case du plateau. Chaque case se dessines elle même.
+=BoardView= ne fait qu'utiliser l'interface =SquareView= de chaque case du plateau. Les cases se dessinent elles mêmes.
+
+Il est ainsi facile d'ajouter un nouveau type de case avec une grande liberté dans l'action de celle-ci tant sur le jeu que sur le rendu graphique : il suffit d'une nouvelle classe héritant de =Square= et de =SquareView=, surchargeant les méthode adéquates.
 
 **** Controller : =GameController=
 La classe =EventHandler= permet de simplifier et de factoriser la gestion des évènements ; elle implémente une boucle principale ( méthode =EventHandler::run()= ) traitant les évènements et appelant les méthodes (virtuelles) correspondantes. Cela permet de définir plusieurs contrôleurs ( chacun héritant de =EventHandler= ), pouvant se "passer la main" entre eux.
@@ -75,11 +74,30 @@ Nous avons ici 2 controlleurs : =GuiController= contrôle le menu d'acceuil, les
 
 
 * Quelques algorithmes
+** Résolveur & "How-to"
+/Voir en annexe 2./
+
+Cet algorithme bien que simple permet de montrer différents aspects intérresants de notre architecture.
 
 
-* Présentation du produit
-** Menu
-** Jeu
-** Résumé des fonctionalités
+
+* Résumé des fonctionalités
+En plus de toutes les fonctionalités obligatoires et supplémentaires, nous avons ajoutés les fonctionalités bonus suivantes :
+- générateur de niveau
+- résolveur de niveau (vérification et "How-to")
+- nombre indéfini de niveau
+- changement de charte graphique (themes)
+
 
 * Conclusion
+* Remerciments à...
+- [[http://opengameart.org/content/rectangle-gems-etc-16px][qubodup]]        :: sprites des cases
+- [[http://opengameart.org/content/more-explosions][StumpyStrust]]   :: animation de l'explosion
+- [[https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th][musiikkisirkus]] :: remix de l'hymne de l'UE (fond sonore)
+- [[http://www.freesound.org/people/Greenhourglass/sounds/159375/][Greenhourglass]] :: bruitages
+- [[http://www.freesound.org/people/Huminaatio/sounds/221909/][Huminaatio]]     :: bruitages
+- [[http://www.freesound.org/people/fins/sounds/171575/][fins]]           :: bruitages
+- [[http://www.freesound.org/people/jivatma07/sounds/173858/][jivatma07]]      :: bruitages
+- [[http://www.freesound.org/people/jbum/sounds/32090/][jbum]]           :: bruitages
+
+
