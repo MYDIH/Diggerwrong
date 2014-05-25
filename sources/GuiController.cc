@@ -15,13 +15,12 @@ GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &mod
 
 int GuiController::launchGame(sf::RenderWindow & w, float now)
 {
-    gControl.start(now);
-    if(gControl.run(w) == 1)
-        return -1;
-
     lGame = false;
     reappear = true;
-    return 0;
+
+    gControl.start(now);
+
+    return gControl.run(w);
 }
 
 void GuiController::draw(sf::RenderTarget & r, float now)
@@ -45,7 +44,7 @@ int GuiController::tick(sf::RenderWindow & w, float now)
 
     if(lGame && vM.appearedOrHidden(now))
     {
-        if(launchGame(w,now) != 0)
+        if(launchGame(w,now) == 1)
             return -1;
     }
 
