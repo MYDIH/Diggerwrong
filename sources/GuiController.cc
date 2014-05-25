@@ -48,7 +48,7 @@ int GuiController::tick(sf::RenderWindow & w, float now)
 
     if(lGame && vM.appearedOrHidden(now))
     {
-        if(launchGame(w,now) == 1)
+        if(launchGame(w,now) != 1)
             return -1;
 
 	EventHandler::auto_resize(w);

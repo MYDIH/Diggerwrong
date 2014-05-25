@@ -10,7 +10,7 @@ Plutôt que de recopier les objectifs de ce projet nous vous invitons à consult
 
 /Une partie de ce rapport est issue du rapport "préliminaire" de conception. L'annexe 1 en est directement issue et ne reflête donc pas l'état final du produit./
 
-Boone lecture !
+Bonne lecture !
 
 * Architecture
 ** Modularité
@@ -22,7 +22,7 @@ et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement e
 classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
 nouvelles cases.
 
-Le diagramme de classes en /annexe 1/ issue du rapport de conception présente essentiellement ceci. Le produit finale est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
+Le diagramme de classes en /annexe 1/ issue du rapport de conception présente essentiellement ceci. Le produit final est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
 
 Le fonctionnement de cette architecture sera présenté au fil de ce document.
 
@@ -33,12 +33,21 @@ Cela à permis de cloisonner des entités distinctes : le jeu en tant que tel, e
 La vue est assez pénible à dévelloper avec de nombreuses contraintes dont notemment un fonctionnement non-bloquant pour ne pas gêler l'interface, une gestion fine du temps pour les animations...
 Il étais donc important de ne pas polluer le code métier avec ces contraintes, et inversement. Cela à également permis d'ajouter très facilement les fonctionalités de résolveur et de "How-to".
 
-# j'ai surtout parlé du jeu ici, je sait pas trop quoi dire pour le menu, peut être juste :
-De même, dans une moindre mesure, pour le menu.
-# ^^
+Grâce a cette "non-pollution", le changement de Vue (Interface) peut être opéré très facilement sans toucher au code métier. C'est un des grands avantages du MVC. En ne changeant que les contrôleurs et la vue, il est possible de porter le jeu sur d'autres supports. Un avant goût de ce concept est dévelloppé dans nôtre code avec la possibilité de lancer le jeu en mode console.
 
 *** Menu
-# pour toi
+Le Menu fait partie de la vue. Il permet a l'utilisateur de configurer le jeu, de lancer la partie et de consulter le tableau des meilleurs scores. Il est composé d'une hiérarchie de classes représentant des écrans, d'un =GuiController= et de deux classes représentant des boutons.
+
+**** Les écrans : =GuiViews=, =MenuView= et =ConfigView=
+La plus grosse partie du menu est gérée par ces trois classes. =GuiViews= est une classe abstraite qui s'occuppe de gérer le placement général de l'écran. Ses deux classes filles =MenuView= et =ConfigView=, représentent respectivement le menu principal et la page de configuration. Elle s'occupent de créer les boutons et autres contrôles (notamment le tableau des =ScoresTab= qui est autonome), de les placer par rapport a sa propre position et de relayer les informations transmises par les bouttons vers le Controller.
+Pour prendre un exemple concret du comportement de ces classes, les vues de la SFML (=sf::View=) sont très similaires. Cependant, nous avons utilisé cette hiérarchie comme une sorte de conteneur à contrôles comme l'on peut en trouver dans des Frameworks graphiques tels que Qt ou wx.
+
+**** Les Contrôles : =Button, =ScoresTab= et =SwitchButton=
+les contrôles représentent les objets en intéraction directe avec l'utilisateur. Chaques contôles sont autonomes. Ils disposent tous d'une fonction =draw()= qui prends en paramètre l'endroit où dessiner et le temps courant. La classe =Button= va simuler un bouton physique banal. Il dispose de fonctions d'affichage et d'une fonction permettant de faire apparaître a l'écran un stimuli visuel indiquant que l'utilisateur peut cliquer a cet endroit.
+Le ScoresTab quand à lui ne dispose pas de fonction permettant une intéraction avec l'utilisateur. Il est autonome, il commence par lire le contenu d'un fichier, le tri a l'aide d'une =std::list= et affiche les scores dans l'ordre. Le =SwitchButton= de choisir dans une liste, qu'il lit lui même a partir d'un fichier, la valeur que veut donner l'utilisateur à une des possibilitées de configurations. Il est utilisé dans le choix des thèmes.
+
+**** Le =GuiContoller=
+c'est cette classe qui va s'occuper de gérer la totalité des évennements que l'utilisateur peut déclencher. Il s'occupe d'acceder aux bons champs de la =MenuView= et de la =ConfigView= afin que les contrôles puissent agir en conséquence. Il s'occupe aussi de passer la main au =GameController=. Il hérite de =EventHandler= ce qui lui confère une horloge unifiée qui permet a chaque tours de boucle de dispacher les évennements aux bonnes fonctions. Il fournit aussi la totalité des valeurs de temps indispensables au bon déroulement des différentes animations. Il gère la totalité des intéractions et c'est de lui qu'émane tous les ordres reçu par les contrôles.
 
 *** Jeu
 Cette section présente les principales classes de la partie Model, Vue et Controller du jeu.
@@ -83,7 +92,7 @@ En plus de toutes les fonctionalités obligatoires et supplémentaires, nous avo
 - résolveur de niveau (vérification et "How-to")
 - nombre indéfini de niveau
 - changement de charte graphique (themes)
-
+ 
 * Conclusion
 Nous avons pris beaucoup de plaisir à réaliser ce projet et y avons
 apporter un grand soin.
