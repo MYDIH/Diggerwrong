@@ -24,6 +24,8 @@ void SwitchButton::parseThemesNames()
 
     parseFile(parseRes, "themes/themes.txt");
 
+    labels.clear();
+
     for(const auto &s : parseRes)
         labels.push_back(s.second);
 }
@@ -70,8 +72,12 @@ const std::string & SwitchButton::onClick(float at, ArrowType t)
     {
         if(current == 0)
             disableLArrow(at);
-        if(current == labels.size() - 1)
+        if(current == labels.size() - 1).
+        {
+            if(disabled == LEFT)
+                enableLArrow(at);
             disableRArrow(at);
+        }
     }
     else
     {
