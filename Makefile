@@ -3,15 +3,15 @@ CXX      = g++
 
 CXXFLAGS = -Wall -iquote sources/includes -std=c++11 -I /usr/include/sfml-1.6
 
-LDLIBS =  -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lboost_program_options
-#LDLIBS =  -lsfml-audio-1.6 -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6 -lboost_program_options
+#LDLIBS =  -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lboost_program_options
+LDLIBS =  -lsfml-audio-1.6 -lsfml-graphics-1.6 -lsfml-window-1.6 -lsfml-system-1.6 -lboost_program_options
 
 
 # constantes
 buildir = Builds
 cache   = $(buildir)/.cache
 bin     = diggewrong
-rev     = $(shell git rev-list --count HEAD || echo '?')
+rev     := $(shell git rev-list --count HEAD || echo '?')
 
 # pour utiliser le globbing
 SHELL    = /bin/bash -O extglob -O globstar -c
@@ -60,9 +60,9 @@ $(buildir)/$(bin).tar.bz2: $(buildir)/release/$(bin)
 $(buildir)/$(bin)-src.tar.bz2:
 	mkdir -p $(@D)
 	-rm -r                   /tmp/$(bin).makebuild/$(bin)-src/
-	mkdir -p                 /tmp/$(bin).makebuild/$(bin)-src/data/themes
+	mkdir -p                 /tmp/$(bin).makebuild/$(bin)-src/data/
 	cp -r !($(buildir)|data) /tmp/$(bin).makebuild/$(bin)-src/
-	cp -r data/themes        /tmp/$(bin).makebuild/$(bin)-src/data/themes
+	cp -r data/themes        /tmp/$(bin).makebuild/$(bin)-src/data/
 	cd /tmp/$(bin).makebuild/ && tar -caf $(bin)-src.tar.bz2 $(bin)-src
 	cp /tmp/$(bin).makebuild/$(bin)-src.tar.bz2 $@
 

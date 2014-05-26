@@ -22,6 +22,7 @@ public:
    //sf::View& getHandlerView();
    void need_refresh();
 
+   void auto_resize(sf::RenderWindow & w);
 
    /* Evenements */
    virtual void draw(sf::RenderTarget & r, float now);

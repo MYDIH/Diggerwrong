@@ -1,0 +1,5 @@
+image=digger.png
+frames=24
+fps=30
+loop=true
+colorR=false

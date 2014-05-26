@@ -1,0 +1,5 @@
+image=disappearing.png
+frames=10
+loop=false
+fps=30
+colorR=false

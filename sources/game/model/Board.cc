@@ -264,7 +264,6 @@ void Board::generate( unsigned width, unsigned height, unsigned target, float ti
 	 for (const module & mod : modules)
 	 {
 	    p += mod.bestp + (mod.worstp-mod.bestp) * difficulty;
-	    std::cout << "\n:: proba: " << mod.bestp + (mod.worstp-mod.bestp) * difficulty << std::endl;
 
 	    if (r <= p)
 	    {
@@ -287,7 +286,7 @@ void Board::generate( unsigned width, unsigned height, unsigned target, float ti
 
    } while( not check() );
    
-   std::cout << "\n____________________\n*** GENERATED *** within  " << n << "  attemps\n" << "difficulty  " << difficulty << "\n\n";
+   std::cout << "\n____________________\n*** Board GENERATED *** within  " << n << "  attemps\n" << "difficulty  " << difficulty << "\n\n";
 }
 
 
@@ -334,7 +333,6 @@ float Board::elapsed() const
 }
 float Board::progress() const
 {
-   //std::cout << "[--] " << elapsed() << " / " << Timelimit << " = " << elapsed()/Timelimit << std::endl;
    return MIN( elapsed() / Timelimit,  1);
 }
 
@@ -368,7 +366,6 @@ GameState Board::move(int dx, int dy)
    }
 
 
-//   std::cout << "-----> Board::move  READCHED=" << Reached << "\tTARGET=" << Target << std::endl;
    return State;
 }
 

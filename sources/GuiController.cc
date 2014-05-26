@@ -2,7 +2,10 @@
 
 #include <iostream>
 
-GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod) :
+SoundResource GuiController::Music("", "music.txt");
+
+GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod, ResourcesPool & pool) :
+    Pool(pool),
     width(r.GetWidth()),
     height(r.GetHeight()),
     gControl(modules,firstmod,defaultmod),
@@ -11,6 +14,7 @@ GuiController::GuiController(const sf::RenderTarget &r, std::vector<module> &mod
     slideAnim(width / 2 + vM.getSize().x, 0, 0.8, EASE_IN_OUT<10>)
 {
     vM.show(0.5);
+    Music.play();
 }
 
 int GuiController::launchGame(sf::RenderWindow & w, float now)
@@ -43,8 +47,12 @@ int GuiController::tick(sf::RenderWindow & w, float now)
     }
 
     if(lGame && vM.appearedOrHidden(now))
+    {
         if(launchGame(w,now) != 1)
             return -1;
+
+	EventHandler::auto_resize(w);
+    }
 
     if(reappear)
     {
@@ -161,53 +169,10 @@ int GuiController::resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float
 
 void GuiController::reloadResources(const std::string &basePath)
 {
-    ResourcesPool p;
-    Normal::init( p );
-    Bonus::init( p );
-    Bomb::init( p );
-    Digged::init( p );
+    Music.stop();
 
-    p.add(&GuiViews::viewCorner);
-    p.add(&GuiViews::title);
-    p.add(&Button::corner);
-    p.add(&Button::back);
-    p.add(&Button::foreg);
-    p.add(&Button::labelFont);
-    p.add(&SwitchButton::arrowsFont);
-    p.add(&SwitchButton::labelsFont);
-    p.add(&ScoresTab::namesCol);
-    p.add(&ScoresTab::contenuCol);
-    p.add(&ScoresTab::tabLines);
+    Pool.load(basePath);
 
-    p.add(&BoardView::DiggerResource);
-    p.add(&BoardView::ExplosionResource);
+    Music.play();
 
-    p.add(&BoardView::DeadResource);
-    p.add(&BoardView::Score_font);
-    p.add(&BoardView::Score_value_font);
-    p.add(&BoardView::Score_sound);
-    p.add(&BoardView::Bonus_sound);
-    p.add(&BoardView::Life_sound);
-    p.add(&BoardView::Fart);
-
-    p.add(&GameController::Big_font);
-    p.add(&GameController::Youwin);
-    p.add(&GameController::Tryagain);
-    p.add(&GameController::Levelup);
-    p.add(&GameController::Gameover);
-    p.add(&GameController::Star1);
-    p.add(&GameController::Star2);
-
-    p.add(&BoardView::DeadResource);
-
-
-    try
-    {
-        p.load(basePath);
-    }
-    catch (const std::string & f)
-    {
-        std::cout << "\n!! ERREUR concernant le fichier:\n" << f << "\n\n";
-        reloadResources("themes/default");
-    }
 }

@@ -1,3 +1,4 @@
-1=Default
-2=Alt
-3=exemple1
+1=default
+2=vintage
+3=default
+

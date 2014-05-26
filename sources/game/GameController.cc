@@ -58,28 +58,27 @@ void GameController::new_game(unsigned width, unsigned height, unsigned target, 
                               ,unsigned last_rank, unsigned lifes, unsigned score )
 
 {
-    Width  = width;
-    Height = height;
-    Target = target;
-    Timelimit = timelimit;
+   Width  = width;
+   Height = height;
+   Target = target;
+   Timelimit = timelimit;
 
-    Rank   = last_rank;
-    Lifes  = lifes;
-    Score  = score;
+   Rank   = last_rank;
+   Lifes  = lifes;
+   Score  = score;
 
-    Waiting = false;
-    How_to  = false;
-    How_to_mode = false;
-    Big_flash.start(FLT_MAX);
-    State = CONTINUE;
-
-    Level.generate( Width,Height,Target,Timelimit
-                    ,inv(Rank), Modules, First, Default );
-
-    std::cout << "rank: " << Rank << "  inv: " << inv(Rank) << std::endl;
-
-    *(Try.second) = Level;
-    View.second->observe( Try.second, 0 );
+   Waiting = false;
+   How_to  = false;
+   How_to_mode = false;
+   Big_flash.start(FLT_MAX);
+   State = CONTINUE;
+   
+   Level.generate( Width,Height,Target,Timelimit
+		   ,inv(Rank), Modules, First, Default );
+   
+   
+   *(Try.second) = Level;
+   View.second->observe( Try.second, 0 );
 }
 
 void GameController::start(float at)
@@ -88,7 +87,8 @@ void GameController::start(float at)
     Backgrounded.set_end_value(0);
     Backgrounded.start(at);
 
-    Try.second -> start();
+    if (State == CONTINUE)
+       Try.second -> start();
 }
 void GameController::stop(float at)
 {
@@ -384,113 +384,104 @@ void GameController::draw(sf::RenderTarget & r, float now)
 
 int GameController::mouse_button_released(sf::RenderWindow & w, sf::Event::MouseButtonEvent & e, float now)
 {
-    if (Slide.running(now) or Backgrounded.value(now))
-        return 0;
+   if (Slide.running(now) or Backgrounded.value(now))
+      return 0;
 
 
-    if (Waiting)
-    {
-        switch (State)
-        {
-        case GAME_OVER:
-            std::cout << "\n>> GAME OVER, je rend la mains." << std::endl;
-            //return 5;
-            break;
+   if (Waiting)
+   {
+      switch (State)
+      {
+	 case GAME_OVER:
 
-        case TRY_AGAIN:
-            std::cout << "\n>> go TRY AGAIN" << std::endl;
-            Lifes--;
+	    break;
 
-            std::swap(Try.first,Try.second);
-            std::swap(View.first,View.second);
+	 case TRY_AGAIN:
+	    Lifes--;
+	    
+	    std::swap(Try.first,Try.second);
+	    std::swap(View.first,View.second);
 
-            *(Try.second) = Level;
-            View.second -> observe( Try.second, now + 0.2 );
+	    *(Try.second) = Level;
+	    View.second -> observe( Try.second, now + 0.2 );
 
-            State = CONTINUE;
-            Big_flash.start(FLT_MAX);
-            Slide.start(now);
+	    State = CONTINUE;
+	    Big_flash.start(FLT_MAX);
+	    Slide.start(now);
 
-            Try.second -> start();
-            Waiting = false;
-            break;
+	    Try.second -> start();
+	    Waiting = false;
+	    break;
 
-        case WON:
-            std::cout << "\n>> go NEXT" << std::endl;
-            Rank++;
-            Score += Try.second->getScore();
-            Score += Try.second->getBonusScore();
-            Lifes += Try.second->getBonusLifes();
+	 case WON:
+	    Rank++;
+	    Score += Try.second->getScore();
+	    Score += Try.second->getBonusScore();
+	    Lifes += Try.second->getBonusLifes();
 
-            Level.generate( Width,Height,Target,Timelimit
-                            ,inv(Rank), Modules, First, Default );
+	    Level.generate( Width,Height,Target,Timelimit
+			    ,inv(Rank), Modules, First, Default );
 
-            std::swap(Try.first,Try.second);
-            std::swap(View.first,View.second);
+	    std::swap(Try.first,Try.second);
+	    std::swap(View.first,View.second);
 
-            *(Try.second) = Level;
-            View.second -> observe( Try.second, now + 0.2 );
+	    *(Try.second) = Level;
+	    View.second -> observe( Try.second, now + 0.2 );
 
-            State = CONTINUE;
-            Big_flash.start(FLT_MAX);
-            Slide.start(now);
+	    State = CONTINUE;
+	    Big_flash.start(FLT_MAX);
+	    Slide.start(now);
 
-            Levelup.play_new();
+	    Levelup.play_new();
 
-            Try.second -> start();
-            Waiting = false;
-            break;
+	    Try.second -> start();	    
+	    Waiting = false;
+	    break;
 
-        default:
-            ;
-        }
+	 default:;
+      }
 
-        return 0;
-    }
+      return 0;
+   }
 
 
 
 
+   
+   const sf::Vector2f click = w.ConvertCoords(e.X, e.Y);
+   const point square = board_coords(click.x, click.y);
+   
+   const point digger = Try.second->getDigger();
+   
+   const int dx = -(digger.x - square.x);
+   const int dy = -(digger.y - square.y);
+   
 
-    const sf::Vector2f click = w.ConvertCoords(e.X, e.Y);
-    const point square = board_coords(click.x, click.y);
+   if ( dx >= -1 and dx <= 1 and dy >= -1 and dy <= 1 )
+   {
+      switch ( Try.second->move(dx,dy) )
+      {
+	 case GameState::LOST:
+	    if (Lifes >= 1)
+	    {
+	       State = TRY_AGAIN;
+	    }
+	    else
+	    {
+	       State = GAME_OVER;
+	    }
+	    break;
+	    
+	    
+	 case GameState::WON:
+	    State = WON;
+	    break;
+	    
+	 default:;
+      }
+   }
 
-    const point digger = Try.second->getDigger();
-
-    const int dx = -(digger.x - square.x);
-    const int dy = -(digger.y - square.y);
-
-    std::cout << "\nclick at: " << square.x << "," << square.y << " | " << dx << "," << dy <<  "  (" << now << ")";
-    std::cout.flush();
-
-    if ( dx >= -1 and dx <= 1 and dy >= -1 and dy <= 1 )
-    {
-        std::cout << "     [valid]";
-        std::cout.flush();
-        switch ( Try.second->move(dx,dy) )
-        {
-        case GameState::LOST:
-            if (Lifes >= 1)
-            {
-                State = TRY_AGAIN;
-            }
-            else
-            {
-                State = GAME_OVER;
-            }
-            break;
-
-
-        case GameState::WON:
-            State = WON;
-            break;
-
-        default:
-            ;
-        }
-    }
-
-    return 0;
+   return 0;
 }
 
 
@@ -537,14 +528,14 @@ int GameController::key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, f
                      ,0,2,0);
 
             stop(now);
-            return 1;
+            return 3;
         }
     }
     else if (e.Code == sf::Key::Code::Space
              or e.Code == sf::Key::Code::Pause)
     {
         stop(now);
-        return 1;
+        return 2;
     }
 
     return 0;

@@ -8,6 +8,7 @@
 #include "SwitchButton.hh"
 #include "squares.hh"
 #include "consts.hh"
+#include "resources.hh"
 
 #include <list>
 #include <vector>
@@ -15,7 +16,9 @@
 class GuiController : public EventHandler
 {
 public:
-    GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod);
+    static SoundResource Music;
+
+    GuiController(const sf::RenderTarget &r, std::vector<module> &modules, module &firstmod, module &defaultmod, ResourcesPool & pool);
 
     int launchGame(sf::RenderWindow & w, float now);
 
@@ -28,6 +31,7 @@ public:
     int resized(sf::RenderWindow & w, sf::Event::SizeEvent & e, float now);
 
 private:
+    ResourcesPool & Pool;
     MenuView vM;
     ConfigView vC;
     bool lGame = false;
@@ -41,4 +45,5 @@ private:
     sf::Vector2f animOffsetMenu;
     sf::Vector2f animOffsetConfig;
     AnimatedValue slideAnim;
+
 };
