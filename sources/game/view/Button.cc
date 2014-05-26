@@ -41,13 +41,19 @@ void Button::hide(float at)
             labelOpacity.swap();
         opacity.start(at);
         labelOpacity.start(at);
-        onLeave(at);
+        if(inOpacity.value(at) != 0)
+        {
+            inOpacity.set_start_value(255);
+            inOpacity.set_end_value(0);
+            inOpacity.start(at);
+            toggle = true;
+        }
     }
 }
 
 void Button::onEnter(float at)
 {
-    if(!inOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
+    if(!inOpacity.running(at) && (labelOpacity.end_value() == 1 && !labelOpacity.running(at))) // Si l'animation est terminée et si le menu est affiché
     {
         if(toggle)
         {
@@ -61,7 +67,7 @@ void Button::onEnter(float at)
 
 void Button::onLeave(float at)
 {
-    if(!inOpacity.running(at) && labelOpacity.value(at) == 1) // Si l'animation est terminée et si le menu est affiché
+    if(!inOpacity.running(at) && (labelOpacity.end_value() == 1 && !labelOpacity.running(at))) // Si l'animation est terminée et si le menu est affiché
     {
         if(!toggle)
         {
