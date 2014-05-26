@@ -13,6 +13,90 @@
 
 
 
+
+//
+// Cette fonction vérifie si, étant donnée un plateau "b", un
+// déplacement "dx","dy" (action possible du joueur soit
+// gauche,droite,haut,bas,diagonales) peut entrainer une
+// victoire. Elle retourne vraie dans ce cas.
+//
+bool Board::check_recur(Board b, int dx, int dy, std::deque<std::pair<int,int>> * record) const
+// "b" est copié pour effectuer le test
+{
+   switch (b.move(dx,dy))
+   {
+      // Si le déplacement entraîne une victoire ou une défaite
+      // immédiate, la recherche est terminé.
+
+      case WON:
+	 if (record)
+	    // on enregistre le déplacement gagnant AVANT le
+	    // précédent puisque nous remontont dans la pile
+	    // d'appels.
+	    record -> push_front({dx,dy});
+
+	 return true;
+	 
+      case LOST:
+	 return false;
+
+      default:;
+   }
+
+   // Si au moins un des déplacements suivant est gagnant alors
+   // celuis ci est gagnant.
+   const bool win ( check_recur(b, -1, -1,record)
+		    or check_recur(b, -1, 0,record)
+		    or check_recur(b, -1, 1,record)
+		    or check_recur(b, 0, -1,record)
+		    // 0 , 0
+		    or check_recur(b, 0,  1,record)
+		    or check_recur(b, 1, -1,record)
+		    or check_recur(b, 1,  0,record)
+		    or check_recur(b, 1,  1,record) );
+
+   if (win and record)
+      record -> push_front({dx,dy});
+      
+   return win;
+}
+
+//
+// Fonction châpeau initiant la récursion. Elle retourne vraie si
+// la configuration du plateau permet de gagner.
+//
+bool Board::check(std::deque<std::pair<int,int>> * record) const
+{
+   return ( check_recur(*this, -1, -1,record)
+	    or check_recur(*this, -1, 0,record)
+	    or check_recur(*this, -1, 1,record)
+	    or check_recur(*this, 0, -1,record)
+	    // 0 , 0
+	    or check_recur(*this, 0,  1,record)
+	    or check_recur(*this, 1, -1,record)
+	    or check_recur(*this, 1,  0,record)
+	    or check_recur(*this, 1,  1,record) );
+}
+
+
+//
+// Cette fonction ne fait qu'éxecuter les mouvements enregistrés.
+// On voit ici l'intêret du schéma Observateur : l'appel à la
+// méthode move() entraine une série de notifications à
+// destination de BoardView qui seront traités plus tard.
+//
+void Board::resolve()
+{
+   std::deque<std::pair<int,int>> record;
+   check(&record);
+
+   for (const auto & m : record)
+      move(m.first, m.second);
+ 
+}
+
+
+
 void Board::Observer::clear()
 { Changes.clear(); }
 
@@ -134,88 +218,6 @@ const Board & Board::operator=(const Board &m)
    copySquares(m);
 
    return *this;
-}
-
-
-//
-// Cette fonction vérifie si, étant donnée un plateau "b", un
-// déplacement "dx","dy" (action possible du joueur soit
-// gauche,droite,haut,bas,diagonales) peut entrainer une
-// victoire. Elle retourne vraie dans ce cas.
-//
-bool Board::check_recur(Board b, int dx, int dy, std::deque<std::pair<int,int>> * record) const
-// "b" est copié pour effectuer le test
-{
-   switch (b.move(dx,dy))
-   {
-      // Si le déplacement entraîne une victoire ou une défaite
-      // immédiate, la recherche est terminé.
-
-      case WON:
-	 if (record)
-	    // on enregistre le déplacement gagnant AVANT le
-	    // précédent puisque nous remontont dans la pile
-	    // d'appels.
-	    record -> push_front({dx,dy});
-
-	 return true;
-	 
-      case LOST:
-	 return false;
-
-      default:;
-   }
-
-   // Si au moins un des déplacements suivant est gagnant alors
-   // celuis ci est gagnant.
-   const bool win ( check_recur(b, -1, -1,record)
-		    or check_recur(b, -1, 0,record)
-		    or check_recur(b, -1, 1,record)
-		    or check_recur(b, 0, -1,record)
-		    // 0 , 0
-		    or check_recur(b, 0,  1,record)
-		    or check_recur(b, 1, -1,record)
-		    or check_recur(b, 1,  0,record)
-		    or check_recur(b, 1,  1,record) );
-
-   if (win and record)
-      record -> push_front({dx,dy});
-      
-   return win;
-}
-
-//
-// Fonction châpeau initiant la récursion. Elle retourne vraie si
-// la configuration du plateau permet de gagner.
-//
-bool Board::check(std::deque<std::pair<int,int>> * record) const
-{
-   return ( check_recur(*this, -1, -1,record)
-	    or check_recur(*this, -1, 0,record)
-	    or check_recur(*this, -1, 1,record)
-	    or check_recur(*this, 0, -1,record)
-	    // 0 , 0
-	    or check_recur(*this, 0,  1,record)
-	    or check_recur(*this, 1, -1,record)
-	    or check_recur(*this, 1,  0,record)
-	    or check_recur(*this, 1,  1,record) );
-}
-
-
-//
-// Cette fonction ne fait qu'éxecuter les mouvements enregistrés.
-// On voit ici l'intêret du schéma Observateur : l'appel à la
-// méthode move() entraine une série de notifications à
-// destination de BoardView qui seront traités plus tard.
-//
-void Board::resolve()
-{
-   std::deque<std::pair<int,int>> record;
-   check(&record);
-
-   for (const auto & m : record)
-      move(m.first, m.second);
- 
 }
 
 

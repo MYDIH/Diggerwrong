@@ -8,7 +8,7 @@ Ce rapport présente notre réalisation : =diggewrong= .
 
 Plutôt que de recopier les objectifs de ce projet nous vous invitons à consulter [[https://sites.google.com/site/projetap2iut/Puru-Puru-Digger][le sujet]] et à jouer à la [[http://www.bigfishgames.fr/jeux-en-ligne/8638/puru-puru-digger/][version originale]].
 
-/Une partie de ce rapport est issue du rapport "préliminaire" de conception. L'annexe 1 en est directement issue et ne reflête donc pas l'état final du produit./
+/Une partie de ce rapport est issue du rapport "préliminaire" de conception. Le diagramme de classe en est directement issue et ne reflête donc pas l'état final du produit./
 
 Bonne lecture !
 
@@ -22,7 +22,7 @@ et =SquareView= de sorte que l'on puisse ajouter de nouvelles cases simplement e
 classes sans toucher au code existant. Il est même possible d'envisager un chargement dynamique de ces
 nouvelles cases.
 
-Le diagramme de classes en /annexe 1/ issue du rapport de conception présente essentiellement ceci. Le produit final est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
+Le diagramme de classes en annexe issue du rapport de conception présente essentiellement ceci. Le produit final est légèrement différent mais le concept est le même. La zone verte représente la partie extensible.
 
 Le fonctionnement de cette architecture sera présenté au fil de ce document.
 
@@ -81,10 +81,9 @@ La classe =EventHandler= permet de simplifier et de factoriser la gestion des é
 Nous avons ici 2 controlleurs : =GuiController= contrôle le menu d'acceuil, les options... et passe la main à =GameController= pour le jeu. =GameController= gère une partie de jeu complète (instanciation des plateaux, transitions...) et contôle =BoardView= pour afficher les plateaux.
 
 * Quelques algorithmes
-** Résolveur & "How-to"
-/Voir en annexe 2./
+Nous vous invitons à consulter le début du fichier Board.cc en annexe. Vous y trouverez le résolveur commenté.
 Cet algorithme bien que simple permet de montrer différents aspects intérresants de notre architecture.
-# j'ai mis la description de l'algo dans les src...
+
 
 * Résumé des fonctionalités
 En plus de toutes les fonctionalités obligatoires et supplémentaires, nous avons ajoutés les fonctionalités bonus suivantes :
@@ -106,13 +105,12 @@ Bonne partie de =diggewrong= !
 * Remerciments à...
 - [[http://www.sfml-dev.org/index-fr.php][la SFML]]
 - [[http://www.boost.org/][BOOST]]
-- [[http://opengameart.org/content/rectangle-gems-etc-16px][qubodup]]        :: sprites des cases
-- [[http://opengameart.org/content/more-explosions][StumpyStrust]]   :: animation de l'explosion
-- [[https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th][musiikkisirkus]] :: remix de l'hymne de l'UE (fond sonore)
-- [[http://www.freesound.org/people/Greenhourglass/sounds/159375/][Greenhourglass]] :: bruitages
-- [[http://www.freesound.org/people/Huminaatio/sounds/221909/][Huminaatio]]     :: bruitages
-- [[http://www.freesound.org/people/fins/sounds/171575/][fins]]           :: bruitages
-- [[http://www.freesound.org/people/jivatma07/sounds/173858/][jivatma07]]      :: bruitages
-- [[http://www.freesound.org/people/jbum/sounds/32090/][jbum]]           :: bruitages
-
+- [[http://opengameart.org/content/rectangle-gems-etc-16px][qubodup]]        sprites des cases
+- [[http://opengameart.org/content/more-explosions][StumpyStrust]]   animation de l'explosion
+- [[https://soundcloud.com/musiikkisirkus/ode-to-joy-beethovens-9th][musiikkisirkus]] remix de l'Ode à la joie, hymne de l'UE (fond sonore)
+- [[http://www.freesound.org/people/Greenhourglass/sounds/159375/][Greenhourglass]] bruitages
+- [[http://www.freesound.org/people/Huminaatio/sounds/221909/][Huminaatio]]     bruitages
+- [[http://www.freesound.org/people/fins/sounds/171575/][fins]]           bruitages
+- [[http://www.freesound.org/people/jivatma07/sounds/173858/][jivatma07]]      bruitages
+- [[http://www.freesound.org/people/jbum/sounds/32090/][jbum]]           bruitages
 
