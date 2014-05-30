@@ -32,8 +32,8 @@ int guiMain(const std::string & themes, const std::string & hightscores)
 
    firstmod.init( p );
    defaultmod.init( p );
-
-
+   
+   
    p.add(&GuiController::Music);
    
    p.add(&GuiViews::viewCorner);
@@ -47,10 +47,10 @@ int guiMain(const std::string & themes, const std::string & hightscores)
    p.add(&ScoresTab::namesCol);
    p.add(&ScoresTab::contenuCol);
    p.add(&ScoresTab::tabLines);
-
+   
    p.add(&BoardView::DiggerResource);
    p.add(&BoardView::ExplosionResource);
-
+   
    p.add(&BoardView::DeadResource);
    p.add(&BoardView::Score_font);
    p.add(&BoardView::Score_value_font);
@@ -58,7 +58,7 @@ int guiMain(const std::string & themes, const std::string & hightscores)
    p.add(&BoardView::Bonus_sound);
    p.add(&BoardView::Life_sound);
    p.add(&BoardView::Fart);
-
+   
    p.add(&GameController::Big_font);
    p.add(&GameController::Youwin);
    p.add(&GameController::Tryagain);
@@ -66,15 +66,15 @@ int guiMain(const std::string & themes, const std::string & hightscores)
    p.add(&GameController::Gameover);
    p.add(&GameController::Star1);
    p.add(&GameController::Star2);
-
+   
    p.add(&BoardView::DeadResource);
-
+   
    p.load("themes/default");
-
-
+   
+   
    sf::RenderWindow window(sf::VideoMode(900,650,32), "diggewrong");
-   window.SetFramerateLimit(30);
-
+   window.UseVerticalSync(true);
+   
    GuiController gc(window, modules, firstmod, defaultmod, p);
    return gc.run(window);
 }

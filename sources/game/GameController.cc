@@ -519,7 +519,15 @@ int GameController::key_pressed(sf::RenderWindow & w, sf::Event::KeyEvent & e, f
             std::map<std::string,std::string> f;
             parseFile(f, "highScores.txt");
 
-            f[Player_name] = std::to_string(Score);
+	    try
+	    {
+	       if ( std::stoi(f[Player_name]) < (int)Score )
+		  f[Player_name] = std::to_string(Score);
+	    }
+	    catch(const std::invalid_argument &ia)
+	    {
+	       f[Player_name] = std::to_string(Score);
+	    }
 
             writeFile(f, "highScores.txt");
 
